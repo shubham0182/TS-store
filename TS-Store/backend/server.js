@@ -8,6 +8,9 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.join(__dirname, 'db.sqlite');
 
+const ADMIN_ID = process.env.ADMIN_ID || 'shubham';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '1234';
+
 const app = express();
 app.use(cors());
 app.use(express.json({limit:'10mb'}));
@@ -77,7 +80,7 @@ async function initDb() {
   )`);
 
   db.run("DELETE FROM admin");
-  db.run("INSERT INTO admin (id, password) VALUES (?, ?)", ['shubham', '1234']);
+  db.run("INSERT INTO admin (id, password) VALUES (?, ?)", [ADMIN_ID, ADMIN_PASSWORD]);
   saveDb();
 }
 
@@ -175,7 +178,7 @@ app.post('/api/apps/:id/review', (req, res) => {
 // Admin auth endpoint
 app.post('/api/admin/login', (req, res) => {
   const { id, password } = req.body;
-  if (id === 'shubham' && password === '1234') return res.json({ success: true });
+  if (id === ADMIN_ID && password === ADMIN_PASSWORD) return res.json({ success: true });
   try {
     const row = getOne('SELECT * FROM admin WHERE id=? AND password=?', [id, password]);
     if (row) return res.json({ success: true });
