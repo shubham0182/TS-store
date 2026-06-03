@@ -1,0 +1,16 @@
+{
+  "name": "TS Store",
+  "short_name": "TS Store",
+  "description": "Discover amazing web apps, games, AI tools, and more.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#111111",
+  "icons": [
+    {
+      "src": "logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

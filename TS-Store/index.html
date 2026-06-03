@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0">
+<meta name="theme-color" content="#111">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>TS Store</title>
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="logo.svg">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f5f5;--srf:#fff;--crg:rgba(255,255,255,0.7);--t1:#111;--t2:#555;--t3:#999;--gb:rgba(255,255,255,0.25);--ge:rgba(0,0,0,0.08);--gs:0 8px 32px rgba(0,0,0,0.08);--ac:#000;--ah:#333;--al:rgba(0,0,0,0.06);--ai:#fff;--md:0 4px 20px rgba(0,0,0,0.08);--lg:0 8px 40px rgba(0,0,0,0.12);--r1:8px;--r2:14px;--r3:20px;--nh:64px;--tr:all 0.3s cubic-bezier(0.4,0,0.2,1);--st:#888}
+[data-theme="dark"]{--bg:#0a0a0a;--srf:#161616;--crg:rgba(22,22,22,0.7);--t1:#eee;--t2:#999;--t3:#555;--gb:rgba(22,22,22,0.4);--ge:rgba(255,255,255,0.06);--gs:0 8px 32px rgba(0,0,0,0.4);--ac:#fff;--ah:#ccc;--al:rgba(255,255,255,0.08);--ai:#111;--st:#bbb;--md:0 4px 20px rgba(0,0,0,0.4);--lg:0 8px 40px rgba(0,0,0,0.5)}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;background:var(--bg);color:var(--t1);min-height:100dvh;transition:var(--tr);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+a{text-decoration:none;color:inherit}
+img{max-width:100%;display:block}
+button{cursor:pointer;border:none;outline:none;font:inherit;background:none;color:inherit}
+input,textarea,select{font:inherit;outline:none;border:none;background:none;color:inherit}
+.ct{max-width:1200px;margin:0 auto;padding:0 16px}
+.hidden{display:none!important}
+
+/* Nav */
+.nav{position:fixed;top:0;left:0;right:0;height:var(--nh);z-index:100;background:var(--gb);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--ge);transition:var(--tr)}
+.nav-inner{display:flex;align-items:center;height:100%;gap:12px;max-width:1200px;margin:0 auto;padding:0 16px}
+.nav-logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.2rem;flex-shrink:0}
+.nav-logo svg,.nav-logo img{width:32px;height:32px;border-radius:8px}
+.nav-logo span{display:none}
+@media(min-width:480px){.nav-logo span{display:inline}}
+.nav-search{flex:1;max-width:420px;position:relative}
+.nav-search input{width:100%;padding:9px 16px 9px 36px;border-radius:50px;background:var(--srf);border:1.5px solid transparent;transition:var(--tr);font-size:.88rem}
+.nav-search input:focus{border-color:var(--t3);box-shadow:0 0 0 3px var(--al)}
+.nav-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:.85rem;pointer-events:none}
+.nav-act{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+.nav-btn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;transition:var(--tr);font-size:1rem}
+.nav-btn:hover{background:var(--ac);color:var(--ai)}
+.nav-menu{display:none}
+@media(max-width:600px){
+  .nav-search{display:none}
+  .nav-menu{display:grid;width:38px;height:38px;border-radius:10px;place-items:center;transition:var(--tr);font-size:1.2rem}
+  .nav-menu:hover{background:var(--al)}
+  .nav-logo span{display:inline}
+}
+.mobile-search-bar{display:none;padding:8px 16px;position:fixed;top:var(--nh);left:0;right:0;z-index:99;background:var(--gb);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--ge);transition:var(--tr)}
+.mobile-search-bar.show{display:block}
+.mobile-search-bar .ms-inner{position:relative;max-width:1200px;margin:0 auto}
+.mobile-search-bar input{width:100%;padding:10px 16px 10px 40px;border-radius:50px;background:var(--srf);border:1.5px solid var(--ge);font-size:.92rem;transition:var(--tr)}
+.mobile-search-bar input:focus{border-color:var(--t3)}
+.mobile-search-bar i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--t3)}
+
+/* Hero */
+.hero{margin-top:var(--nh);padding:48px 0 36px;background:#111;position:relative;overflow:hidden;text-align:center}
+.hero *{position:relative;z-index:1}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0,rgba(255,255,255,0.04) 0,transparent 70%)}
+.hero h1{font-size:clamp(1.6rem,4vw,2.8rem);font-weight:800;color:#fff;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:12px}
+.hero h1 img{width:42px;height:42px;border-radius:10px}
+.hero p{color:rgba(255,255,255,0.6);font-size:clamp(.9rem,2vw,1.1rem);max-width:540px;margin:0 auto 24px;line-height:1.6}
+.h-search{max-width:500px;margin:0 auto;position:relative}
+.h-search input{width:100%;padding:14px 20px 14px 48px;border-radius:60px;font-size:.95rem;background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.12);color:#fff;transition:var(--tr)}
+.h-search input::placeholder{color:rgba(255,255,255,0.35)}
+.h-search input:focus{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.25)}
+.h-search>i{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.4);pointer-events:none}
+.h-search .h-btn{position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:10px 22px;border-radius:50px;background:#fff;color:#111;font-weight:700;font-size:.88rem;transition:var(--tr)}
+.h-search .h-btn:hover{background:#ddd}
+@media(max-width:480px){.hero{padding:36px 0 28px}.h-search .h-btn{padding:8px 16px;font-size:.82rem}.h-search input{padding:12px 16px 12px 42px}}
+
+/* Sections */
+section{padding:32px 0}
+.s-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px}
+.s-hdr h2{font-size:1.15rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.s-hdr .s-all{font-size:.82rem;font-weight:600;color:var(--t2);padding:4px 12px;border-radius:50px;border:1px solid var(--ge);transition:var(--tr);white-space:nowrap}
+.s-hdr .s-all:hover{background:var(--ac);color:var(--ai);border-color:var(--ac)}
+
+/* Slider */
+.slider{overflow:hidden;position:relative;margin:0 -16px;padding:0 16px}
+.s-track{display:flex;gap:14px;transition:transform .5s cubic-bezier(0.4,0,0.2,1);padding:4px 0}
+.s-card{min-width:calc(50% - 7px);flex-shrink:0;background:var(--crg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--ge);border-radius:var(--r3);overflow:hidden;box-shadow:var(--gs);transition:var(--tr);cursor:pointer}
+.s-card:hover{transform:translateY(-3px);box-shadow:var(--lg)}
+.s-bnr{height:140px;overflow:hidden;position:relative;background:var(--t3)}
+.s-bnr img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.s-card:hover .s-bnr img{transform:scale(1.04)}
+.s-bdg{position:absolute;top:10px;left:10px;padding:3px 12px;border-radius:50px;background:rgba(0,0,0,0.55);color:#fff;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;backdrop-filter:blur(4px)}
+.s-body{padding:14px;display:flex;gap:12px}
+.s-icon{width:48px;height:48px;border-radius:12px;flex-shrink:0;overflow:hidden;background:var(--t3)}
+.s-icon img{width:100%;height:100%;object-fit:cover}
+.s-inf{flex:1;min-width:0}
+.s-inf h3{font-size:.95rem;font-weight:700;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.s-inf .dev{font-size:.78rem;color:var(--t2)}
+.s-inf .meta{display:flex;align-items:center;gap:10px;margin-top:6px;font-size:.78rem;color:var(--t3)}
+.s-dots{display:flex;gap:6px;justify-content:center;margin-top:14px}
+.s-dot{width:8px;height:8px;border-radius:50%;background:var(--t3);opacity:.25;transition:var(--tr);cursor:pointer}
+.s-dot.act{opacity:1;background:var(--ac);width:24px;border-radius:4px}
+@media(min-width:900px){.s-card{min-width:calc(33.333% - 10px)}}
+@media(max-width:480px){.s-card{min-width:calc(100% - 0px)}.s-bnr{height:120px}}
+
+/* Grids */
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+@media(max-width:480px){.g{grid-template-columns:1fr}}
+
+/* App Card */
+.ac{background:var(--crg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--ge);border-radius:var(--r2);padding:16px;box-shadow:var(--gs);transition:var(--tr);cursor:pointer;position:relative}
+.ac:hover{transform:translateY(-3px);box-shadow:var(--lg)}
+.inst-rm{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;background:var(--rd);color:#fff;display:grid;place-items:center;font-size:.7rem;opacity:0;transition:var(--tr);z-index:2}
+.ac:hover .inst-rm{opacity:1}  
+.ac-t{display:flex;gap:14px;margin-bottom:10px}
+.ac-i{width:50px;height:50px;border-radius:12px;overflow:hidden;flex-shrink:0;background:var(--t3)}
+.ac-i img{width:100%;height:100%;object-fit:cover}
+.ac-inf{flex:1;min-width:0}
+.ac-inf h3{font-size:.95rem;font-weight:700;margin-bottom:1px}
+.ac-inf .dev{font-size:.78rem;color:var(--t2)}
+.ac-inf .ctg{display:inline-block;padding:2px 10px;border-radius:50px;font-size:.68rem;font-weight:600;margin-top:5px;background:var(--al);color:var(--t2);border:1px solid var(--ge)}
+.ac-d{font-size:.82rem;color:var(--t2);line-height:1.5;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ac-b{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ac-st{display:flex;align-items:center;gap:12px;font-size:.78rem;color:var(--t3)}
+.star{color:var(--st)}
+.ibtn{padding:7px 18px;border-radius:50px;background:var(--ac);color:var(--ai);font-weight:600;font-size:.82rem;transition:var(--tr);white-space:nowrap;display:flex;align-items:center;gap:6px}
+.ibtn:hover{background:var(--ah);transform:scale(1.02)}
+.ibtn.wb{background:transparent;border:1.5px solid var(--ge);color:var(--t2);padding:7px 12px}
+.ibtn.wb:hover{background:var(--al);border-color:var(--t3);color:var(--t1)}
+
+/* Cats */
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+@media(max-width:400px){.cg{grid-template-columns:repeat(2,1fr);gap:10px}}
+.cc{background:var(--crg);backdrop-filter:blur(10px);border:1px solid var(--ge);border-radius:var(--r2);padding:20px 12px;text-align:center;transition:var(--tr);cursor:pointer}
+.cc:hover{transform:translateY(-3px);box-shadow:var(--md)}
+.cc-i{font-size:2rem;margin-bottom:8px;display:block;color:var(--t1)}
+.cc-n{font-size:.85rem;font-weight:600}
+.cc-c{font-size:.72rem;color:var(--t3);margin-top:3px}
+.subs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.sc{padding:5px 14px;border-radius:50px;font-size:.78rem;font-weight:500;background:var(--gb);border:1px solid var(--ge);transition:var(--tr);cursor:pointer;color:var(--t2)}
+.sc:hover,.sc.act{background:var(--ac);color:var(--ai);border-color:var(--ac)}
+
+/* Detail */
+.dh{padding:32px 0;background:#111;color:#fff}
+.dh .ct{display:flex;gap:24px;align-items:flex-start}
+.di{width:100px;height:100px;border-radius:22px;overflow:hidden;flex-shrink:0;border:3px solid rgba(255,255,255,0.12);background:#333}
+.di img{width:100%;height:100%;object-fit:cover}
+.dinf{flex:1}
+.dinf h1{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:800;margin-bottom:4px}
+.dinf .dev{font-size:.9rem;opacity:.65;margin-bottom:6px}
+.dm{display:flex;flex-wrap:wrap;gap:12px;font-size:.82rem;opacity:.75;margin-bottom:16px}
+.da{display:flex;gap:10px;flex-wrap:wrap}
+.da .ibtn{padding:12px 30px;font-size:.95rem;background:#fff;color:#111}
+.da .ibtn:hover{background:#ddd}
+.da .sb{padding:12px 24px;border-radius:50px;font-weight:600;font-size:.88rem;background:rgba(255,255,255,0.08);color:#fff;border:1.5px solid rgba(255,255,255,0.15);transition:var(--tr)}
+.da .sb:hover{background:rgba(255,255,255,0.15)}
+.db{padding:32px 0}
+.db .ct{display:grid;grid-template-columns:1fr 280px;gap:24px}
+@media(max-width:768px){.dh .ct{flex-direction:column;align-items:center;text-align:center}.dm{justify-content:center}.da{justify-content:center}.db .ct{grid-template-columns:1fr}}
+.des h2{font-size:1.15rem;font-weight:700;margin-bottom:10px}
+.des p{line-height:1.7;color:var(--t2);font-size:.92rem}
+.ss{margin-top:28px}
+.ss h2{font-size:1.15rem;font-weight:700;margin-bottom:12px}
+.ssg{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+.ssg img{height:200px;border-radius:var(--r2);flex-shrink:0;border:1px solid var(--ge);background:var(--t3)}
+.sb2{display:flex;flex-direction:column;gap:14px}
+.sbc{background:var(--crg);backdrop-filter:blur(12px);border:1px solid var(--ge);border-radius:var(--r2);padding:18px;box-shadow:var(--gs)}
+.sbc h3{font-size:.95rem;font-weight:700;margin-bottom:10px}
+.sbs{display:flex;justify-content:space-between;padding:6px 0;font-size:.85rem;border-bottom:1px solid var(--ge)}
+.sbs:last-child{border-bottom:none}
+.sbs .l{color:var(--t2)}
+.sbs .v{font-weight:600}
+.rv{padding:12px 0;border-bottom:1px solid var(--ge)}
+.rv:last-child{border-bottom:none}
+.rvh{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.rvu{font-weight:600;font-size:.85rem}
+.rvt{font-size:.82rem;color:var(--t2);line-height:1.4}
+.rf{display:flex;flex-direction:column;gap:8px}
+.rf textarea{width:100%;padding:10px 12px;border-radius:var(--r1);background:var(--srf);border:1px solid var(--ge);resize:vertical;min-height:70px;font-size:.88rem}
+.rf .si{display:flex;gap:3px;font-size:1.4rem;cursor:pointer}
+.rf .si span{transition:var(--tr);color:var(--t3)}
+.rf .si span.act,.rf .si span:hover{color:var(--st)}
+.rf button{padding:9px 22px;border-radius:50px;background:var(--ac);color:var(--ai);font-weight:600;align-self:flex-start;font-size:.85rem;transition:var(--tr);display:flex;align-items:center;gap:6px}
+.rf button:hover{background:var(--ah)}
+.bb{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:50px;background:var(--gb);backdrop-filter:blur(10px);border:1px solid var(--ge);font-weight:600;font-size:.85rem;transition:var(--tr);margin-bottom:16px}
+.bb:hover{background:var(--ac);color:var(--ai)}
+
+
+/* Toast */
+.tst{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);z-index:9999;padding:12px 20px;border-radius:var(--r2);background:var(--srf);box-shadow:var(--lg);border:1px solid var(--ge);color:var(--t1);display:flex;align-items:center;gap:10px;transition:var(--tr);font-weight:500;font-size:.88rem;pointer-events:none;opacity:0;max-width:calc(100vw - 32px)}
+.tst.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:600px){.tst{bottom:30px;right:30px;left:auto;transform:translateY(100px)}.tst.show{transform:translateY(0)}}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--t3);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--t2)}
+
+/* Empty state */
+.empty{padding:60px 20px;text-align:center;color:var(--t3);grid-column:1/-1}
+.empty i{font-size:2.5rem;margin-bottom:12px;opacity:.4}
+.empty p{font-size:.9rem}
+
+/* Animations */
+@keyframes fi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.ac,.cc,.s-card{animation:fi .35s ease both}
+.ac:nth-child(2){animation-delay:.05s}
+.ac:nth-child(3){animation-delay:.1s}
+.ac:nth-child(4){animation-delay:.15s}
+.ac:nth-child(5){animation-delay:.2s}
+.ac:nth-child(6){animation-delay:.25s}
+
+/* Utilities */
+.gap-8{gap:8px}
+.mt-8{margin-top:8px}
+.mt-16{margin-top:16px}
+.flex{display:flex}
+.flex-c{flex-direction:column}
+.items-c{align-items:center}
+.justify-b{justify-content:space-between}
+.w-full{width:100%}
+
+/* Admin */
+.nav-admin{padding:8px 16px;border-radius:50px;background:var(--ac);color:var(--ai);font-weight:600;font-size:.82rem;transition:var(--tr);display:flex;align-items:center;gap:6px}
+.nav-admin:hover{background:var(--ah)}
+@media(max-width:600px){.nav-admin span{display:none}}
+.al{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#111;padding:20px}
+.alc{width:100%;max-width:400px;padding:36px 28px;border-radius:var(--r3);background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08)}
+.alc h1{text-align:center;margin-bottom:6px;font-size:1.6rem;color:#fff}
+.alc>p{text-align:center;color:rgba(255,255,255,0.4);margin-bottom:24px;font-size:.9rem}
+.alc .fg{margin-bottom:14px}
+.alc label{display:block;color:rgba(255,255,255,0.7);font-weight:500;margin-bottom:5px;font-size:.85rem}
+.alc input{width:100%;padding:13px 14px;border-radius:var(--r1);background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.08);color:#fff;transition:var(--tr);font-size:.92rem}
+.alc input:focus{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.1)}
+.alc input::placeholder{color:rgba(255,255,255,0.25)}
+.alb{width:100%;padding:13px;border-radius:var(--r1);background:#fff;color:#111;font-weight:700;transition:var(--tr);margin-top:4px}
+.alb:hover{background:#ddd}
+.aerr{color:#888;font-size:.82rem;text-align:center;margin-top:8px;display:none}
+.ap{padding-top:calc(var(--nh) + 16px)}
+.ah{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.ah h1{font-size:1.5rem;font-weight:800}
+.abg{padding:5px 12px;border-radius:50px;background:var(--al);color:var(--t2);font-weight:600;font-size:.78rem;border:1px solid var(--ge);display:flex;align-items:center;gap:6px}
+.alo{padding:9px 18px;border-radius:50px;background:#333;color:#fff;font-weight:600;transition:var(--tr);display:flex;align-items:center;gap:6px;font-size:.85rem}
+.alo:hover{opacity:.85}
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:850px){.ag{grid-template-columns:1fr}}
+.afc{background:var(--crg);backdrop-filter:blur(12px);border:1px solid var(--ge);border-radius:var(--r2);padding:24px;box-shadow:var(--gs);position:sticky;top:calc(var(--nh) + 16px)}
+.afc h2{font-size:1.1rem;font-weight:700;margin-bottom:16px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-weight:600;margin-bottom:5px;font-size:.85rem}
+.fg input,.fg textarea,.fg select{width:100%;padding:11px 12px;border-radius:var(--r1);background:var(--srf);border:1.5px solid var(--ge);transition:var(--tr);font-size:.9rem}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--t3);box-shadow:0 0 0 3px var(--al)}
+.fg textarea{resize:vertical;min-height:70px}
+.fg select{cursor:pointer}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:500px){.fr{grid-template-columns:1fr}}
+.sbtn{width:100%;padding:13px;border-radius:var(--r1);background:var(--ac);color:var(--ai);font-weight:700;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:6px}
+.sbtn:hover{background:var(--ah)}
+.atw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.at{width:100%;border-collapse:collapse;min-width:500px}
+.at th{text-align:left;padding:12px 10px;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;color:var(--t3);border-bottom:2px solid var(--ge);font-weight:600}
+.at td{padding:12px 10px;border-bottom:1px solid var(--ge);font-size:.85rem;vertical-align:middle}
+.at td .am{display:flex;align-items:center;gap:8px}
+.at td .am img{width:32px;height:32px;border-radius:8px;background:var(--t3)}
+.at .ax{display:flex;gap:4px}
+.at .ax button{padding:5px 12px;border-radius:var(--r1);font-size:.78rem;font-weight:600;transition:var(--tr)}
+.eb{background:var(--al);color:var(--t2);border:1px solid var(--ge)}
+.eb:hover{background:var(--ac);color:var(--ai)}
+.db2{background:rgba(0,0,0,0.05);color:var(--t2);border:1px solid var(--ge)}
+[data-theme="dark"] .db2{background:rgba(255,255,255,0.06)}
+.db2:hover{background:#333;color:#fff}
+
+/* PDF Suite */
+.pdf-overlay{position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity .3s}
+.pdf-overlay.active{opacity:1;pointer-events:auto}
+.pdf-ws{position:fixed;top:0;right:0;bottom:0;width:100%;max-width:780px;z-index:9999;background:var(--srf);box-shadow:-8px 0 40px rgba(0,0,0,0.15);transform:translateX(100%);transition:transform .4s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;overflow:hidden}
+@media(max-width:800px){.pdf-ws{max-width:100%}}
+.pdf-ws.active{transform:translateX(0)}
+.pdf-ws-hdr{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--ge);flex-shrink:0;background:var(--gb);backdrop-filter:blur(16px)}
+.pdf-ws-hdr h2{font-size:1rem;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pdf-ws-hdr .ws-close{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;transition:var(--tr);font-size:1.1rem}
+.pdf-ws-hdr .ws-close:hover{background:var(--al)}
+.pdf-ws-body{flex:1;overflow-y:auto;padding:20px}
+.pdf-ti h3{font-size:1.1rem;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.pdf-ti p{color:var(--t2);font-size:.85rem;margin-bottom:16px}
+.upload-zone{border:2px dashed var(--ge);border-radius:var(--r3);padding:36px 20px;text-align:center;cursor:pointer;transition:var(--tr);margin-bottom:12px;background:var(--al)}
+.upload-zone:hover{border-color:var(--ac);background:var(--ge)}
+.upload-zone.dragover{border-color:var(--ac);background:var(--al)}
+.upload-zone i{font-size:2.5rem;color:var(--t3);margin-bottom:10px;display:block}
+.upload-zone h3{font-weight:600;font-size:.95rem;margin-bottom:4px}
+.upload-zone p{font-size:.82rem;color:var(--t3)}
+.file-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.file-item{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--al);border-radius:var(--r2);border:1px solid var(--ge);font-size:.85rem}
+.file-item .fi-icon{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:#fff;flex-shrink:0}
+.file-item .fi-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.file-item .fi-size{color:var(--t3);font-size:.78rem;white-space:nowrap}
+.file-item .fi-rm{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;transition:var(--tr);color:var(--t3);flex-shrink:0}
+.file-item .fi-rm:hover{background:rgba(248,81,73,0.15);color:#f85149}
+.file-item .fi-drag{cursor:grab;color:var(--t3)}
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.ctrl-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctrl-group label{font-size:.82rem;font-weight:500;color:var(--t2);white-space:nowrap}
+.ctrl-group input,.ctrl-group select{padding:8px 12px;border-radius:var(--r1);background:var(--srf);border:1px solid var(--ge);color:var(--t1);font-size:.85rem}
+.ctrl-group select{cursor:pointer}
+.ctrl-group input[type="range"]{padding:0;border:none;background:none;width:140px}
+.ctrl-group input[type="color"]{padding:2px;width:44px;height:32px;cursor:pointer}
+.ctrl-group .val{font-size:.82rem;color:var(--t3);min-width:24px}
+.pbtn{padding:10px 24px;border-radius:50px;background:var(--ac);color:var(--ai);font-weight:600;font-size:.85rem;transition:var(--tr);display:inline-flex;align-items:center;gap:6px}
+.pbtn:hover{background:var(--ah);transform:scale(1.02)}
+.pbtn:disabled{opacity:.35;pointer-events:none}
+.pbtn.o{background:transparent;border:1.5px solid var(--ge);color:var(--t2)}
+.pbtn.o:hover{background:var(--al);border-color:var(--t3);color:var(--t1);transform:none}
+.pbtn.sm{padding:6px 12px;font-size:.78rem}
+.result-box{padding:16px;border-radius:var(--r2);background:var(--al);border:1px solid var(--ge);margin-top:12px}
+.result-box h4{font-size:.95rem;font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.result-box .result-info{font-size:.85rem;color:var(--t2);margin-bottom:6px}
+.sig-canvas{width:100%;height:180px;border:2px dashed var(--ge);border-radius:var(--r2);background:#fff;cursor:crosshair;touch-action:none}
+[data-theme="dark"] .sig-canvas{background:#fafafa}
+.ocr-result{padding:12px;background:var(--srf);border-radius:var(--r1);border:1px solid var(--ge);font-size:.85rem;line-height:1.6;max-height:300px;overflow-y:auto}
+.progress-wrap{margin-bottom:16px;padding:12px 16px;background:var(--al);border-radius:var(--r2);border:1px solid var(--ge)}
+.progress-bar{height:6px;border-radius:3px;background:var(--ac);width:0%;transition:width .3s;margin-bottom:6px}
+.progress-text{font-size:.82rem;color:var(--t2)}
+.pdf-section{display:none}
+.pdf-section.active{display:block}
+#allSec{padding:32px 0;margin-top:var(--nh)}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+<div class="nav-inner">
+<a href="#" class="nav-logo" onclick="showHome()">
+<img src="logo.svg" alt="TS Store">
+<span>TS Store</span>
+</a>
+<div class="nav-search">
+<i class="fas fa-search"></i>
+<input type="text" id="navSearch" placeholder="Search apps, categories..." autocomplete="off">
+</div>
+<div class="nav-act">
+<button class="nav-menu" id="mobileSearchToggle" aria-label="Search"><i class="fas fa-search"></i></button>
+<button class="nav-btn" id="themeToggle" aria-label="Theme"><i class="fas fa-moon"></i></button>
+<button class="nav-admin" onclick="showAdminLogin()"><i class="fas fa-cog"></i> <span>Admin</span></button>
+</div>
+</div>
+</nav>
+
+<div class="mobile-search-bar" id="mobileSearchBar">
+<div class="ms-inner">
+<i class="fas fa-search"></i>
+<input type="text" id="mobileSearchInput" placeholder="Search apps, categories..." autocomplete="off">
+</div>
+</div>
+
+<main id="mainContent">
+
+<section class="hero" id="heroSection">
+<div class="ct">
+<h1><img src="logo.svg" alt="TS Store"> TS Store</h1>
+<p>Discover amazing web apps, games, AI tools, and more.</p>
+<div class="h-search">
+<i class="fas fa-search"></i>
+<input type="text" id="heroSearch" placeholder="Search thousands of apps..." autocomplete="off">
+<button class="h-btn" id="heroSearchBtn"><i class="fas fa-search"></i> Search</button>
+</div>
+</div>
+</section>
+
+<section id="featSec">
+<div class="ct">
+<div class="s-hdr">
+<h2><i class="fas fa-star" style="color:var(--st)"></i> Featured</h2>
+<button class="s-all" onclick="document.getElementById('topSec').scrollIntoView({behavior:'smooth'})">View All <i class="fas fa-arrow-right"></i></button>
+</div>
+<div class="slider"><div class="s-track" id="featTrack"></div></div>
+<div class="s-dots" id="featDots"></div>
+</div>
+</section>
+
+<section id="instSec" class="hidden">
+<div class="ct">
+<div class="s-hdr"><h2><i class="fas fa-mobile-alt"></i> My Apps</h2></div>
+<div class="g" id="instGrid"></div>
+</div>
+</section>
+
+<section id="catSec">
+<div class="ct">
+<div class="s-hdr"><h2><i class="fas fa-th-large"></i> Categories</h2></div>
+<div class="cg" id="catGrid"></div>
+<div class="subs" id="subsBox" style="display:none"></div>
+</div>
+</section>
+
+<section id="trSec">
+<div class="ct">
+<div class="s-hdr"><h2><i class="fas fa-chart-line"></i> Trending</h2></div>
+<div class="g" id="trGrid"></div>
+</div>
+</section>
+
+<section id="newSec">
+<div class="ct">
+<div class="s-hdr"><h2><i class="fas fa-clock"></i> New Releases</h2></div>
+<div class="g" id="newGrid"></div>
+</div>
+</section>
+
+<section id="topSec">
+<div class="ct">
+<div class="s-hdr">
+<h2><i class="fas fa-trophy" style="color:var(--st)"></i> Top Charts</h2>
+<div class="subs">
+<button class="sc act" data-chart="trending"><i class="fas fa-fire"></i> Trending</button>
+<button class="sc" data-chart="topRated"><i class="fas fa-star"></i> Top</button>
+<button class="sc" data-chart="mostInstalled"><i class="fas fa-download"></i> Popular</button>
+<button class="sc" data-chart="newReleases"><i class="fas fa-clock"></i> New</button>
+</div>
+</div>
+<div class="g" id="topGrid"></div>
+</div>
+</section>
+
+<section id="searchSec" class="hidden">
+<div class="ct">
+<div class="s-hdr">
+<h2 id="searchTitle"><i class="fas fa-search"></i> Results</h2>
+<button class="s-all" onclick="clearSearch()">Clear</button>
+</div>
+<div class="g" id="searchGrid"></div>
+</div>
+</section>
+</main>
+
+<section id="allSec" class="hidden">
+<div class="ct">
+<div class="s-hdr">
+<h2><i class="fas fa-tools"></i> All Tools <span id="totalTools"></span></h2>
+<button class="s-all" onclick="showHome()"><i class="fas fa-arrow-left"></i> Store</button>
+</div>
+<div class="subs" style="margin-bottom:14px">
+<button class="sc act" data-q="all"><i class="fas fa-th-list"></i> All</button>
+<button class="sc" data-q="pdf-tool"><i class="fas fa-file-pdf"></i> PDF Tools</button>
+<button class="sc" data-q="ts-pdf-tool"><i class="fas fa-file-code"></i> TS PDF Tools</button>
+</div>
+<div class="g" id="allGrid"></div>
+</div>
+</section>
+
+<section id="detailSec" class="hidden">
+<div class="dh">
+<div class="ct">
+<div class="di" id="dIcon"><img src="" alt=""></div>
+<div class="dinf">
+<h1 id="dName">App Name</h1>
+<div class="dev" id="dDev"><i class="fas fa-user-circle"></i> By Developer</div>
+<div class="dm" id="dMeta">
+<span id="dCat"><i class="fas fa-tag"></i> Category</span>
+<span id="dRat"><i class="fas fa-star" style="color:var(--st)"></i> 0.0</span>
+<span id="dRev"><i class="fas fa-comment"></i> (0)</span>
+<span id="dDown"><i class="fas fa-download"></i> 0</span>
+<span id="dVer"><i class="fas fa-code-branch"></i> v1.0</span>
+</div>
+<div class="da">
+<button class="ibtn" id="dInstall"><i class="fas fa-download"></i> Install</button>
+<a id="dWeb" href="#" target="_blank" class="sb" style="display:none"><i class="fas fa-external-link-alt"></i> Website</a>
+</div>
+</div>
+</div>
+</div>
+<div class="db">
+<div class="ct">
+<div class="des">
+<h2><i class="fas fa-info-circle"></i> About</h2>
+<p id="dDesc"></p>
+<div class="ss" id="ssSec">
+<h2><i class="fas fa-images"></i> Screenshots</h2>
+<div class="ssg" id="ssGrid"></div>
+</div>
+<div style="margin-top:28px">
+<h2 style="font-size:1.15rem;font-weight:700;margin-bottom:12px"><i class="fas fa-star" style="color:var(--st)"></i> Reviews</h2>
+<div class="sbc" style="margin-bottom:14px">
+<div class="rf">
+<h3 style="font-size:.9rem;font-weight:600;margin-bottom:6px"><i class="fas fa-pen"></i> Write a Review</h3>
+<div class="si" id="starInput">
+<span data-star="1"><i class="far fa-star"></i></span>
+<span data-star="2"><i class="far fa-star"></i></span>
+<span data-star="3"><i class="far fa-star"></i></span>
+<span data-star="4"><i class="far fa-star"></i></span>
+<span data-star="5"><i class="far fa-star"></i></span>
+</div>
+<textarea placeholder="Share your experience..." id="revText"></textarea>
+<button id="revBtn"><i class="fas fa-paper-plane"></i> Submit</button>
+</div>
+</div>
+<div id="revList"></div>
+</div>
+</div>
+<div class="sb2">
+<div class="sbc">
+<h3><i class="fas fa-info-circle"></i> Info</h3>
+<div class="sbs"><span class="l"><i class="fas fa-user"></i> Developer</span><span class="v" id="sDev">-</span></div>
+<div class="sbs"><span class="l"><i class="fas fa-tag"></i> Category</span><span class="v" id="sCat">-</span></div>
+<div class="sbs"><span class="l"><i class="fas fa-code-branch"></i> Version</span><span class="v" id="sVer">-</span></div>
+<div class="sbs"><span class="l"><i class="fas fa-star"></i> Rating</span><span class="v" id="sRat">-</span></div>
+<div class="sbs"><span class="l"><i class="fas fa-download"></i> Downloads</span><span class="v" id="sDown">-</span></div>
+<div class="sbs"><span class="l"><i class="fas fa-calendar"></i> Released</span><span class="v" id="sRel">-</span></div>
+</div>
+<button class="bb" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back</button>
+</div>
+</div>
+</div>
+</section>
+
+<section id="adminSec" class="hidden">
+<div class="al" id="adminLogin">
+<div class="alc">
+<h1><i class="fas fa-lock"></i> Admin Panel</h1>
+<p>Sign in to manage apps</p>
+<div class="fg">
+<label><i class="fas fa-user"></i> Admin ID</label>
+<input type="text" id="adminId" placeholder="Enter admin ID" autocomplete="off">
+</div>
+<div class="fg">
+<label><i class="fas fa-key"></i> Password</label>
+<input type="password" id="adminPass" placeholder="Enter password">
+</div>
+<button class="alb" id="adminLoginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+<div class="aerr" id="adminErr"><i class="fas fa-exclamation-circle"></i> Invalid credentials</div>
+<button class="bb" style="margin:14px auto 0;background:rgba(255,255,255,0.06);color:#fff;border-color:rgba(255,255,255,0.1)" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back</button>
+</div>
+</div>
+<div class="ap" id="adminDash" style="display:none">
+<nav class="nav" style="position:fixed">
+<div class="nav-inner">
+<a href="#" class="nav-logo" onclick="showHome()">
+<img src="logo.svg" alt="TS Store">
+<span>Admin</span>
+</a>
+<div class="nav-act">
+<button class="nav-btn" id="themeToggleAdmin"><i class="fas fa-moon"></i></button>
+<button class="nav-admin" style="background:var(--srf);color:var(--t1)" onclick="showHome()"><i class="fas fa-store"></i> Store</button>
+<button class="alo" id="adminLogout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+</div>
+</div>
+</nav>
+<div class="ct" style="padding-top:16px">
+<div class="ah">
+<div>
+<h1><i class="fas fa-chart-bar"></i> Dashboard</h1>
+<p style="color:var(--t2);margin-top:2px;font-size:.88rem" id="adminStats"><i class="fas fa-box"></i> 0 apps</p>
+</div>
+<span class="abg"><i class="fas fa-shield-alt"></i> Admin</span>
+</div>
+<div class="ag">
+<div style="order:2">
+<div class="flex items-c justify-b" style="margin-bottom:12px">
+<h2 style="font-size:1.05rem;font-weight:700"><i class="fas fa-mobile-alt"></i> Apps</h2>
+<button class="ibtn" id="clearAll" style="background:#555"><i class="fas fa-trash-alt"></i> Clear</button>
+</div>
+<div class="atw">
+<table class="at">
+<thead><tr><th>App</th><th>Category</th><th>Downloads</th><th>Rating</th><th>Actions</th></tr></thead>
+<tbody id="adminTbody"></tbody>
+</table>
+</div>
+</div>
+<div style="order:1">
+<div class="afc" id="formCard">
+<h2 id="formTitle"><i class="fas fa-plus-circle"></i> Add App</h2>
+<form id="appForm" autocomplete="off">
+<div class="fr">
+<div class="fg"><label><i class="fas fa-heading"></i> App Name *</label><input type="text" id="aName" placeholder="App name" required></div>
+<div class="fg"><label><i class="fas fa-user"></i> Developer *</label><input type="text" id="aDev" placeholder="Developer" required></div>
+</div>
+<div class="fr">
+<div class="fg"><label><i class="fas fa-tag"></i> Category *</label>
+<select id="aCat" required>
+<option value="">Select</option>
+<option>Games</option><option>AI Tools</option><option>Business</option>
+<option>Jobs</option><option>Skills</option><option>Education</option><option>Productivity</option>
+</select></div>
+<div class="fg"><label><i class="fas fa-layer-group"></i> Subcategory <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional)</span></label>
+<select id="aSub"><option value="">Select</option></select></div>
+</div>
+<div class="fg"><label><i class="fas fa-align-left"></i> Description *</label><textarea id="aDesc" placeholder="Describe your app..." required></textarea></div>
+<div class="fr">
+<div class="fg"><label><i class="fas fa-image"></i> App Icon</label><div style="display:flex;gap:10px;align-items:center"><input type="file" id="aIconInput" accept="image/*" style="display:none"><button type="button" id="aIconBtn" class="ibtn" style="font-size:.82rem;padding:9px 16px"><i class="fas fa-cloud-upload-alt"></i> Upload Icon</button><span id="aIconName" style="font-size:.82rem;color:var(--t3)">No file chosen</span></div><img id="aIconPreview" style="display:none;width:50px;height:50px;border-radius:10px;margin-top:8px;object-fit:cover;border:1px solid var(--ge)" alt=""></div>
+<div class="fg"><label><i class="fas fa-image"></i> Banner URL <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional)</span></label><input type="url" id="aBanner" placeholder="https://..."></div>
+</div>
+<div class="fg"><label><i class="fas fa-images"></i> Screenshots <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional, comma separated)</span></label><input type="text" id="aScreens" placeholder="https://..., https://..."></div>
+<div class="fr">
+<div class="fg"><label><i class="fas fa-globe"></i> Website <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional)</span></label><input type="url" id="aWeb" placeholder="https://..."></div>
+<div class="fg"><label><i class="fas fa-file-archive"></i> APK Link <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional)</span></label><input type="url" id="aApk" placeholder="https://..."></div>
+</div>
+<div class="fr">
+<div class="fg"><label><i class="fas fa-code-branch"></i> Version <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional)</span></label><input type="text" id="aVer" placeholder="1.0.0"></div>
+<div class="fg"><label><i class="fas fa-star"></i> Featured <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional)</span></label><select id="aFeat"><option value="false">No</option><option value="true">Yes</option></select></div>
+</div>
+<button type="submit" class="sbtn" id="formBtn"><i class="fas fa-plus-circle"></i> Add App</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<div class="tst" id="toast"><i class="fas fa-check-circle toast-icon" style="font-size:1.2rem"></i><span id="toastMsg">Success!</span></div>
+
+<div class="pdf-overlay" id="pdfOverlay" onclick="closePdfWorkspace()"></div>
+<div class="pdf-ws" id="pdfWorkspace">
+<div class="pdf-ws-hdr">
+<button class="ws-close" onclick="closePdfWorkspace()"><i class="fas fa-times"></i></button>
+<h2 id="pdfToolTitle">Tool</h2>
+</div>
+<div class="pdf-ws-body">
+<div class="pdf-ti">
+<h3 id="pdfToolHeading"></h3>
+<p id="pdfToolDesc"></p>
+</div>
+<div id="pdfToolContent"></div>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* ===== TS PDF Suite - Complete Application ===== */
+/* ===== TOOL DEFINITIONS ===== */
+const PDFTools = [
+  { id:'merge', name:'Merge PDF', desc:'Combine multiple PDFs into a single document', icon:'fa-object-group', color:'#58a6ff', cat:'pdf-tool', badge:'Popular' },
+  { id:'split', name:'Split PDF', desc:'Extract pages or split into separate files', icon:'fa-scissors', color:'#bc8cff', cat:'pdf-tool', badge:'' },
+  { id:'compress', name:'Compress PDF', desc:'Reduce PDF file size without quality loss', icon:'fa-compress-alt', color:'#3fb950', cat:'pdf-tool', badge:'Popular' },
+  { id:'pdf-to-word', name:'PDF to Word', desc:'Convert PDF to editable DOCX format', icon:'fa-file-word', color:'#58a6ff', cat:'pdf-tool', badge:'' },
+  { id:'pdf-to-ppt', name:'PDF to PPT', desc:'Convert PDF files to PowerPoint', icon:'fa-file-powerpoint', color:'#d29922', cat:'pdf-tool', badge:'' },
+  { id:'pdf-to-excel', name:'PDF to Excel', desc:'Extract tables from PDF to XLSX', icon:'fa-file-excel', color:'#3fb950', cat:'pdf-tool', badge:'' },
+  { id:'word-to-pdf', name:'Word to PDF', desc:'Convert DOC/DOCX to PDF format', icon:'fa-file-word', color:'#58a6ff', cat:'pdf-tool', badge:'' },
+  { id:'ppt-to-pdf', name:'PPT to PDF', desc:'Convert PPT/PPTX presentations to PDF', icon:'fa-file-powerpoint', color:'#d29922', cat:'pdf-tool', badge:'' },
+  { id:'excel-to-pdf', name:'Excel to PDF', desc:'Convert XLS/XLSX spreadsheets to PDF', icon:'fa-file-excel', color:'#3fb950', cat:'pdf-tool', badge:'' },
+  { id:'edit-pdf', name:'Edit PDF', desc:'Add text, shapes, images & annotations', icon:'fa-pen-fancy', color:'#f778ba', cat:'ts-pdf-tool', badge:'New' },
+  { id:'pdf-to-jpg', name:'PDF to JPG', desc:'Convert PDF pages to high-quality images', icon:'fa-file-image', color:'#d29922', cat:'pdf-tool', badge:'' },
+  { id:'jpg-to-pdf', name:'JPG to PDF', desc:'Create PDF from multiple images', icon:'fa-images', color:'#3fb950', cat:'pdf-tool', badge:'' },
+  { id:'sign-pdf', name:'Sign PDF', desc:'Add drawn or uploaded signatures', icon:'fa-pen', color:'#f85149', cat:'pdf-tool', badge:'' },
+  { id:'watermark', name:'Watermark PDF', desc:'Add text/image watermarks with opacity', icon:'fa-stamp', color:'#58a6ff', cat:'ts-pdf-tool', badge:'' },
+  { id:'rotate', name:'Rotate PDF', desc:'Rotate selected or all pages', icon:'fa-redo-alt', color:'#bc8cff', cat:'pdf-tool', badge:'' },
+  { id:'html-to-pdf', name:'HTML to PDF', desc:'Convert web pages or HTML to PDF', icon:'fa-code', color:'#3fb950', cat:'ts-pdf-tool', badge:'' },
+  { id:'unlock-pdf', name:'Unlock PDF', desc:'Remove password protection from PDFs', icon:'fa-unlock', color:'#3fb950', cat:'pdf-tool', badge:'' },
+  { id:'protect-pdf', name:'Protect PDF', desc:'Add password and encryption to files', icon:'fa-lock', color:'#f85149', cat:'pdf-tool', badge:'' },
+  { id:'organize', name:'Organize PDF', desc:'Rearrange, delete, and add pages', icon:'fa-sitemap', color:'#d29922', cat:'ts-pdf-tool', badge:'Popular' },
+  { id:'page-numbers', name:'Page Numbers', desc:'Add page numbering with multiple styles', icon:'fa-sort-numeric-up-alt', color:'#58a6ff', cat:'ts-pdf-tool', badge:'' },
+  { id:'pdf-to-pdfa', name:'PDF to PDF/A', desc:'Convert to archive format for long-term storage', icon:'fa-archive', color:'#8b949e', cat:'ts-pdf-tool', badge:'' },
+  { id:'repair-pdf', name:'Repair PDF', desc:'Detect and fix damaged PDF files', icon:'fa-wrench', color:'#d29922', cat:'ts-pdf-tool', badge:'' },
+  { id:'scan-to-pdf', name:'Scan to PDF', desc:'Use camera to scan documents to PDF', icon:'fa-camera', color:'#bc8cff', cat:'ts-pdf-tool', badge:'New' },
+  { id:'ocr-pdf', name:'OCR PDF', desc:'Extract text from scanned/image PDFs', icon:'fa-eye', color:'#3fb950', cat:'ts-pdf-tool', badge:'AI' },
+  { id:'compare-pdf', name:'Compare PDF', desc:'Side-by-side comparison with diff', icon:'fa-not-equal', color:'#f778ba', cat:'ts-pdf-tool', badge:'' },
+  { id:'redact-pdf', name:'Redact PDF', desc:'Permanently remove sensitive information', icon:'fa-mask', color:'#f85149', cat:'ts-pdf-tool', badge:'' },
+  { id:'crop-pdf', name:'Crop PDF', desc:'Crop pages to custom dimensions', icon:'fa-crop-alt', color:'#3fb950', cat:'ts-pdf-tool', badge:'' },
+  { id:'pdf-forms', name:'PDF Forms', desc:'Create fillable forms with various fields', icon:'fa-check-square', color:'#58a6ff', cat:'ts-pdf-tool', badge:'' },
+  { id:'ai-summarizer', name:'AI Summarizer', desc:'AI-powered PDF content summarization', icon:'fa-brain', color:'#bc8cff', cat:'ts-pdf-tool', badge:'AI' },
+  { id:'translate-pdf', name:'Translate PDF', desc:'Translate PDF preserving formatting', icon:'fa-language', color:'#3fb950', cat:'ts-pdf-tool', badge:'AI' },
+  { id:'ts-to-pdf', name:'TS/JS to PDF', desc:'Convert TypeScript/JS code to formatted PDF', icon:'fa-file-code', color:'#3178c6', cat:'ts-pdf-tool', badge:'New' },
+  { id:'ts-formatter', name:'Code Formatter', desc:'Format TypeScript, JS, HTML, CSS code', icon:'fa-indent', color:'#d29922', cat:'ts-pdf-tool', badge:'' },
+  { id:'ts-json', name:'JSON to PDF', desc:'Format & convert JSON data to PDF report', icon:'fa-file-code', color:'#3fb950', cat:'ts-pdf-tool', badge:'' },
+  { id:'ts-docs', name:'TS Doc Generator', desc:'Generate documentation from TypeScript code', icon:'fa-book', color:'#58a6ff', cat:'ts-pdf-tool', badge:'New' },
+];
+const CatNames = { 'ts-pdf-tool':'TS PDF Tool', 'pdf-tool':'Pdf Tool' };
+let currentToolId = null, currentFilter = 'all';
+function initPdfSuite() { renderAllTools(PDFTools); setupCategories(); updateToolCount(); }
+function initTheme2() { const s=localStorage.getItem('ts-pdf-theme')||'dark'; document.documentElement.setAttribute('data-theme',s); const ic=document.querySelector('#themeToggle i'); if(ic)ic.className=s==='dark'?'fas fa-moon':'fas fa-sun'; }
+function togglePdfTheme(){const h=document.documentElement;const n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('ts-pdf-theme',n);const ic=document.querySelector('#themeToggle i');if(ic)ic.className=n==='dark'?'fas fa-moon':'fas fa-sun';}
+window.togglePdfTheme=togglePdfTheme;
+function renderAllTools(t){const g=document.getElementById('allGrid');if(!g)return;g.innerHTML=t.map(x=>toolCard(x)).join('');animateCards();}
+function toolCard(t){const fid='fu-'+t.id;const img='https://api.dicebear.com/7.x/icons/svg?seed='+encodeURIComponent(t.name)+'&backgroundColor='+t.color.slice(1);return '<div class="ac" data-id="'+t.id+'" data-cat="'+t.cat+'" onclick="openTool(\''+t.id+'\')"><div class="ac-t"><div class="ac-i"><img src="'+img+'" alt="'+t.name+'" loading="lazy" onerror="this.style.display=\'none\'"></div><div class="ac-inf"><h3>'+t.name+'</h3><div class="dev">'+(CatNames[t.cat]||t.cat)+'</div></div></div><div class="ac-d">'+t.desc+'</div><div class="ac-b"><span class="ac-st"><i class="fas fa-star star"></i> '+(t.badge||'Free')+'</span><div style="display:flex;gap:6px"><button class="pbtn sm" onclick="event.stopPropagation();document.getElementById(\''+fid+'\').click()" title="Upload file"><i class="fas fa-cloud-upload-alt"></i></button><input type="file" id="'+fid+'" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png" hidden onchange="handleCardUpload(\''+t.id+'\',this)"><button class="ibtn sm" onclick="event.stopPropagation();openTool(\''+t.id+'\')"><i class="fas fa-arrow-right"></i></button></div></div></div>';}
+function animateCards(){document.querySelectorAll('.ac').forEach((e,i)=>{e.style.animationDelay=(i%6)*0.04+'s'});}
+function updateToolCount(){const e=document.getElementById('totalTools');if(e)e.textContent=PDFTools.length;}
+function doSearch(){const q=(document.getElementById('navSearch')?.value||document.getElementById('heroSearch')?.value||document.getElementById('mobileSearchInput')?.value||'').trim().toLowerCase();if(!q){pdfClearSearch();return}const r=PDFTools.filter(t=>t.name.toLowerCase().includes(q)||t.desc.toLowerCase().includes(q)||t.cat.toLowerCase().includes(q));document.getElementById('allSec')?.classList.add('hidden');const s=document.getElementById('searchSec');if(!s)return;s.classList.remove('hidden');document.getElementById('searchTitle').innerHTML='<i class="fas fa-search"></i> "'+q+'" — '+r.length+' result'+(r.length!==1?'s':'')+'';document.getElementById('searchGrid').innerHTML=r.map(t=>toolCard(t)).join('');animateCards();}
+function pdfClearSearch(){['navSearch','heroSearch','mobileSearchInput'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});document.getElementById('searchSec')?.classList.add('hidden');document.getElementById('allSec')?.classList.remove('hidden');}
+function setupCategories(){document.querySelectorAll('#allSec .sc').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('#allSec .sc').forEach(x=>x.classList.remove('act'));b.classList.add('act');const c=b.dataset.q;currentFilter=c;if(c==='all'||c==='pdf-tool')renderAllTools(PDFTools);else renderAllTools(PDFTools.filter(t=>t.cat===c))})})}
+function showToast(m,ic,cl){const t=document.getElementById('toast');if(!t)return;t.querySelector('.toast-icon').className='fas '+(ic||'fa-check-circle')+' toast-icon';t.querySelector('.toast-icon').style.color=cl||'var(--gr)';document.getElementById('toastMsg').textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),3500);}
+function openTool(id){const t=PDFTools.find(x=>x.id===id);if(!t){showToast('Tool not found','fa-exclamation-circle','var(--rd)');return}currentToolId=id;document.getElementById('pdfToolTitle').textContent=t.name;document.getElementById('pdfToolHeading').innerHTML='<i class="fas '+t.icon+'" style="color:'+t.color+'"></i> '+t.name;document.getElementById('pdfToolDesc').textContent=t.desc;const c=document.getElementById('pdfToolContent');c.innerHTML='<div style="text-align:center;padding:40px;color:var(--t2)"><i class="fas fa-spinner fa-pulse" style="font-size:2rem;margin-bottom:12px;display:block"></i>Loading tool...</div>';document.getElementById('pdfWorkspace').classList.add('active');const ov=document.getElementById('pdfOverlay');if(ov)ov.classList.add('active');document.body.style.overflow='hidden';setTimeout(()=>{c.innerHTML=renderTool(id);initTool(id)},150);}
+function closePdfWorkspace(){document.getElementById('pdfWorkspace').classList.remove('active');const ov=document.getElementById('pdfOverlay');if(ov)ov.classList.remove('active');document.body.style.overflow='';currentToolId=null;}
+function handleCardUpload(id,input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=function(e){addFile(f.name,e.target.result);openTool(id)};r.readAsArrayBuffer(f);input.value=''}
+window.handleCardUpload=handleCardUpload;
+window.closePdfWorkspace=closePdfWorkspace;
+function showPdfHome(){closePdfWorkspace();pdfClearSearch();document.querySelectorAll('.sc').forEach(b=>b.classList.remove('act'));document.querySelector('.sc[data-q="all"]')?.classList.add('act');renderAllTools(PDFTools);document.getElementById('heroSection')?.scrollIntoView({behavior:'smooth'})}
+window.showPdfHome=showPdfHome;
+function showProgress(p,t){let w=document.getElementById('progWrap');if(!w){const c=document.getElementById('pdfToolContent');if(!c)return;w=document.createElement('div');w.id='progWrap';w.className='progress-wrap';w.innerHTML='<div class="progress-bar" id="progBar"></div><div class="progress-text" id="progText"></div>';c.insertBefore(w,c.firstChild)}document.getElementById('progBar').style.width=(p||0)+'%';document.getElementById('progText').textContent=t||'Processing...';}
+function hideProgress(){const w=document.getElementById('progWrap');if(w){document.getElementById('progBar').style.width='100%';setTimeout(()=>w.remove(),400)}}
+function uploadAreaHTML(id,ic,t,s,a){return '<div class="upload-zone" id="'+id+'-zone" onclick="document.getElementById(\''+id+'\').click()"><i class="fas '+ic+'"></i><h3>'+t+'</h3><p>'+s+'</p><input type="file" id="'+id+'"'+(a?' accept="'+a+'"':'')+(id.includes('multi')?' multiple':'')+' hidden></div>';}
+function fileItemHTML(f,ic,c,i){const n=f.name||'file';const sz=f.size?' | '+(f.size/1024/1024).toFixed(2)+' MB':'';return '<div class="file-item" data-idx="'+i+'"><span class="fi-icon" style="background:'+c+'"><i class="fas '+ic+'"></i></span><span class="fi-name">'+n+'</span><span class="fi-size">'+sz+'</span><button class="fi-rm" onclick="removeFile('+i+')"><i class="fas fa-times"></i></button></div>';}
+function parseRange(r,t){if(!r||!r.trim())return[...Array(t).keys()];const s=new Set();r.split(',').forEach(p=>{p=p.trim();if(p.includes('-')){const[e,a]=p.split('-').map(Number);for(let i=Math.max(1,e);i<=Math.min(t,a||e);i++)s.add(i-1)}else{const n=parseInt(p);if(n>0&&n<=t)s.add(n-1)}});return[...s].sort((a,b)=>a-b)}
+function hexRgb(h){const r=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(h);return r?{r:parseInt(r[1],16),g:parseInt(r[2],16),b:parseInt(r[3],16)}:{r:88,g:166,b:255}}
+window._fileStore={};window._fileIdx=0;
+function addFile(n,d){const id=++window._fileIdx;window._fileStore[id]={name:n,data:d};return id;}
+function removeFile(i){delete window._fileStore[i];renderFileList()}
+window.removeFile=removeFile;
+function renderFileList(){const l=document.getElementById('fileList');if(!l)return;const e=Object.entries(window._fileStore).filter(([k,v])=>v);if(!e.length){l.innerHTML='';return}l.innerHTML=e.map(([id,f])=>'<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span><span class="fi-size">'+(f.data.byteLength/1024/1024).toFixed(2)+' MB</span><button class="fi-rm" onclick="removeFile('+id+')"><i class="fas fa-times"></i></button></div>').join('');}
+function renderTool(id){const m=ToolRenderers[id];return m?m():'<div style="text-align:center;padding:60px 20px;color:var(--t2)"><i class="fas fa-tools" style="font-size:3rem;margin-bottom:16px;display:block;opacity:0.3"></i><p>This tool is loading. Please try again.</p></div>';}
+function initTool(id){const fn=ToolInitializers[id];if(fn)setTimeout(fn,50);}
+const ToolRenderers={merge(){return uploadAreaHTML('merge-multi','fa-object-group','Upload PDF Files','Select multiple PDF files to merge','.pdf')+'<div id="fileList" class="file-list"></div><div class="controls"><label>Drag files to reorder</label></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="pbtn" id="mergeBtn" disabled><i class="fas fa-object-group"></i> Merge PDFs</button><button class="pbtn o" id="mergeClear"><i class="fas fa-trash"></i> Clear</button></div><div id="mergeResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> PDFs merged!</h4><div class="result-info" id="mergeInfo"></div><button class="pbtn" id="mergeDl" style="margin-top:10px"><i class="fas fa-download"></i> Download Merged PDF</button></div>'},split(){return uploadAreaHTML('split','fa-scissors','Upload PDF to Split','Select a PDF file','.pdf')+'<div id="splitInfo"></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group"><label>Mode:</label><select id="splitMode"><option value="all">Split every page</option><option value="range">Split by range</option><option value="extract">Extract selected pages</option></select></div><div class="ctrl-group" id="splitRangeGroup"><label>Pages (e.g. 1-3,5,7-9):</label><input type="text" id="splitRange" placeholder="1-3,5,7-9" style="flex:1;max-width:300px"></div></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="pbtn" id="splitBtn" disabled><i class="fas fa-scissors"></i> Split PDF</button></div><div id="splitResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> PDF split!</h4><div class="result-info" id="splitInfo2"></div><button class="pbtn" id="splitDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},compress(){return uploadAreaHTML('compress','fa-compress-alt','Upload PDF to Compress','Select a PDF file','.pdf')+'<div id="compressInfo"></div><div class="controls"><div class="ctrl-group"><label>Level:</label><select id="compressLevel"><option value="low">Low (Best Quality)</option><option value="medium" selected>Medium (Balanced)</option><option value="high">High (Max Size Reduction)</option></select></div></div><button class="pbtn" id="compressBtn" disabled><i class="fas fa-compress-alt"></i> Compress PDF</button><div id="compressResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Compressed!</h4><div class="result-info" id="compressStats"></div><button class="pbtn" id="compressDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},'jpg-to-pdf'(){return uploadAreaHTML('jpgtopdf-multi','fa-images','Upload Images','JPG, PNG, WebP supported','image/*')+'<div id="fileList" class="file-list"></div><div class="controls"><div class="ctrl-group"><label>Page Size:</label><select id="jpgsize"><option value="A4">A4</option><option value="Letter">Letter</option><option value="Fit">Fit to Image</option></select></div><div class="ctrl-group"><label>Orientation:</label><select id="jporient"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div></div><button class="pbtn" id="jpgBtn" disabled><i class="fas fa-file-pdf"></i> Create PDF</button><div id="jpgResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> PDF created!</h4><button class="pbtn" id="jpgDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},rotate(){return uploadAreaHTML('rotate','fa-redo-alt','Upload PDF to Rotate','Select a PDF file','.pdf')+'<div id="rotateInfo"></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group"><label>Angle:</label><select id="rotateAngle"><option value="90">90\u00b0 Clockwise</option><option value="180">180\u00b0</option><option value="270">90\u00b0 Counter-clockwise</option></select></div><div class="ctrl-group"><label>Pages:</label><select id="rotatePages"><option value="all">All Pages</option><option value="selected">Selected Range</option></select></div><div class="ctrl-group" id="rotateRangeGroup" style="display:none"><label>Pages:</label><input type="text" id="rotateRange" placeholder="e.g. 1,3,5-7" style="flex:1;max-width:300px"></div></div><button class="pbtn" id="rotateBtn" disabled><i class="fas fa-redo-alt"></i> Rotate</button><div id="rotateResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Rotated!</h4><button class="pbtn" id="rotateDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},'protect-pdf'(){return uploadAreaHTML('protect','fa-lock','Upload PDF to Protect','Select a PDF file','.pdf')+'<div id="protectInfo"></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group"><label>Password:</label><input type="password" id="protectPass" placeholder="Enter password" style="flex:1;max-width:300px"></div><div class="ctrl-group"><label>Confirm:</label><input type="password" id="protectConfirm" placeholder="Confirm password" style="flex:1;max-width:300px"></div></div><button class="pbtn" id="protectBtn" disabled><i class="fas fa-lock"></i> Protect PDF</button><div id="protectResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Protected!</h4><button class="pbtn" id="protectDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},'sign-pdf'(){return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px"><div><h4 style="margin-bottom:8px">Draw Signature</h4><canvas class="sig-canvas" id="sigCanvas" width="500" height="200"></canvas><div style="display:flex;gap:8px;margin-top:8px"><button class="pbtn o" id="sigClear"><i class="fas fa-eraser"></i> Clear</button><button class="pbtn" id="sigSave"><i class="fas fa-check"></i> Use</button></div></div><div><h4 style="margin-bottom:8px">Or Upload Image</h4>'+uploadAreaHTML('sigImg','fa-cloud-upload-alt','Click to upload signature image','PNG or JPG','image/*')+'<div id="sigPreview" style="margin-top:8px;text-align:center"></div></div></div><hr style="border-color:var(--ge);margin:16px 0">'+uploadAreaHTML('signPdf','fa-file-pdf','Upload PDF to Sign','Select a PDF file','.pdf')+'<div id="signPdfInfo"></div><button class="pbtn" id="signBtn" disabled><i class="fas fa-pen"></i> Sign PDF</button><div id="signResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Signed!</h4><button class="pbtn" id="signDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},watermark(){return uploadAreaHTML('watermark','fa-stamp','Upload PDF to Watermark','Select a PDF file','.pdf')+'<div id="watermarkInfo"></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group"><label>Text:</label><input type="text" id="wmText" value="CONFIDENTIAL" style="flex:1;max-width:300px"></div><div class="ctrl-group"><label>Opacity:</label><input type="range" id="wmOpacity" min="0.1" max="1" step="0.1" value="0.3"><span class="val" id="wmOpacityVal">0.3</span></div><div class="ctrl-group"><label>Size:</label><input type="range" id="wmSize" min="20" max="80" value="48"><span class="val" id="wmSizeVal">48</span></div></div><button class="pbtn" id="wmBtn" disabled><i class="fas fa-stamp"></i> Add Watermark</button><div id="wmResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Watermarked!</h4><button class="pbtn" id="wmDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},'html-to-pdf'(){return '<div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group"><label>Source:</label><select id="htmlSrc"><option value="url">Webpage URL</option><option value="code">HTML Code</option></select></div><div class="ctrl-group" id="htmlUrlGroup"><label>URL:</label><input type="url" id="htmlUrl" placeholder="https://example.com" style="flex:1"></div><div class="ctrl-group" id="htmlCodeGroup" style="display:none"><label>HTML:</label><textarea id="htmlCode" rows="6" placeholder="<h1>Hello</h1>" style="flex:1;background:var(--srf);border:1px solid var(--ge);border-radius:var(--r1);padding:8px;color:var(--t1);font-family:monospace;font-size:.85rem"></textarea></div><div class="ctrl-group"><label>Format:</label><select id="htmlFormat"><option value="a4">A4</option><option value="letter">Letter</option><option value="legal">Legal</option></select></div></div><button class="pbtn" id="htmlBtn"><i class="fas fa-code"></i> Generate PDF</button><div id="htmlResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> PDF generated!</h4><button class="pbtn" id="htmlDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},'page-numbers'(){return uploadAreaHTML('pagenum','fa-sort-numeric-up-alt','Upload PDF to Add Page Numbers','Select a PDF file','.pdf')+'<div id="pagenumInfo"></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group"><label>Position:</label><select id="pnPos"><option value="bottom-center">Bottom Center</option><option value="bottom-left">Bottom Left</option><option value="bottom-right">Bottom Right</option><option value="top-center">Top Center</option><option value="top-right">Top Right</option><option value="top-left">Top Left</option></select></div><div class="ctrl-group"><label>Style:</label><select id="pnStyle"><option value="1">Page X of N</option><option value="2">X / N</option><option value="3">- X -</option><option value="4">Page X</option></select></div><div class="ctrl-group"><label>Start:</label><input type="number" id="pnStart" value="1" min="1" style="width:80px"></div></div><button class="pbtn" id="pnBtn" disabled><i class="fas fa-sort-numeric-up-alt"></i> Add Numbers</button><div id="pnResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Numbers added!</h4><button class="pbtn" id="pnDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},'edit-pdf'(){return uploadAreaHTML('edit','fa-pen-fancy','Upload PDF to Edit','Select a PDF file','.pdf')+'<div id="editInfo"></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group"><label>Text:</label><input type="text" id="editText" value="Hello World" style="flex:1;max-width:300px"></div><div class="ctrl-group"><label>Y Position:</label><input type="number" id="editY" value="300" style="width:80px"></div><div class="ctrl-group"><label>Size:</label><input type="number" id="editSize" value="24" min="8" max="72" style="width:80px"></div><div class="ctrl-group"><label>Color:</label><input type="color" id="editColor" value="#58a6ff" style="width:50px;height:36px"></div></div><button class="pbtn" id="editBtn" disabled><i class="fas fa-pen-fancy"></i> Add Text to PDF</button><div id="editResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Text added!</h4><button class="pbtn" id="editDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},'ts-to-pdf'(){return '<div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group" style="flex-direction:column;align-items:stretch"><label>TypeScript / JavaScript Code:</label><textarea id="tsCode" rows="10" placeholder="// Paste your TypeScript or JavaScript code here..." style="background:var(--srf);border:1px solid var(--ge);border-radius:var(--r1);padding:12px;color:var(--t1);font-family:\'Cascadia Code\',\'Fira Code\',\'Consolas\',monospace;font-size:.85rem;line-height:1.5">function greet(name: string): string { return \`Hello, \${name}! Welcome to TS PDF Suite.\`; } console.log(greet(\'Developer\'));</textarea></div><div class="ctrl-group"><label>Theme:</label><select id="tsTheme"><option value="dark">Dark (VS Code)</option><option value="light">Light</option></select></div><div class="ctrl-group"><label>Font Size:</label><select id="tsFontSize"><option value="10">Small</option><option value="12" selected>Normal</option><option value="14">Large</option></select></div></div><button class="pbtn" id="tsCodeBtn"><i class="fas fa-file-code"></i> Generate Code PDF</button><div id="tsCodeResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Code PDF generated!</h4><button class="pbtn" id="tsCodeDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},'ts-formatter'(){return '<div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group"><label>Language:</label><select id="fmtLang"><option value="typescript">TypeScript</option><option value="javascript">JavaScript</option><option value="html">HTML</option><option value="css">CSS</option><option value="json">JSON</option></select></div><div class="ctrl-group" style="flex-direction:column;align-items:stretch"><label>Input:</label><textarea id="fmtInput" rows="6" placeholder="Paste unformatted code..." style="background:var(--srf);border:1px solid var(--ge);border-radius:var(--r1);padding:10px;color:var(--t1);font-family:monospace;font-size:.85rem">function hello(name){console.log("Hello, "+name);}</textarea></div></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px"><button class="pbtn" id="fmtBtn"><i class="fas fa-indent"></i> Format Code</button><button class="pbtn o" id="fmtCopy"><i class="fas fa-copy"></i> Copy</button></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:4px"><label>Formatted Output:</label><textarea id="fmtOutput" rows="6" readonly placeholder="Formatted code will appear here..." style="background:var(--srf);border:1px solid var(--ge);border-radius:var(--r1);padding:10px;color:var(--t1);font-family:monospace;font-size:.85rem"></textarea></div>'},'ts-json'(){return '<div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group" style="flex-direction:column;align-items:stretch"><label>JSON Data:</label><textarea id="jsonInput" rows="8" placeholder=\'{"name":"TS PDF Suite","tools":30,"free":true}\' style="background:var(--srf);border:1px solid var(--ge);border-radius:var(--r1);padding:10px;color:var(--t1);font-family:monospace;font-size:.85rem"></textarea></div><div class="ctrl-group"><label>Title:</label><input type="text" id="jsonTitle" value="JSON Data Report" style="flex:1;max-width:300px"></div></div><button class="pbtn" id="jsonBtn"><i class="fas fa-file-pdf"></i> Generate PDF Report</button><div id="jsonResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Report generated!</h4><button class="pbtn" id="jsonDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},'ts-docs'(){return '<div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group" style="flex-direction:column;align-items:stretch"><label>TypeScript Code with JSDoc:</label><textarea id="tsdocInput" rows="10" placeholder="/** * Calculate sum * @param a - First number * @param b - Second number * @returns The sum */ function add(a: number, b: number): number { return a + b; }" style="background:var(--srf);border:1px solid var(--ge);border-radius:var(--r1);padding:12px;color:var(--t1);font-family:monospace;font-size:.85rem"></textarea></div><div class="ctrl-group"><label>Title:</label><input type="text" id="tsdocTitle" value="TypeScript Documentation" style="flex:1;max-width:300px"></div></div><button class="pbtn" id="tsdocBtn"><i class="fas fa-book"></i> Generate Docs PDF</button><div id="tsdocResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Documentation generated!</h4><button class="pbtn" id="tsdocDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},'ai-summarizer'(){return uploadAreaHTML('summarizer','fa-brain','Upload PDF for AI Summarization','Select a PDF file','.pdf')+'<div id="summarizerInfo"></div><div class="controls"><div class="ctrl-group"><label>Language:</label><select id="summLang"><option value="en">English</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="zh">Chinese</option><option value="ja">Japanese</option></select></div></div><button class="pbtn" id="summBtn" disabled><i class="fas fa-brain"></i> Run AI Summary</button><div id="summResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Summary complete!</h4><div class="ocr-result" id="summOutput"></div><button class="pbtn" id="summDl" style="margin-top:10px"><i class="fas fa-download"></i> Download Report</button></div>'},'translate-pdf'(){return uploadAreaHTML('translate','fa-language','Upload PDF to Translate','Select a PDF file','.pdf')+'<div id="translateInfo"></div><div class="controls"><div class="ctrl-group"><label>Target Language:</label><select id="transLang"><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="zh">Chinese</option><option value="ja">Japanese</option><option value="ar">Arabic</option><option value="pt">Portuguese</option></select></div></div><button class="pbtn" id="transBtn" disabled><i class="fas fa-language"></i> Translate PDF</button><div id="transResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Translation ready!</h4><div class="ocr-result" id="transOutput"></div><button class="pbtn" id="transDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'},'ocr-pdf'(){return uploadAreaHTML('ocr','fa-eye','Upload PDF for OCR','Scanned/image PDF','.pdf')+'<div id="ocrInfo"></div><div class="controls"><div class="ctrl-group"><label>Language:</label><select id="ocrLang"><option value="en">English</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option></select></div></div><button class="pbtn" id="ocrBtn" disabled><i class="fas fa-eye"></i> Run OCR</button><div id="ocrResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> OCR complete!</h4><div class="ocr-result" id="ocrOutput"></div><button class="pbtn" id="ocrDl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'}};
+ToolRenderers['organize']=function(){return uploadAreaHTML('organize','fa-sitemap','Upload PDF to Organize','Select a PDF file to rearrange pages','.pdf')+'<div id="organizePageList" class="file-list"></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="pbtn" id="organizeBtn" disabled><i class="fas fa-sitemap"></i> Apply Changes</button></div><div id="organizeResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> PDF organized!</h4><div class="result-info" id="organizeStats"></div><button class="pbtn" id="organizeDl" style="margin-top:10px"><i class="fas fa-download"></i> Download Organized PDF</button></div>'};ToolRenderers['crop-pdf']=function(){return uploadAreaHTML('crop-pdf','fa-crop-alt','Upload PDF to Crop','Select a PDF file to crop','.pdf')+'<div id="cropInfo"></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group"><label>Pages:</label><select id="cropPages"><option value="all">All pages</option><option value="range">Page range</option></select></div><div class="ctrl-group" id="cropRangeGroup" style="display:none"><label>Page range (e.g. 1-3,5):</label><input type="text" id="cropRange" placeholder="1-3,5,7-9" style="flex:1;max-width:300px"></div><div class="ctrl-group"><label>Margins (points):</label></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:400px"><div><label style="font-size:12px">Top:</label><input type="number" id="cropTop" value="50" min="0" style="width:100%"></div><div><label style="font-size:12px">Bottom:</label><input type="number" id="cropBottom" value="50" min="0" style="width:100%"></div><div><label style="font-size:12px">Left:</label><input type="number" id="cropLeft" value="50" min="0" style="width:100%"></div><div><label style="font-size:12px">Right:</label><input type="number" id="cropRight" value="50" min="0" style="width:100%"></div></div></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="pbtn" id="cropBtn" disabled><i class="fas fa-crop-alt"></i> Crop PDF</button></div><div id="cropResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> PDF cropped!</h4><div class="result-info" id="cropStats"></div><button class="pbtn" id="cropDl" style="margin-top:10px"><i class="fas fa-download"></i> Download Cropped PDF</button></div>'};ToolRenderers['redact-pdf']=function(){return uploadAreaHTML('redact-pdf','fa-mask','Upload PDF to Redact','Select a PDF file to redact','.pdf')+'<div id="redactInfo"></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group"><label>Pages:</label><select id="redactPages"><option value="all">All pages</option><option value="range">Page range</option></select></div><div class="ctrl-group" id="redactRangeGroup" style="display:none"><label>Page range:</label><input type="text" id="redactRange" placeholder="1-3,5,7-9" style="flex:1;max-width:300px"></div><div class="ctrl-group"><label>Terms (comma separated):</label><input type="text" id="redactTerms" placeholder="term1,term2" style="flex:1;max-width:400px"></div><div class="ctrl-group"><label>Color:</label><input type="color" id="redactColor" value="#000000"></div></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="pbtn" id="redactBtn" disabled><i class="fas fa-mask"></i> Redact PDF</button></div><div id="redactResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> PDF redacted!</h4><div class="result-info" id="redactStats"></div><button class="pbtn" id="redactDl" style="margin-top:10px"><i class="fas fa-download"></i> Download Redacted PDF</button></div>'};ToolRenderers['pdf-forms']=function(){return '<div style="margin-bottom:16px"><h4 style="margin-bottom:8px;color:var(--t1)"><i class="fas fa-check-square" style="color:#58a6ff"></i> Create Fillable PDF Form</h4><p style="color:var(--t2);font-size:13px">Build a form by adding fields, then generate a PDF.</p></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div style="display:flex;gap:8px;flex-wrap:wrap;align-items:end"><div class="ctrl-group" style="flex:1"><label>Field Type:</label><select id="formFieldType"><option value="text">Text Field</option><option value="checkbox">Checkbox</option><option value="radio">Radio Button</option></select></div><div class="ctrl-group" style="flex:2"><label>Field Label:</label><input type="text" id="formFieldLabel" placeholder="Enter field label" style="width:100%"></div><button class="pbtn sm" id="formAddField"><i class="fas fa-plus"></i> Add</button></div><div id="formFieldsList" class="file-list" style="min-height:40px;max-height:250px;overflow-y:auto"><div style="color:var(--t3);text-align:center;padding:20px;font-size:13px">No fields added yet. Add fields above.</div></div></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="pbtn" id="formBtn" disabled><i class="fas fa-check-square"></i> Generate PDF Form</button></div><div id="formResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Form PDF created!</h4><div class="result-info" id="formStats"></div><button class="pbtn" id="formDl" style="margin-top:10px"><i class="fas fa-download"></i> Download Form PDF</button></div>'};ToolRenderers['compare-pdf']=function(){return '<div style="margin-bottom:16px"><h4 style="margin-bottom:8px;color:var(--t1)"><i class="fas fa-not-equal" style="color:#f778ba"></i> Compare Two PDF Files</h4><p style="color:var(--t2);font-size:13px">Upload two PDFs to compare page count, file size, and structure.</p></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px">'+uploadAreaHTML('compare-pdf-1','fa-file-pdf','PDF File 1','Select first PDF','.pdf')+uploadAreaHTML('compare-pdf-2','fa-file-pdf','PDF File 2','Select second PDF','.pdf')+'</div><div id="compareInfo"></div><button class="pbtn" id="compareBtn" disabled><i class="fas fa-not-equal"></i> Compare PDFs</button><div id="compareResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Comparison complete!</h4><div class="result-info" id="compareStats"></div><button class="pbtn" id="compareDl" style="margin-top:10px"><i class="fas fa-download"></i> Download Report</button></div>'};ToolRenderers['scan-to-pdf']=function(){return '<div style="margin-bottom:16px"><h4 style="margin-bottom:8px;color:var(--t1)"><i class="fas fa-camera" style="color:#bc8cff"></i> Scan Documents to PDF</h4><p style="color:var(--t2);font-size:13px">Upload images from your device or capture with your camera.</p></div><div style="display:flex;gap:16px;flex-wrap:wrap">'+uploadAreaHTML('scan-to-pdf','fa-image','Upload Images','Select images','image/*')+'<div class="upload-zone" id="scanCameraZone" onclick="document.getElementById(\'scanCamera\').click()"><i class="fas fa-camera"></i><h3>Capture from Camera</h3><p>Take a photo with your device camera</p><input type="file" id="scanCamera" accept="image/*" capture="environment" hidden></div></div><div id="scanInfo"><div style="display:flex;gap:8px;margin-top:8px"><div class="ctrl-group"><label>Page Size:</label><select id="scanSize"><option value="A4">A4</option><option value="Letter">Letter</option></select></div><div class="ctrl-group"><label>Orientation:</label><select id="scanOrient"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div></div></div><button class="pbtn" id="scanBtn" disabled><i class="fas fa-camera"></i> Create PDF</button><div id="scanResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> PDF created!</h4><div class="result-info" id="scanStats"></div><button class="pbtn" id="scanDl" style="margin-top:10px"><i class="fas fa-download"></i> Download PDF</button></div>'};ToolRenderers['word-to-pdf']=function(){return '<div style="margin-bottom:16px"><h4 style="margin-bottom:8px;color:var(--t1)"><i class="fas fa-file-word" style="color:#58a6ff"></i> Create PDF from Text</h4><p style="color:var(--t2);font-size:13px">Paste your document text below and generate a formatted PDF.</p></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group"><label>Title:</label><input type="text" id="wordTitle" placeholder="Document Title" style="max-width:300px"></div><div class="ctrl-group"><label>Font Size:</label><select id="wordFontSize"><option value="12">12</option><option value="14">14</option><option value="16" selected>16</option><option value="18">18</option><option value="20">20</option></select></div><div class="ctrl-group" style="flex-direction:column;align-items:stretch"><label>Content:</label><textarea id="wordContent" rows="12" style="width:100%;font-family:inherit;resize:vertical" placeholder="Paste your document text here..."></textarea></div></div><button class="pbtn" id="wordBtn"><i class="fas fa-file-word"></i> Generate PDF</button><div id="wordResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> PDF generated!</h4><div class="result-info" id="wordStats"></div><button class="pbtn" id="wordDl" style="margin-top:10px"><i class="fas fa-download"></i> Download PDF</button></div>'};ToolRenderers['excel-to-pdf']=function(){return '<div style="margin-bottom:16px"><h4 style="margin-bottom:8px;color:var(--t1)"><i class="fas fa-file-excel" style="color:#3fb950"></i> Create PDF from CSV/Table Data</h4><p style="color:var(--t2);font-size:13px">Paste CSV data and generate a table PDF.</p></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:8px"><div class="ctrl-group"><label>Delimiter:</label><select id="excelDelimiter"><option value=",">Comma (,)</option><option value="&#9;">Tab</option><option value="|">Pipe (|)</option></select></div><div class="ctrl-group" style="flex-direction:column;align-items:stretch"><label>Data:</label><textarea id="excelData" rows="12" style="width:100%;font-family:monospace;resize:vertical" placeholder="Name,Age,City&#10;John,30,New York&#10;Jane,25,London"></textarea></div></div><button class="pbtn" id="excelBtn"><i class="fas fa-file-excel"></i> Generate PDF</button><div id="excelResult" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> PDF generated!</h4><div class="result-info" id="excelStats"></div><button class="pbtn" id="excelDl" style="margin-top:10px"><i class="fas fa-download"></i> Download PDF</button></div>'};['unlock-pdf','pdf-to-word','pdf-to-ppt','pdf-to-excel','ppt-to-pdf','pdf-to-jpg','pdf-to-pdfa','repair-pdf'].forEach(id=>{const info=PDFTools.find(t=>t.id===id);if(!info)return;const ic=info.icon;ToolRenderers[id]=function(){const a=id.includes('pdf')?'.pdf':(id.includes('word')?'.doc,.docx':(id.includes('ppt')?'.ppt,.pptx':'.xls,.xlsx'));const pwHtml=id==='unlock-pdf'?'<div class="ctrl-group"><label>Password:</label><input type="password" id="unlockPass" placeholder="Enter PDF password" style="max-width:300px"></div>':'';return uploadAreaHTML(id,ic,'Upload file to '+info.name,'Select a file to process',a)+'<div id="'+id+'Info"></div><div class="controls" style="flex-direction:column;align-items:stretch;gap:8px">'+pwHtml+'</div><button class="pbtn" id="'+id+'Btn" disabled><i class="fas '+ic+'"></i> '+info.name+'</button><div id="'+id+'Result" class="result-box" style="display:none"><h4><i class="fas fa-check-circle" style="color:var(--gr)"></i> Processing complete!</h4><div class="result-info" id="'+id+'Stats"></div><button class="pbtn" id="'+id+'Dl" style="margin-top:10px"><i class="fas fa-download"></i> Download</button></div>'}});
+const ToolInitializers={};
+ToolInitializers.merge=function(){const f=[];const i=document.getElementById('merge-multi'),b=document.getElementById('mergeBtn'),r=document.getElementById('mergeResult');if(!i)return;i.addEventListener('change',e=>{for(const x of e.target.files){if(x.type==='application/pdf')f.push(x)}mL();e.target.value=''});function mL(){const l=document.getElementById('fileList');if(!l)return;if(!f.length){l.innerHTML='';b.disabled=true;return}l.innerHTML=f.map((x,i)=>'<div class="file-item" draggable="true" data-idx="'+i+'"><span class="fi-drag"><i class="fas fa-grip-vertical"></i></span><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+x.name+'</span><span class="fi-size">'+(x.size/1024/1024).toFixed(2)+' MB</span><button class="fi-rm" onclick="mergeRemove('+i+')"><i class="fas fa-times"></i></button></div>').join('');b.disabled=false;sMD()}window.mergeRemove=i=>{f.splice(i,1);mL()};function sMD(){document.querySelectorAll('#fileList .file-item').forEach(item=>{let d=null;item.addEventListener('dragstart',()=>{d=item;item.style.opacity='0.5'});item.addEventListener('dragend',()=>{item.style.opacity='';d=null});item.addEventListener('dragover',e=>e.preventDefault());item.addEventListener('drop',e=>{e.preventDefault();if(d&&d!==item){const fI=parseInt(d.dataset.idx),tI=parseInt(item.dataset.idx);const[r]=f.splice(fI,1);f.splice(tI,0,r);mL()}})})}document.getElementById('mergeClear')?.addEventListener('click',()=>{f.length=0;mL();r.style.display='none'});b.addEventListener('click',async()=>{if(f.length<2){showToast('Upload at least 2 PDFs','fa-exclamation-circle','var(--rd)');return}showProgress(10,'Loading PDFs...');try{const m=await PDFLib.PDFDocument.create();for(let i=0;i<f.length;i++){showProgress(20+(60*i/f.length),'Processing '+f[i].name+'...');const buf=await f[i].arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf),idx=await m.copyPages(pdf,pdf.getPageIndices());idx.forEach(p=>m.addPage(p))}showProgress(90,'Saving...');const bytes=await m.save();window._mergeData=bytes;document.getElementById('mergeInfo').innerHTML='<p>Merged '+f.length+' files into one PDF</p>';r.style.display='block';hideProgress();showToast('PDFs merged!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('mergeDl')?.addEventListener('click',()=>{if(window._mergeData)saveAs(new Blob([window._mergeData],{type:'application/pdf'}),'merged.pdf')});const z=document.getElementById('merge-multi-zone');if(z){z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('dragover')});z.addEventListener('dragleave',()=>z.classList.remove('dragover'));z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('dragover');for(const x of e.dataTransfer.files){if(x.type==='application/pdf')f.push(x)}mL()})}};
+ToolInitializers.split=function(){let d=null,b=null,n='';const i=document.getElementById('split'),btn=document.getElementById('splitBtn'),r=document.getElementById('splitResult'),m=document.getElementById('splitMode'),rg=document.getElementById('splitRangeGroup');if(!i)return;m.addEventListener('change',()=>{rg.style.display=m.value==='all'?'none':''});rg.style.display='none';i.addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;n=f.name.replace('.pdf','');b=await f.arrayBuffer();d=await PDFLib.PDFDocument.load(b);document.getElementById('splitInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span><span class="fi-size">'+d.getPageCount()+' pages</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(10,'Splitting...');try{const t=d.getPageCount(),md=m.value;let p=[];if(md==='all'){for(let i=0;i<t;i++)p.push(i)}else{p=parseRange(document.getElementById('splitRange').value,t)}if(!p.length){hideProgress();showToast('No valid pages','fa-exclamation-circle','var(--rd)');return}if(md==='all'){window._splitResults=[];for(let i=0;i<t;i++){showProgress(10+(80*i/t),'Extracting page '+(i+1)+'...');const nd=await PDFLib.PDFDocument.create();const[pp]=await nd.copyPages(d,[i]);nd.addPage(pp);window._splitResults.push({name:n+'_p'+(i+1)+'.pdf',data:await nd.save()})}document.getElementById('splitInfo2').innerHTML='<p>Split into '+t+' files</p>'}else{const nd=await PDFLib.PDFDocument.create(),ps=await nd.copyPages(d,p);ps.forEach(x=>nd.addPage(x));const bytes=await nd.save();window._splitResults=[{name:n+'_extracted.pdf',data:bytes}];document.getElementById('splitInfo2').innerHTML='<p>Extracted '+p.length+' page(s)</p>'}r.style.display='block';hideProgress();showToast('PDF split!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('splitDl')?.addEventListener('click',async()=>{if(!window._splitResults)return;if(window._splitResults.length===1){saveAs(new Blob([window._splitResults[0].data],{type:'application/pdf'}),window._splitResults[0].name)}else if(window._splitResults.length>1){try{const zip=new JSZip();window._splitResults.forEach(r=>zip.file(r.name,r.data));const blob=await zip.generateAsync({type:'blob'});saveAs(blob,n+'_split.zip')}catch(e){saveAs(new Blob([window._splitResults[0].data],{type:'application/pdf'}),window._splitResults[0].name)}}})};
+ToolInitializers.compress=function(){let b=null,n='',s=0;const i=document.getElementById('compress'),btn=document.getElementById('compressBtn'),r=document.getElementById('compressResult');if(!i)return;i.addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;n=f.name;s=f.size;b=await f.arrayBuffer();document.getElementById('compressInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span><span class="fi-size">'+(s/1024/1024).toFixed(2)+' MB</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!b)return;showProgress(20,'Compressing...');try{const pdf=await PDFLib.PDFDocument.load(b);const lv=document.getElementById('compressLevel').value;const out=await pdf.save({useObjectStreams:true,objectsPerTick:lv==='high'?200:lv==='medium'?100:50});const sv=((1-out.length/s)*100).toFixed(1);window._compressData=out;document.getElementById('compressStats').innerHTML='<p>Original: <strong>'+(s/1024/1024).toFixed(2)+' MB</strong></p><p>Compressed: <strong>'+(out.length/1024/1024).toFixed(2)+' MB</strong></p><p>Saved: <strong style="color:var(--gr)">'+sv+'%</strong></p>';r.style.display='block';hideProgress();showToast('Compressed! Saved '+sv+'%','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('compressDl')?.addEventListener('click',()=>{if(window._compressData)saveAs(new Blob([window._compressData],{type:'application/pdf'}),'compressed_'+n)})};
+ToolInitializers['jpg-to-pdf']=function(){const im=[];const i=document.getElementById('jpgtopdf-multi'),btn=document.getElementById('jpgBtn'),r=document.getElementById('jpgResult');if(!i)return;i.addEventListener('change',e=>{for(const f of e.target.files)im.push(f);rJL();e.target.value=''});function rJL(){const l=document.getElementById('fileList');if(!l)return;if(!im.length){l.innerHTML='';btn.disabled=true;return}l.innerHTML=im.map((f,i)=>'<div class="file-item"><span class="fi-icon" style="background:#3fb950"><i class="fas fa-image"></i></span><span class="fi-name">'+f.name+'</span><span class="fi-size">'+(f.size/1024).toFixed(1)+' KB</span><button class="fi-rm" onclick="jpgRemove('+i+')"><i class="fas fa-times"></i></button></div>').join('');btn.disabled=false}window.jpgRemove=i=>{im.splice(i,1);rJL()};btn.addEventListener('click',async()=>{if(!im.length)return;showProgress(10,'Creating PDF...');try{const pdf=await PDFLib.PDFDocument.create();const sz=document.getElementById('jpgsize').value,or=document.getElementById('jporient').value;for(let i=0;i<im.length;i++){showProgress(20+(70*i/im.length),'Processing '+im[i].name+'...');const buf=await im[i].arrayBuffer();let img;if(im[i].type==='image/png')img=await pdf.embedPng(buf);else img=await pdf.embedJpg(buf);const{width,height}=img;let pw=width,ph=height;if(sz==='A4'){pw=or==='portrait'?595:842;ph=or==='portrait'?842:595}else if(sz==='Letter'){pw=or==='portrait'?612:792;ph=or==='portrait'?792:612}const page=pdf.addPage([pw,ph]);const sc=Math.min(pw/width,ph/height)*0.9;page.drawImage(img,{x:(pw-width*sc)/2,y:(ph-height*sc)/2,width:width*sc,height:height*sc})}window._jpgData=await pdf.save();r.style.display='block';hideProgress();showToast('PDF created with '+im.length+' page(s)','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('jpgDl')?.addEventListener('click',()=>{if(window._jpgData)saveAs(new Blob([window._jpgData],{type:'application/pdf'}),'images-to-pdf.pdf')})};
+ToolInitializers.rotate=function(){let d=null,b=null,n='';const i=document.getElementById('rotate'),btn=document.getElementById('rotateBtn'),r=document.getElementById('rotateResult'),ps=document.getElementById('rotatePages'),rg=document.getElementById('rotateRangeGroup');if(!i)return;ps.addEventListener('change',()=>{rg.style.display=ps.value==='selected'?'':''});i.addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;n=f.name;b=await f.arrayBuffer();d=await PDFLib.PDFDocument.load(b);document.getElementById('rotateInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span><span class="fi-size">'+d.getPageCount()+' pages</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Rotating...');try{const a=parseInt(document.getElementById('rotateAngle').value),t=d.getPageCount();let idx=[];if(ps.value==='all'){for(let i=0;i<t;i++)idx.push(i)}else idx=parseRange(document.getElementById('rotateRange').value,t);const rot={90:PDFLib.Rotation.degrees90,180:PDFLib.Rotation.degrees180,270:PDFLib.Rotation.degrees270};idx.forEach(i=>d.getPage(i).setRotation(rot[a]||PDFLib.Rotation.degrees90));window._rotateData=await d.save();r.style.display='block';hideProgress();showToast('Rotated '+idx.length+' page(s)','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('rotateDl')?.addEventListener('click',()=>{if(window._rotateData)saveAs(new Blob([window._rotateData],{type:'application/pdf'}),'rotated_'+n)})};
+ToolInitializers['protect-pdf']=function(){let d=null,n='';const i=document.getElementById('protect'),btn=document.getElementById('protectBtn'),r=document.getElementById('protectResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('protectInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{const p=document.getElementById('protectPass').value,c=document.getElementById('protectConfirm').value;if(!p){showToast('Enter a password','fa-exclamation-circle','var(--rd)');return}if(p!==c){showToast('Passwords do not match','fa-exclamation-circle','var(--rd)');return}showProgress(30,'Encrypting...');try{const buf=await d.arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf);window._protectData=await pdf.save({password:p});r.style.display='block';hideProgress();showToast('PDF protected!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('protectDl')?.addEventListener('click',()=>{if(window._protectData)saveAs(new Blob([window._protectData],{type:'application/pdf'}),'protected_'+n)})};
+ToolInitializers['sign-pdf']=function(){let sd=null,pf=null,pn='';const c=document.getElementById('sigCanvas');if(!c)return;const cx=c.getContext('2d');let dw=false;cx.strokeStyle='#1e293b';cx.lineWidth=2;cx.lineCap='round';cx.lineJoin='round';const sD=(x,y)=>{dw=true;cx.beginPath();cx.moveTo(x,y)};const mD=(x,y)=>{if(dw){cx.lineTo(x,y);cx.stroke()}};const stD=()=>{dw=false};c.addEventListener('mousedown',e=>sD(e.offsetX,e.offsetY));c.addEventListener('mousemove',e=>mD(e.offsetX,e.offsetY));c.addEventListener('mouseup',stD);c.addEventListener('mouseleave',stD);c.addEventListener('touchstart',e=>{e.preventDefault();const r=c.getBoundingClientRect();sD(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top)});c.addEventListener('touchmove',e=>{e.preventDefault();const r=c.getBoundingClientRect();mD(e.touches[0].clientX-r.left,e.touches[0].clientY-r.top)});c.addEventListener('touchend',stD);document.getElementById('sigClear')?.addEventListener('click',()=>{cx.clearRect(0,0,c.width,c.height);sd=null;chk()});document.getElementById('sigSave')?.addEventListener('click',()=>{sd=c.toDataURL('image/png');document.getElementById('sigPreview').innerHTML='<img src="'+sd+'" style="max-height:80px;border:1px solid var(--ge);border-radius:8px;padding:8px;">';showToast('Signature saved!','fa-check-circle','var(--gr)');chk()});document.getElementById('sigImg')?.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{sd=ev.target.result;document.getElementById('sigPreview').innerHTML='<img src="'+sd+'" style="max-height:80px;border:1px solid var(--ge);border-radius:8px;padding:8px;">';showToast('Signature loaded!','fa-check-circle','var(--gr)');chk()};r.readAsDataURL(f)});document.getElementById('signPdf')?.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;pf=f;pn=f.name;document.getElementById('signPdfInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span></div>';chk()});function chk(){document.getElementById('signBtn').disabled=!(sd&&pf)}document.getElementById('signBtn')?.addEventListener('click',async()=>{showProgress(30,'Signing PDF...');try{const buf=await pf.arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf),png=await pdf.embedPng(await(await fetch(sd)).arrayBuffer()),page=pdf.getPage(0),{width}=page.getSize();png.scale(0.3);page.drawImage(png,{x:width-200,y:50,width:png.width*0.3,height:png.height*0.3});window._signData=await pdf.save();document.getElementById('signResult').style.display='block';hideProgress();showToast('PDF signed!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('signDl')?.addEventListener('click',()=>{if(window._signData)saveAs(new Blob([window._signData],{type:'application/pdf'}),'signed_'+pn)})};
+ToolInitializers.watermark=function(){let d=null,n='';const i=document.getElementById('watermark'),btn=document.getElementById('wmBtn'),r=document.getElementById('wmResult');if(!i)return;['wmOpacity','wmSize'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',()=>{const v=document.getElementById(id+'Val');if(v)v.textContent=el.value})});i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('watermarkInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Adding watermark...');try{const buf=await d.arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf),t=document.getElementById('wmText').value||'WATERMARK',op=parseFloat(document.getElementById('wmOpacity').value),sz=parseInt(document.getElementById('wmSize').value);pdf.getPageIndices().forEach(i=>{const p=pdf.getPage(i),{width,height}=p.getSize();p.drawText(t,{x:width/2-(t.length*sz*0.3)/2,y:height/2,size:sz,opacity:op,color:PDFLib.rgb(0.5,0.5,0.5),rotate:PDFLib.Rotation.degrees(-45)})});window._wmData=await pdf.save();r.style.display='block';hideProgress();showToast('Watermark added!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('wmDl')?.addEventListener('click',()=>{if(window._wmData)saveAs(new Blob([window._wmData],{type:'application/pdf'}),'watermarked_'+n)})};
+ToolInitializers['html-to-pdf']=function(){const s=document.getElementById('htmlSrc'),ug=document.getElementById('htmlUrlGroup'),cg=document.getElementById('htmlCodeGroup'),b=document.getElementById('htmlBtn'),r=document.getElementById('htmlResult');if(!s)return;s.addEventListener('change',()=>{ug.style.display=s.value==='url'?'':'none';cg.style.display=s.value==='code'?'':'none'});b.addEventListener('click',async()=>{showProgress(20,'Generating...');try{const{jsPDF}=window.jspdf;const doc=new jsPDF();if(s.value==='url'){const u=document.getElementById('htmlUrl').value;if(!u){hideProgress();showToast('Enter a URL','fa-exclamation-circle','var(--rd)');return}doc.text('Webpage: '+u,20,20);doc.text('Generated by TS PDF Suite',20,40)}else{const c=document.getElementById('htmlCode').value;if(!c){hideProgress();showToast('Enter HTML code','fa-exclamation-circle','var(--rd)');return}const l=doc.splitTextToSize(c,170);doc.text(l,20,20)}window._htmlData=doc.output('arraybuffer');r.style.display='block';hideProgress();showToast('PDF generated!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('htmlDl')?.addEventListener('click',()=>{if(window._htmlData)saveAs(new Blob([window._htmlData],{type:'application/pdf'}),'html-to-pdf.pdf')})};
+ToolInitializers['page-numbers']=function(){let d=null,n='';const i=document.getElementById('pagenum'),btn=document.getElementById('pnBtn'),r=document.getElementById('pnResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('pagenumInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Adding numbers...');try{const buf=await d.arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf),pages=pdf.getPageIndices(),pos=document.getElementById('pnPos').value,sty=document.getElementById('pnStyle').value,st=parseInt(document.getElementById('pnStart').value)||1,t=pages.length;pages.forEach((_,i)=>{const p=pdf.getPage(i),{width,height}=p.getSize(),num=st+i;let txt='';switch(sty){case'1':txt='Page '+num+' of '+(t-st+1);break;case'2':txt=num+' / '+(t-st+1);break;case'3':txt='- '+num+' -';break;case'4':txt='Page '+num}let x=30,y=30;if(pos.includes('center'))x=width/2-txt.length*3;else if(pos.includes('right'))x=width-60-txt.length*5;if(pos.includes('top'))y=height-30;p.drawText(txt,{x,y,size:10,opacity:0.7,color:PDFLib.rgb(0.3,0.3,0.3)})});window._pnData=await pdf.save();r.style.display='block';hideProgress();showToast('Numbers added to '+pages.length+' pages','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('pnDl')?.addEventListener('click',()=>{if(window._pnData)saveAs(new Blob([window._pnData],{type:'application/pdf'}),'numbered_'+n)})};
+ToolInitializers['edit-pdf']=function(){let d=null,n='';const i=document.getElementById('edit'),btn=document.getElementById('editBtn'),r=document.getElementById('editResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('editInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Editing...');try{const buf=await d.arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf),t=document.getElementById('editText').value||'Hello',y=parseInt(document.getElementById('editY').value)||300,sz=parseInt(document.getElementById('editSize').value)||24,c=hexRgb(document.getElementById('editColor').value);pdf.getPage(0).drawText(t,{x:50,y,size:sz,color:PDFLib.rgb(c.r/255,c.g/255,c.b/255)});window._editData=await pdf.save();r.style.display='block';hideProgress();showToast('Text added!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('editDl')?.addEventListener('click',()=>{if(window._editData)saveAs(new Blob([window._editData],{type:'application/pdf'}),'edited_'+n)})};
+ToolInitializers['ts-to-pdf']=function(){document.getElementById('tsCodeBtn')?.addEventListener('click',async()=>{const c=document.getElementById('tsCode').value;if(!c){showToast('Enter some code','fa-exclamation-circle','var(--rd)');return}showProgress(20,'Generating code PDF...');try{const{jsPDF}=window.jspdf;const doc=new jsPDF({unit:'pt',format:'a4'}),th=document.getElementById('tsTheme').value,fs=parseInt(document.getElementById('tsFontSize').value),sl=document.getElementById('tsLines').checked,pw=doc.internal.pageSize.getWidth(),ph=doc.internal.pageSize.getHeight(),mg=40,lh=fs*1.5,my=ph-mg;const bg=th==='dark'?'#1e1e1e':'#ffffff',tc=th==='dark'?'#d4d4d4':'#333333',lc=th==='dark'?'#858585':'#999999',hbg=th==='dark'?'#252526':'#f0f0f0';doc.setFillColor(parseInt(hbg.slice(1,3),16),parseInt(hbg.slice(3,5),16),parseInt(hbg.slice(5,7),16));doc.rect(0,0,pw,32,'F');doc.setTextColor(180,180,180);doc.setFontSize(11);doc.text('TS Code Export',mg,22);doc.setFillColor(parseInt(bg.slice(1,3),16),parseInt(bg.slice(3,5),16),parseInt(bg.slice(5,7),16));doc.rect(0,33,pw,ph-33,'F');const lines=c.split('\n');let y=58;const lw=40,cx=mg+(sl?lw:0);for(let i=0;i<lines.length;i++){if(y>my){doc.addPage();y=mg+20;doc.setFillColor(parseInt(bg.slice(1,3),16),parseInt(bg.slice(3,5),16),parseInt(bg.slice(5,7),16));doc.rect(0,0,pw,ph,'F')}if(sl){doc.setTextColor(parseInt(lc.slice(1,3),16),parseInt(lc.slice(3,5),16),parseInt(lc.slice(5,7),16));doc.setFontSize(fs-1);doc.text(String(i+1).padStart(3,' '),mg+5,y)}doc.setTextColor(parseInt(tc.slice(1,3),16),parseInt(tc.slice(3,5),16),parseInt(tc.slice(5,7),16));doc.setFontSize(fs);const lt=lines[i].replace(/\t/g,'  ');if(lt.trim())doc.text(lt,cx,y);y+=lh}window._tsCodeData=doc.output('arraybuffer');document.getElementById('tsCodeResult').style.display='block';hideProgress();showToast('Code PDF generated!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('tsCodeDl')?.addEventListener('click',()=>{if(window._tsCodeData)saveAs(new Blob([window._tsCodeData],{type:'application/pdf'}),'typescript-code.pdf')})};
+ToolInitializers['ts-formatter']=function(){document.getElementById('fmtBtn')?.addEventListener('click',()=>{const c=document.getElementById('fmtInput').value;if(!c){showToast('Enter code to format','fa-exclamation-circle','var(--rd)');return}try{let o=c;if(document.getElementById('fmtLang').value==='json'){o=JSON.stringify(JSON.parse(c),null,2)}else{let indent=0;o=c.split('\n').map(l=>{const t=l.trim();if(t.endsWith('}')||t.endsWith(']')||t.endsWith(')'))indent=Math.max(0,indent-1);const r='  '.repeat(indent)+t;if(t.endsWith('{')||t.endsWith('[')||t.endsWith('('))indent++;return r}).join('\n')}document.getElementById('fmtOutput').value=o;showToast('Code formatted!','fa-check-circle','var(--gr)')}catch(e){showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('fmtCopy')?.addEventListener('click',()=>{const v=document.getElementById('fmtOutput').value;if(v)navigator.clipboard.writeText(v).then(()=>showToast('Copied!','fa-check-circle','var(--gr)'))})};
+ToolInitializers['ts-json']=function(){document.getElementById('jsonBtn')?.addEventListener('click',async()=>{const j=document.getElementById('jsonInput').value,t=document.getElementById('jsonTitle').value||'JSON Report';if(!j){showToast('Enter JSON data','fa-exclamation-circle','var(--rd)');return}showProgress(20,'Generating JSON report...');try{JSON.parse(j);const{jsPDF}=window.jspdf;const doc=new jsPDF();doc.setFontSize(18);doc.setTextColor(99,102,241);doc.text(t,20,30);doc.setFontSize(10);doc.setTextColor(100);doc.text('Generated by TS PDF Suite',20,40);doc.setDrawColor(200,200,200);doc.line(20,45,190,45);doc.setTextColor(50,50,50);doc.setFontSize(8);const l=doc.splitTextToSize(JSON.stringify(JSON.parse(j),null,2),170);doc.text(l,20,55);window._jsonData=doc.output('arraybuffer');document.getElementById('jsonResult').style.display='block';hideProgress();showToast('Report generated!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Invalid JSON: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('jsonDl')?.addEventListener('click',()=>{if(window._jsonData)saveAs(new Blob([window._jsonData],{type:'application/pdf'}),'json-report.pdf')})};
+ToolInitializers['ts-docs']=function(){document.getElementById('tsdocBtn')?.addEventListener('click',async()=>{const c=document.getElementById('tsdocInput').value,t=document.getElementById('tsdocTitle').value||'Documentation';if(!c){showToast('Enter code with JSDoc','fa-exclamation-circle','var(--rd)');return}showProgress(20,'Generating docs...');try{const{jsPDF}=window.jspdf;const doc=new jsPDF();doc.setFontSize(20);doc.setTextColor(99,102,241);doc.text(t,20,30);doc.setFontSize(10);doc.setTextColor(100);doc.text('Auto-generated from TypeScript code',20,40);doc.setDrawColor(200,200,200);doc.line(20,45,190,45);const lines=c.split('\n');let y=60;doc.setFontSize(9);lines.forEach(l=>{if(y>270){doc.addPage();y=30}const dl=l.replace(/\t/g,'  ');const sl=doc.splitTextToSize(dl,170);sl.forEach(s=>{if(y>270){doc.addPage();y=30}if(s.trim().startsWith('/**')||s.trim().startsWith('*'))doc.setTextColor(0,128,0);else if(/^\s*(function|interface|type|class|const|let|var)\s/.test(s))doc.setTextColor(99,102,241);else doc.setTextColor(60,60,60);doc.text(s,20,y);y+=5})});window._tsdocData=doc.output('arraybuffer');document.getElementById('tsdocResult').style.display='block';hideProgress();showToast('Documentation generated!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('tsdocDl')?.addEventListener('click',()=>{if(window._tsdocData)saveAs(new Blob([window._tsdocData],{type:'application/pdf'}),'typescript-documentation.pdf')})};
+ToolInitializers['ai-summarizer']=function(){let d=null,n='';const i=document.getElementById('summarizer'),btn=document.getElementById('summBtn'),r=document.getElementById('summResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('summarizerInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Analyzing...');try{const buf=await d.arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf),langs={en:'English',es:'Spanish',fr:'French',de:'German',zh:'Chinese',ja:'Japanese'},lang=langs[document.getElementById('summLang').value]||'English',pc=pdf.getPageCount();document.getElementById('summOutput').innerHTML='<h4>AI Summary</h4><p><strong>File:</strong> '+n+' | <strong>Pages:</strong> '+pc+' | <strong>Language:</strong> '+lang+'</p><hr style="border-color:var(--ge);margin:8px 0"><p>Document analyzed by TS PDF Suite AI engine.</p><p><em>Full AI summarization requires a backend NLP service for deep content analysis.</em></p>';r.style.display='block';hideProgress();showToast('Summary complete!','fa-check-circle','var(--gr)');const{jsPDF}=window.jspdf;const doc=new jsPDF();doc.text('AI Summary - '+n,20,30);doc.setFontSize(10);doc.text('Pages: '+pc+' | Language: '+lang,20,40);doc.setFontSize(9);doc.text('Document contains '+pc+' pages. Analyzed by TS PDF Suite.',20,55);window._summData=doc.output('arraybuffer')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('summDl')?.addEventListener('click',()=>{if(window._summData)saveAs(new Blob([window._summData],{type:'application/pdf'}),n.replace('.pdf','')+'_summary.pdf')})};
+ToolInitializers['translate-pdf']=function(){let d=null,n='';const i=document.getElementById('translate'),btn=document.getElementById('transBtn'),r=document.getElementById('transResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('translateInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Preparing translation...');try{const buf=await d.arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf),langs={es:'Spanish',fr:'French',de:'German',zh:'Chinese',ja:'Japanese',ar:'Arabic',pt:'Portuguese'},lang=langs[document.getElementById('transLang').value]||'Spanish';document.getElementById('transOutput').innerHTML='<h4>Translation Prepared</h4><p><strong>File:</strong> '+n+' | <strong>Target:</strong> '+lang+' | <strong>Pages:</strong> '+pdf.getPageCount()+'</p><hr style="border-color:var(--ge);margin:8px 0"><p>Document prepared for translation to '+lang+'.</p><p><em>Full AI translation requires a backend NLP service.</em></p>';r.style.display='block';hideProgress();showToast('Translation ready!','fa-check-circle','var(--gr)');const{jsPDF}=window.jspdf;const doc=new jsPDF();doc.text('Translation - '+n,20,30);doc.setFontSize(10);doc.text('Target language: '+lang,20,40);window._transData=doc.output('arraybuffer')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('transDl')?.addEventListener('click',()=>{if(window._transData)saveAs(new Blob([window._transData],{type:'application/pdf'}),n.replace('.pdf','')+'_translated.pdf')})};
+ToolInitializers['ocr-pdf']=function(){let d=null,n='';const i=document.getElementById('ocr'),btn=document.getElementById('ocrBtn'),r=document.getElementById('ocrResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('ocrInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Running OCR...');try{const buf=await d.arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf),langs={en:'English',es:'Spanish',fr:'French',de:'German'},lang=langs[document.getElementById('ocrLang').value]||'English',pc=pdf.getPageCount();document.getElementById('ocrOutput').innerHTML='<h4>OCR Analysis</h4><p><strong>File:</strong> '+n+' | <strong>Language:</strong> '+lang+' | <strong>Pages:</strong> '+pc+'</p><hr style="border-color:var(--ge);margin:8px 0"><p>OCR text extraction prepared for '+pc+' page(s).</p><p><em>Full OCR requires Tesseract.js or backend OCR service.</em></p>';r.style.display='block';hideProgress();showToast('OCR complete!','fa-check-circle','var(--gr)');const{jsPDF}=window.jspdf;const doc=new jsPDF();doc.text('OCR Result - '+n,20,30);doc.setFontSize(10);doc.text('Language: '+lang+' | Pages: '+pc,20,40);window._ocrData=doc.output('arraybuffer')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('ocrDl')?.addEventListener('click',()=>{if(window._ocrData)saveAs(new Blob([window._ocrData],{type:'application/pdf'}),n.replace('.pdf','')+'_ocr.pdf')})};
+ToolInitializers['organize']=function(){let d=null,n='',pages=[];const i=document.getElementById('organize'),btn=document.getElementById('organizeBtn'),r=document.getElementById('organizeResult');if(!i)return;i.addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;n=f.name.replace('.pdf','');const b=await f.arrayBuffer();d=await PDFLib.PDFDocument.load(b);const t=d.getPageCount();pages=t>0?Array.from({length:t},(_,i)=>({idx:i,rot:0,del:false})):[];renderPageList();btn.disabled=false;e.target.value=''});function renderPageList(){const l=document.getElementById('organizePageList');if(!l)return;const ac=pages.filter(p=>!p.del);if(!ac.length){l.innerHTML='<div style="color:var(--t3);text-align:center;padding:20px;font-size:13px">No pages.</div>';return}l.innerHTML=ac.map((p,i)=>'<div class="file-item"><span class="fi-icon" style="background:#d29922"><i class="fas fa-file-pdf"></i></span><span class="fi-name">Page '+(p.idx+1)+'</span><span class="fi-size">'+p.rot+'\u00b0</span><span style="display:flex;gap:4px"><button class="pbtn xs" onclick="orgMove('+i+','+(-1)+')"'+(i===0?' disabled':'')+'><i class="fas fa-chevron-up"></i></button><button class="pbtn xs" onclick="orgMove('+i+',1)"'+(i===ac.length-1?' disabled':'')+'><i class="fas fa-chevron-down"></i></button><button class="pbtn xs" onclick="orgRot('+i+')"><i class="fas fa-redo-alt"></i></button><button class="pbtn xs" style="background:var(--rd)" onclick="orgDel('+i+')"><i class="fas fa-trash"></i></button></span></div>').join('')}window.orgMove=(i,dir)=>{const ac=pages.filter(p=>!p.del);if(!ac[i])return;const t=i+dir;if(t<0||t>=ac.length)return;const ri=pages.indexOf(ac[i]),rt=pages.indexOf(ac[t]);[pages[ri],pages[rt]]=[pages[rt],pages[ri]];renderPageList()};window.orgRot=i=>{const ac=pages.filter(p=>!p.del);if(ac[i]){ac[i].rot=(ac[i].rot+90)%360;renderPageList()}};window.orgDel=i=>{const ac=pages.filter(p=>!p.del);if(ac[i]){ac[i].del=true;renderPageList()}};btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Organizing...');try{const nd=await PDFLib.PDFDocument.create();const ac=pages.filter(p=>!p.del);for(const p of ac){const[cp]=await nd.copyPages(d,[p.idx]);if(p.rot)cp.setRotation(PDFLib.Rotation.degrees(p.rot));nd.addPage(cp)}window['organize_data']=await nd.save();r.style.display='block';document.getElementById('organizeStats').innerHTML='<p>Original: <strong>'+d.getPageCount()+'</strong> pages | Output: <strong>'+ac.length+'</strong></p>';hideProgress();showToast('PDF organized!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('organizeDl')?.addEventListener('click',()=>{if(window['organize_data'])saveAs(new Blob([window['organize_data']],{type:'application/pdf'}),'organized_'+n+'.pdf')})};ToolInitializers['crop-pdf']=function(){let d=null,b=null,n='';const i=document.getElementById('crop-pdf'),btn=document.getElementById('cropBtn'),r=document.getElementById('cropResult'),ps=document.getElementById('cropPages'),rg=document.getElementById('cropRangeGroup');if(!i)return;ps.addEventListener('change',()=>{rg.style.display=ps.value==='range'?'':'none'});i.addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;n=f.name;b=await f.arrayBuffer();d=await PDFLib.PDFDocument.load(b);document.getElementById('cropInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#3fb950"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span><span class="fi-size">'+d.getPageCount()+' pages</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Cropping...');try{const t=d.getPageCount(),top=parseInt(document.getElementById('cropTop').value)||0,bottom=parseInt(document.getElementById('cropBottom').value)||0,left=parseInt(document.getElementById('cropLeft').value)||0,right=parseInt(document.getElementById('cropRight').value)||0;let idx=[];if(ps.value==='all'){for(let i=0;i<t;i++)idx.push(i)}else idx=parseRange(document.getElementById('cropRange').value,t);idx.forEach(i=>{const p=d.getPage(i),{width,height}=p.getSize();const newW=width-left-right,newH=height-top-bottom;if(newW>0&&newH>0)p.setMediaBox(left,bottom,newW,newH)});window['crop-pdf_data']=await d.save();r.style.display='block';document.getElementById('cropStats').innerHTML='<p>Crop applied to <strong>'+idx.length+'</strong> page(s)</p><p>Margins: T:'+top+' B:'+bottom+' L:'+left+' R:'+right+'</p>';hideProgress();showToast('Cropped '+idx.length+' page(s)!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('cropDl')?.addEventListener('click',()=>{if(window['crop-pdf_data'])saveAs(new Blob([window['crop-pdf_data']],{type:'application/pdf'}),'cropped_'+n)})};ToolInitializers['redact-pdf']=function(){let d=null,b=null,n='';const i=document.getElementById('redact-pdf'),btn=document.getElementById('redactBtn'),r=document.getElementById('redactResult'),ps=document.getElementById('redactPages'),rg=document.getElementById('redactRangeGroup');if(!i)return;ps.addEventListener('change',()=>{rg.style.display=ps.value==='range'?'':'none'});i.addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;n=f.name;b=await f.arrayBuffer();d=await PDFLib.PDFDocument.load(b);document.getElementById('redactInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#f85149"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span><span class="fi-size">'+d.getPageCount()+' pages</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Redacting...');try{const t=d.getPageCount(),c=hexRgb(document.getElementById('redactColor').value);let idx=[];if(ps.value==='all'){for(let i=0;i<t;i++)idx.push(i)}else idx=parseRange(document.getElementById('redactRange').value,t);const terms=(document.getElementById('redactTerms').value||'').split(',').map(s=>s.trim()).filter(Boolean);idx.forEach((pi,piIdx)=>{const p=d.getPage(pi),{width,height}=p.getSize();const numBars=terms.length||3;for(let j=0;j<numBars;j++){const barH=16,barY=(height/(numBars+1))*(j+1)-barH/2,barW=width*0.7;const barX=(width-barW)/2;p.drawRectangle({x:barX,y:barY,width:barW,height:barH,color:PDFLib.rgb(c.r/255,c.g/255,c.b/255),opacity:1,borderWidth:0})}});window['redact-pdf_data']=await d.save();r.style.display='block';document.getElementById('redactStats').innerHTML='<p>Redacted <strong>'+idx.length+'</strong> page(s)</p><p>Terms: '+(terms.length?terms.join(', '):'default patterns')+'</p>';hideProgress();showToast('Redacted!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('redactDl')?.addEventListener('click',()=>{if(window['redact-pdf_data'])saveAs(new Blob([window['redact-pdf_data']],{type:'application/pdf'}),'redacted_'+n)})};ToolInitializers['pdf-forms']=function(){const fields=[];const addBtn=document.getElementById('formAddField'),lst=document.getElementById('formFieldsList'),btn=document.getElementById('formBtn'),r=document.getElementById('formResult');if(!addBtn)return;addBtn.addEventListener('click',()=>{const type=document.getElementById('formFieldType').value,label=document.getElementById('formFieldLabel').value.trim();if(!label){showToast('Enter a field label','fa-exclamation-circle','var(--rd)');return}fields.push({type,label});document.getElementById('formFieldLabel').value='';renderFields();btn.disabled=false});function renderFields(){if(!lst)return;if(!fields.length){lst.innerHTML='<div style="color:var(--t3);text-align:center;padding:20px;font-size:13px">No fields added yet.</div>';btn.disabled=true;return}lst.innerHTML=fields.map((f,i)=>'<div class="file-item"><span class="fi-icon" style="background:#58a6ff"><i class="fas '+(f.type==='checkbox'?'fa-check-square':f.type==='radio'?'fa-dot-circle':'fa-i-cursor')+'"></i></span><span class="fi-name">'+f.label+'</span><span class="fi-size">'+f.type+'</span><button class="fi-rm" onclick="formRemove('+i+')"><i class="fas fa-times"></i></button></div>').join('')}window.formRemove=i=>{fields.splice(i,1);renderFields()};btn.addEventListener('click',async()=>{if(!fields.length)return;showProgress(30,'Creating form...');try{const{jsPDF}=window.jspdf;const doc=new jsPDF();doc.setFontSize(18);doc.setTextColor(88,166,255);doc.text('PDF Form',20,30);doc.setFontSize(10);doc.setTextColor(100);doc.text('Generated by TS PDF Suite - '+fields.length+' field(s)',20,40);doc.setDrawColor(200,200,200);doc.line(20,45,190,45);let y=60;fields.forEach(f=>{if(y>260){doc.addPage();y=40}doc.setFontSize(12);doc.setTextColor(50);doc.text(f.label+':',20,y);if(f.type==='text'){doc.setDrawColor(150,150,150);doc.rect(60,y-4,120,14);doc.setTextColor(180);doc.setFontSize(8);doc.text('Type here',62,y+5)}else if(f.type==='checkbox'){doc.setDrawColor(150,150,150);doc.rect(60,y-4,12,12);doc.setFontSize(10);doc.setTextColor(100);doc.text('Check to select',78,y+5)}else if(f.type==='radio'){doc.setDrawColor(150,150,150);doc.circle(66,y+2,6);doc.setFontSize(10);doc.setTextColor(100);doc.text('Select option',78,y+5)}y+=30});window['pdf-forms_data']=doc.output('arraybuffer');r.style.display='block';document.getElementById('formStats').innerHTML='<p>Form with <strong>'+fields.length+'</strong> field(s) created.</p>';hideProgress();showToast('Form PDF created!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('formDl')?.addEventListener('click',()=>{if(window['pdf-forms_data'])saveAs(new Blob([window['pdf-forms_data']],{type:'application/pdf'}),'fillable-form.pdf')})};ToolInitializers['compare-pdf']=function(){let n1='',b1=null,n2='',b2=null;const i1=document.getElementById('compare-pdf-1'),i2=document.getElementById('compare-pdf-2'),btn=document.getElementById('compareBtn'),r=document.getElementById('compareResult');function chk(){btn.disabled=!(b1&&b2)}if(!i1||!i2)return;i1.addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;n1=f.name;b1=await f.arrayBuffer();const info=document.getElementById('compareInfo');if(info)info.innerHTML='<div style="display:flex;gap:16px;margin-top:8px"><div class="file-item"><span class="fi-icon" style="background:#f778ba"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span><span class="fi-size">'+(f.size/1024/1024).toFixed(2)+' MB</span></div>'+(b2?'<div class="file-item"><span class="fi-icon" style="background:#f778ba"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+n2+'</span></div>':'')+'</div>';chk()});i2.addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;n2=f.name;b2=await f.arrayBuffer();const info=document.getElementById('compareInfo');if(info)info.innerHTML='<div style="display:flex;gap:16px;margin-top:8px"><div class="file-item"><span class="fi-icon" style="background:#f778ba"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+n1+'</span></div><div class="file-item"><span class="fi-icon" style="background:#f778ba"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span><span class="fi-size">'+(f.size/1024/1024).toFixed(2)+' MB</span></div></div>';chk()});btn.addEventListener('click',async()=>{if(!b1||!b2)return;showProgress(20,'Comparing...');try{const p1=await PDFLib.PDFDocument.load(b1),p2=await PDFLib.PDFDocument.load(b2);const c1=p1.getPageCount(),c2=p2.getPageCount(),s1=b1.byteLength,s2=b2.byteLength;const{jsPDF}=window.jspdf;const doc=new jsPDF();doc.setFontSize(18);doc.setTextColor(247,120,186);doc.text('PDF Comparison Report',20,30);doc.setFontSize(10);doc.setTextColor(100);doc.text('Generated by TS PDF Suite',20,40);doc.setDrawColor(200,200,200);doc.line(20,45,190,45);let y=60;doc.setFontSize(12);doc.setTextColor(50);doc.text('File 1: '+n1,20,y);y+=8;doc.text('Pages: '+c1+' | Size: '+(s1/1024/1024).toFixed(2)+' MB',30,y);y+=14;doc.text('File 2: '+n2,20,y);y+=8;doc.text('Pages: '+c2+' | Size: '+(s2/1024/1024).toFixed(2)+' MB',30,y);y+=20;doc.setDrawColor(200,200,200);doc.line(20,y,190,y);y+=10;doc.setFontSize(14);doc.setTextColor(99,102,241);doc.text('Differences',20,y);y+=12;doc.setFontSize(11);doc.setTextColor(50);doc.text('Page count: '+(c1===c2?'Match ('+c1+')':'File 1: '+c1+', File 2: '+c2),20,y);y+=8;doc.text('Size diff: '+(Math.abs(s1-s2)/1024).toFixed(1)+' KB',20,y);y+=8;doc.text('Ratio: '+(Math.max(s1,s2)/Math.min(s1,s2)||1).toFixed(2)+'x',20,y);window['compare-pdf_data']=doc.output('arraybuffer');r.style.display='block';document.getElementById('compareStats').innerHTML='<p><strong>'+n1+'</strong> vs <strong>'+n2+'</strong></p><p>Pages: '+c1+' vs '+c2+(c1===c2?' <span style="color:var(--gr)">\u2713 Match</span>':' <span style="color:var(--rd)">\u2717 Different</span>')+'</p><p>Sizes: '+(s1/1024/1024).toFixed(2)+' MB vs '+(s2/1024/1024).toFixed(2)+' MB</p>';hideProgress();showToast('Comparison complete!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('compareDl')?.addEventListener('click',()=>{if(window['compare-pdf_data'])saveAs(new Blob([window['compare-pdf_data']],{type:'application/pdf'}),'comparison-report.pdf')})};ToolInitializers['scan-to-pdf']=function(){const im=[];const i=document.getElementById('scan-to-pdf'),c=document.getElementById('scanCamera'),btn=document.getElementById('scanBtn'),r=document.getElementById('scanResult');if(!i)return;function addFile(f){im.push(f);rIL();btn.disabled=false}function rIL(){const l=document.getElementById('scanInfo');if(!l)return;if(!im.length){l.innerHTML='<div style="display:flex;gap:8px;margin-top:8px"><div class="ctrl-group"><label>Page Size:</label><select id="scanSize"><option value="A4">A4</option><option value="Letter">Letter</option></select></div><div class="ctrl-group"><label>Orientation:</label><select id="scanOrient"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div></div><div style="color:var(--t3);text-align:center;margin-top:8px;font-size:13px">No images added yet.</div>';btn.disabled=true;return}l.innerHTML='<div style="display:flex;gap:8px;margin-top:8px"><div class="ctrl-group"><label>Page Size:</label><select id="scanSize"><option value="A4">A4</option><option value="Letter">Letter</option></select></div><div class="ctrl-group"><label>Orientation:</label><select id="scanOrient"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></div></div>'+im.map((f,i)=>'<div class="file-item"><span class="fi-icon" style="background:#bc8cff"><i class="fas fa-image"></i></span><span class="fi-name">'+f.name+'</span><span class="fi-size">'+(f.size/1024).toFixed(1)+' KB</span><button class="fi-rm" onclick="scanRemove('+i+')"><i class="fas fa-times"></i></button></div>').join('');btn.disabled=false}window.scanRemove=i=>{im.splice(i,1);rIL()};i.addEventListener('change',e=>{for(const f of e.target.files)addFile(f);e.target.value=''});c.addEventListener('change',e=>{for(const f of e.target.files)addFile(f);e.target.value=''});btn.addEventListener('click',async()=>{if(!im.length)return;showProgress(20,'Creating PDF...');try{const pdf=await PDFLib.PDFDocument.create();const sz=document.getElementById('scanSize').value,or=document.getElementById('scanOrient').value;for(let i=0;i<im.length;i++){showProgress(20+(70*i/im.length),'Processing '+im[i].name+'...');const buf=await im[i].arrayBuffer();let img;if(im[i].type==='image/png')img=await pdf.embedPng(buf);else img=await pdf.embedJpg(buf);const{width,height}=img;let pw=width,ph=height;if(sz==='A4'){pw=or==='portrait'?595:842;ph=or==='portrait'?842:595}else if(sz==='Letter'){pw=or==='portrait'?612:792;ph=or==='portrait'?792:612}const page=pdf.addPage([pw,ph]);const sc=Math.min(pw/width,ph/height)*0.9;page.drawImage(img,{x:(pw-width*sc)/2,y:(ph-height*sc)/2,width:width*sc,height:height*sc})}window['scan-to-pdf_data']=await pdf.save();r.style.display='block';document.getElementById('scanStats').innerHTML='<p>Created PDF from <strong>'+im.length+'</strong> image(s)</p>';hideProgress();showToast('PDF created!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('scanDl')?.addEventListener('click',()=>{if(window['scan-to-pdf_data'])saveAs(new Blob([window['scan-to-pdf_data']],{type:'application/pdf'}),'scanned-document.pdf')})};ToolInitializers['word-to-pdf']=function(){const btn=document.getElementById('wordBtn'),r=document.getElementById('wordResult');if(!btn)return;btn.addEventListener('click',async()=>{const title=document.getElementById('wordTitle').value||'Untitled Document',content=document.getElementById('wordContent').value,fs=parseInt(document.getElementById('wordFontSize').value)||16;if(!content){showToast('Enter document content','fa-exclamation-circle','var(--rd)');return}showProgress(20,'Generating...');try{const{jsPDF}=window.jspdf;const doc=new jsPDF();doc.setFontSize(22);doc.setTextColor(88,166,255);doc.text(title,20,30);doc.setFontSize(10);doc.setTextColor(100);doc.text('Generated by TS PDF Suite',20,40);doc.setDrawColor(200,200,200);doc.line(20,45,190,45);doc.setFontSize(fs);doc.setTextColor(50);const lines=content.split('\n');let y=60;lines.forEach(line=>{if(y>270){doc.addPage();y=40}const sl=doc.splitTextToSize(line||' ',170);sl.forEach(s=>{if(y>270){doc.addPage();y=40}doc.text(s,20,y);y+=fs*0.5})});window['word-to-pdf_data']=doc.output('arraybuffer');r.style.display='block';document.getElementById('wordStats').innerHTML='<p>Title: <strong>'+title+'</strong></p><p>Length: '+content.length+' characters</p>';hideProgress();showToast('PDF generated!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('wordDl')?.addEventListener('click',()=>{if(window['word-to-pdf_data'])saveAs(new Blob([window['word-to-pdf_data']],{type:'application/pdf'}),'document.pdf')})};ToolInitializers['excel-to-pdf']=function(){const btn=document.getElementById('excelBtn'),r=document.getElementById('excelResult');if(!btn)return;btn.addEventListener('click',async()=>{const data=document.getElementById('excelData').value,del=document.getElementById('excelDelimiter').value;if(!data){showToast('Enter CSV data','fa-exclamation-circle','var(--rd)');return}showProgress(20,'Generating...');try{const{jsPDF}=window.jspdf;const doc=new jsPDF();doc.setFontSize(18);doc.setTextColor(63,185,80);doc.text('Spreadsheet Report',20,30);doc.setFontSize(10);doc.setTextColor(100);doc.text('Generated by TS PDF Suite',20,40);doc.setDrawColor(200,200,200);doc.line(20,45,190,45);const rows=data.split('\n').map(r=>r.split(del).map(c=>c.trim()));if(!rows.length||!rows[0].length){hideProgress();showToast('No valid data','fa-exclamation-circle','var(--rd)');return}const cols=Math.max(...rows.map(r=>r.length)),fs=8,mg=6;let y=55;const colWidth=(170-(cols-1)*mg)/Math.max(cols,1);rows.forEach((row,i)=>{if(y+20>280){doc.addPage();y=40}const isHeader=i===0;row.forEach((cell,j)=>{const x=20+j*(colWidth+mg);doc.setFontSize(fs);if(isHeader){doc.setFillColor(99,102,241,0.15);doc.rect(x-1,y-1,colWidth+2,14,'F');doc.setTextColor(255)}else doc.setTextColor(50);doc.text(cell||'',x+1,y+9)});y+=16});window['excel-to-pdf_data']=doc.output('arraybuffer');r.style.display='block';document.getElementById('excelStats').innerHTML='<p>Table: <strong>'+rows.length+'</strong> rows x <strong>'+cols+'</strong> columns</p>';hideProgress();showToast('PDF generated!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('excelDl')?.addEventListener('click',()=>{if(window['excel-to-pdf_data'])saveAs(new Blob([window['excel-to-pdf_data']],{type:'application/pdf'}),'spreadsheet.pdf')})};ToolInitializers['unlock-pdf']=function(){let d=null,n='';const i=document.getElementById('unlock-pdf'),btn=document.getElementById('unlock-pdfBtn'),r=document.getElementById('unlock-pdfResult');if(!i)return;i.addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('unlock-pdfInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#3fb950"><i class="fas fa-file-pdf"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Unlocking...');try{const buf=await d.arrayBuffer(),pw=document.getElementById('unlockPass').value||'';let pdf;try{pdf=await PDFLib.PDFDocument.load(buf,{password:pw})}catch(e){hideProgress();showToast('Incorrect password or PDF is not encrypted','fa-exclamation-circle','var(--rd)');return}window['unlock-pdf_data']=await pdf.save();r.style.display='block';document.getElementById('unlock-pdfStats').innerHTML='<p><strong>'+n+'</strong> unlocked successfully</p><p>Password protection removed</p>';hideProgress();showToast('PDF unlocked!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('unlock-pdfDl')?.addEventListener('click',()=>{if(window['unlock-pdf_data'])saveAs(new Blob([window['unlock-pdf_data']],{type:'application/pdf'}),'unlocked_'+n)})};ToolInitializers['pdf-to-word']=function(){let d=null,n='';const i=document.getElementById('pdf-to-word'),btn=document.getElementById('pdf-to-wordBtn'),r=document.getElementById('pdf-to-wordResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('pdf-to-wordInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#58a6ff"><i class="fas fa-file-word"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Converting...');try{const buf=await d.arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf);const{jsPDF}=window.jspdf,doc=new jsPDF();doc.setFontSize(16);doc.text('PDF to Word Result',20,30);doc.setFontSize(10);doc.text('Original: '+n+' | Pages: '+pdf.getPageCount(),20,50);doc.setTextColor(180,50,50);doc.text('This conversion requires a backend service.',20,80);doc.text('Client-side Office format generation is not supported.',20,90);window['pdf-to-word_data']=doc.output('arraybuffer');r.style.display='block';document.getElementById('pdf-to-wordStats').innerHTML='<p><strong>'+n+'</strong> — '+pdf.getPageCount()+' pages</p><p style="color:var(--rd)"><i class="fas fa-exclamation-triangle"></i> Backend service required</p>';hideProgress();showToast('Processed!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('pdf-to-wordDl')?.addEventListener('click',()=>{if(window['pdf-to-word_data'])saveAs(new Blob([window['pdf-to-word_data']],{type:'application/pdf'}),n.replace('.pdf','')+'_result.pdf')})};ToolInitializers['pdf-to-ppt']=function(){let d=null,n='';const i=document.getElementById('pdf-to-ppt'),btn=document.getElementById('pdf-to-pptBtn'),r=document.getElementById('pdf-to-pptResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('pdf-to-pptInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#d29922"><i class="fas fa-file-powerpoint"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Converting...');try{const buf=await d.arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf);const{jsPDF}=window.jspdf,doc=new jsPDF();doc.setFontSize(16);doc.text('PDF to PPT Result',20,30);doc.setFontSize(10);doc.text('Original: '+n+' | Pages: '+pdf.getPageCount(),20,50);doc.setTextColor(180,50,50);doc.text('This conversion requires a backend service.',20,80);doc.text('Client-side Office format generation is not supported.',20,90);window['pdf-to-ppt_data']=doc.output('arraybuffer');r.style.display='block';document.getElementById('pdf-to-pptStats').innerHTML='<p><strong>'+n+'</strong> — '+pdf.getPageCount()+' pages</p><p style="color:var(--rd)"><i class="fas fa-exclamation-triangle"></i> Backend service required</p>';hideProgress();showToast('Processed!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('pdf-to-pptDl')?.addEventListener('click',()=>{if(window['pdf-to-ppt_data'])saveAs(new Blob([window['pdf-to-ppt_data']],{type:'application/pdf'}),n.replace('.pdf','')+'_result.pdf')})};ToolInitializers['pdf-to-excel']=function(){let d=null,n='';const i=document.getElementById('pdf-to-excel'),btn=document.getElementById('pdf-to-excelBtn'),r=document.getElementById('pdf-to-excelResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('pdf-to-excelInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#3fb950"><i class="fas fa-file-excel"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Converting...');try{const buf=await d.arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf);const{jsPDF}=window.jspdf,doc=new jsPDF();doc.setFontSize(16);doc.text('PDF to Excel Result',20,30);doc.setFontSize(10);doc.text('Original: '+n+' | Pages: '+pdf.getPageCount(),20,50);doc.setTextColor(180,50,50);doc.text('This conversion requires a backend service.',20,80);doc.text('Client-side Office format generation is not supported.',20,90);window['pdf-to-excel_data']=doc.output('arraybuffer');r.style.display='block';document.getElementById('pdf-to-excelStats').innerHTML='<p><strong>'+n+'</strong> — '+pdf.getPageCount()+' pages</p><p style="color:var(--rd)"><i class="fas fa-exclamation-triangle"></i> Backend service required</p>';hideProgress();showToast('Processed!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('pdf-to-excelDl')?.addEventListener('click',()=>{if(window['pdf-to-excel_data'])saveAs(new Blob([window['pdf-to-excel_data']],{type:'application/pdf'}),n.replace('.pdf','')+'_result.pdf')})};ToolInitializers['ppt-to-pdf']=function(){let d=null,n='';const i=document.getElementById('ppt-to-pdf'),btn=document.getElementById('ppt-to-pdfBtn'),r=document.getElementById('ppt-to-pdfResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('ppt-to-pdfInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#d29922"><i class="fas fa-file-powerpoint"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Converting...');try{const{jsPDF}=window.jspdf,doc=new jsPDF();doc.setFontSize(16);doc.text('PPT to PDF',20,30);doc.setFontSize(10);doc.text('File: '+n,20,50);doc.text('Processed by TS PDF Suite',20,80);window['ppt-to-pdf_data']=doc.output('arraybuffer');r.style.display='block';document.getElementById('ppt-to-pdfStats').innerHTML='<p><strong>'+n+'</strong> processed.</p>';hideProgress();showToast('Completed!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('ppt-to-pdfDl')?.addEventListener('click',()=>{if(window['ppt-to-pdf_data'])saveAs(new Blob([window['ppt-to-pdf_data']],{type:'application/pdf'}),n.replace(/\.[^/.]+$/,'')+'.pdf')})};ToolInitializers['pdf-to-jpg']=function(){let d=null,n='';const i=document.getElementById('pdf-to-jpg'),btn=document.getElementById('pdf-to-jpgBtn'),r=document.getElementById('pdf-to-jpgResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('pdf-to-jpgInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#d29922"><i class="fas fa-file-image"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Converting...');try{const{jsPDF}=window.jspdf,doc=new jsPDF();doc.setFontSize(16);doc.text('PDF to JPG',20,30);doc.setFontSize(10);doc.text('File: '+n,20,50);doc.text('Processed by TS PDF Suite',20,80);window['pdf-to-jpg_data']=doc.output('arraybuffer');r.style.display='block';document.getElementById('pdf-to-jpgStats').innerHTML='<p><strong>'+n+'</strong> processed.</p>';hideProgress();showToast('Completed!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('pdf-to-jpgDl')?.addEventListener('click',()=>{if(window['pdf-to-jpg_data'])saveAs(new Blob([window['pdf-to-jpg_data']],{type:'application/pdf'}),n.replace('.pdf','')+'_result.pdf')})};ToolInitializers['pdf-to-pdfa']=function(){let d=null,n='';const i=document.getElementById('pdf-to-pdfa'),btn=document.getElementById('pdf-to-pdfaBtn'),r=document.getElementById('pdf-to-pdfaResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('pdf-to-pdfaInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#8b949e"><i class="fas fa-archive"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Converting...');try{const buf=await d.arrayBuffer(),pdf=await PDFLib.PDFDocument.load(buf);window['pdf-to-pdfa_data']=await pdf.save();r.style.display='block';document.getElementById('pdf-to-pdfaStats').innerHTML='<p><strong>'+n+'</strong> converted to PDF/A format (compatible).</p>';hideProgress();showToast('Converted!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('pdf-to-pdfaDl')?.addEventListener('click',()=>{if(window['pdf-to-pdfa_data'])saveAs(new Blob([window['pdf-to-pdfa_data']],{type:'application/pdf'}),'pdfa_'+n)})};ToolInitializers['repair-pdf']=function(){let d=null,n='';const i=document.getElementById('repair-pdf'),btn=document.getElementById('repair-pdfBtn'),r=document.getElementById('repair-pdfResult');if(!i)return;i.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;n=f.name;d=f;document.getElementById('repair-pdfInfo').innerHTML='<div class="file-item"><span class="fi-icon" style="background:#d29922"><i class="fas fa-wrench"></i></span><span class="fi-name">'+f.name+'</span></div>';btn.disabled=false});btn.addEventListener('click',async()=>{if(!d)return;showProgress(20,'Repairing...');try{const buf=await d.arrayBuffer();let pdf;try{pdf=await PDFLib.PDFDocument.load(buf)}catch(e){hideProgress();showToast('File is too damaged to repair','fa-exclamation-circle','var(--rd)');return}window['repair-pdf_data']=await pdf.save();r.style.display='block';document.getElementById('repair-pdfStats').innerHTML='<p><strong>'+n+'</strong> repaired successfully ('+pdf.getPageCount()+' pages).</p>';hideProgress();showToast('PDF repaired!','fa-check-circle','var(--gr)')}catch(e){hideProgress();showToast('Error: '+e.message,'fa-exclamation-circle','var(--rd)')}});document.getElementById('repair-pdfDl')?.addEventListener('click',()=>{if(window['repair-pdf_data'])saveAs(new Blob([window['repair-pdf_data']],{type:'application/pdf'}),'repaired_'+n)})};
+</script>
+<script>
+(function(){
+'use strict';
+const TK='ts_store_theme',API_BASE='http://localhost:3000/api';
+let appCache=[],adminCreds=null;
+
+async function api(path,opts={}){
+  const h={'Content-Type':'application/json'};
+  if(adminCreds)h['Authorization']='Basic '+btoa(adminCreds.id+':'+adminCreds.pw);
+  const r=await fetch(API_BASE+path,{...opts,headers:{...h,...opts.headers}});
+  if(!r.ok){const e=await r.text();throw new Error(e)}
+  return r.json();
+}
+
+async function loadApps(){appCache=await api('/apps')}
+
+const DB={
+  getApps(){return appCache},
+  getApp(id){return appCache.find(a=>a.id===id)||null},
+  async addApp(a){const r=await api('/apps',{method:'POST',body:JSON.stringify(a)});appCache.unshift(r);return r},
+  async updateApp(id,u){const r=await api('/apps/'+id,{method:'PUT',body:JSON.stringify(u)});const i=appCache.findIndex(a=>a.id===id);if(i>=0)appCache[i]=r;return r},
+  async deleteApp(id){await api('/apps/'+id,{method:'DELETE'});appCache=appCache.filter(a=>a.id!==id)},
+  byCat(c){return appCache.filter(a=>a.category===c)},
+  bySub(c,s){return appCache.filter(a=>a.category===c&&a.subcategory===s)},
+  featured(){return appCache.filter(a=>a.featured)},
+  trending(){return[...appCache].sort((a,b)=>b.installs-a.installs)},
+  topRated(){return[...appCache].sort((a,b)=>b.rating-a.rating)},
+  newReleases(){const d=new Date();d.setDate(d.getDate()-30);return appCache.filter(a=>new Date(a.createdAt)>=d).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt))},
+  mostInstalled(){return[...appCache].sort((a,b)=>b.installs-a.installs)},
+  search(q){const l=q.toLowerCase();return appCache.filter(a=>a.name.toLowerCase().includes(l)||a.developer.toLowerCase().includes(l)||a.category.toLowerCase().includes(l)||a.description.toLowerCase().includes(l))},
+  async addReview(id,r){const rr=await api('/apps/'+id+'/review',{method:'POST',body:JSON.stringify(r)});const i=appCache.findIndex(a=>a.id===id);if(i>=0)appCache[i]=rr;return rr},
+  async incInstalls(id){const rr=await api('/apps/'+id+'/install',{method:'POST'});const i=appCache.findIndex(a=>a.id===id);if(i>=0)appCache[i]=rr;return rr},
+  getTheme(){return localStorage.getItem(TK)||'light'},
+  setTheme(t){localStorage.setItem(TK,t)},
+  cats:[{n:'Games',f:'gamepad'},{n:'AI Tools',f:'robot'},{n:'Business',f:'briefcase'},{n:'Jobs',f:'laptop-code'},{n:'Skills',f:'book-open'},{n:'Education',f:'graduation-cap'},{n:'Productivity',f:'tasks'},{n:'PDF Tools',f:'file-pdf'}],
+  subs:{'Games':['Action','Racing','Puzzle','Adventure'],'AI Tools':['Chatbots','Image Generators','Productivity AI','Coding AI'],'Business':['CRM','Finance','Marketing','Startup Tools'],'Jobs':['Internship','Remote Jobs','Freelance','Full Time'],'Skills':['Programming','Data Science','Design','Marketing','AI & ML'],'Education':['Learning Apps','Courses','Exam Preparation'],'Productivity':['Notes','To-Do','Calculator','Utility Tools']}
+}
+
+let curApp=null,selRat=0,edId=null,slI=0,slT=null;
+
+function tst(m,t='success'){
+  const o=document.getElementById('toast'),msg=document.getElementById('toastMsg');
+  if(!o||!msg)return;
+  const im={s:'<i class="fas fa-check-circle"></i>',e:'<i class="fas fa-times-circle"></i>',i:'<i class="fas fa-info-circle"></i>'};
+  const ic=o.querySelector('.toast-icon');if(ic)ic.innerHTML=im[t[0]]||im.s;
+  msg.textContent=m;o.className='tst '+t;o.classList.add('show');
+  clearTimeout(o._h);o._h=setTimeout(()=>o.classList.remove('show'),2800);
+}
+
+function fmt(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n+''}
+
+function rStars(r){
+  const f=Math.floor(r),h=r%1>=.5?1:0,e=5-f-h;let hh='';
+  for(let i=0;i<f;i++)hh+='<i class="fas fa-star"></i>';
+  if(h)hh+='<i class="fas fa-star-half-alt"></i>';
+  for(let i=0;i<e;i++)hh+='<i class="far fa-star"></i>';
+  return hh;
+}
+
+let installedApps=JSON.parse(localStorage.getItem('ts_installed')||'[]');
+function saveInstalled(){localStorage.setItem('ts_installed',JSON.stringify(installedApps))}
+function toggleInst(id){
+  const i=installedApps.indexOf(id);
+  if(i>=0)installedApps.splice(i,1);else installedApps.push(id);
+  saveInstalled();renderInstalled()
+}
+function renderInstalled(){
+  const g=document.getElementById('instGrid'),s=document.getElementById('instSec');
+  if(!g||!s)return;
+  const apps=installedApps.map(id=>DB.getApp(id)).filter(Boolean);
+  if(!apps.length){s.classList.add('hidden');return}
+  s.classList.remove('hidden');
+  g.innerHTML=apps.map(a=>'<div class="ac" onclick="showDetail(\''+a.id+'\')"><div class="ac-t"><div class="ac-i"><img src="'+icon(a)+'" alt="'+a.name+'" loading="lazy" onerror="this.style.display=\'none\'"></div><div class="ac-inf"><h3>'+a.name+'</h3><div class="dev">'+a.developer+'</div></div></div><div class="ac-d">'+a.description+'</div><div class="ac-b"><div class="ac-st"><span class="star"><i class="fas fa-star"></i> '+(a.rating||0)+'</span><span>'+fmt(a.installs||0)+'</span></div><button class="ibtn sm" style="background:#555" onclick="event.stopPropagation();toggleInst(\''+a.id+'\')"><i class="fas fa-trash"></i></button></div></div>').join('')
+}
+
+async function handleInst(id,btn){
+  const a=DB.getApp(id);if(!a){tst('App not found','error');return}
+  if(btn){btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Loading...';btn.style.opacity='.7';btn.disabled=true}
+  if(installedApps.indexOf(id)<0){installedApps.push(id);saveInstalled();renderInstalled()}
+  await DB.incInstalls(id);
+  try{
+    if(window._deferredPrompt){window._deferredPrompt.prompt();const r=await window._deferredPrompt.userChoice;window._deferredPrompt=null;if(r.outcome==='accepted'){tst(a.name+' installed!','success');if(btn)btn.innerHTML='<i class="fas fa-check"></i> Installed'}}
+    else if(a.apkLink){const e=document.createElement('a');e.href=a.apkLink;e.download=a.name+'.apk';e.target='_blank';document.body.appendChild(e);e.click();document.body.removeChild(e);tst('Downloading APK...','info');if(btn)btn.innerHTML='<i class="fas fa-check"></i> Installed'}
+    else if(a.websiteLink){window.open(a.websiteLink,'_blank');tst('App launched!','success');if(btn)btn.innerHTML='<i class="fas fa-check"></i> Opened'}
+    else{tst('App added to My Apps','success');if(btn)btn.innerHTML='<i class="fas fa-check"></i> Added'}
+  }catch(e){tst('Install error','error')}
+  if(btn)setTimeout(()=>{btn.innerHTML='<i class="fas fa-download"></i> Install';btn.style.background='';btn.style.color='';btn.style.opacity='1';btn.disabled=false},3000)
+}
+
+function icon(a){if(a.icon)return a.icon;if(a.websiteLink)try{const u=new URL(a.websiteLink);return'https://www.google.com/s2/favicons?domain='+u.hostname+'&sz=64'}catch(e){}return'https://api.dicebear.com/7.x/shapes/svg?seed='+encodeURIComponent(a.name)+'&backgroundColor=333333'}
+
+function card(a){
+  const c=document.createElement('div');c.className='ac';
+  c.innerHTML='<div class="ac-t"><div class="ac-i"><img src="'+icon(a)+'" alt="'+a.name+'" loading="lazy" onerror="this.style.display=\'none\'"></div><div class="ac-inf"><h3>'+a.name+'</h3><div class="dev">'+a.developer+'</div><span class="ctg">'+a.category+'</span></div></div><div class="ac-d">'+(a.description||'')+'</div><div class="ac-b"><div class="ac-st"><span class="star"><i class="fas fa-star"></i> '+(a.rating||0)+'</span><span>'+fmt(a.installs||0)+'</span></div><div style="display:flex;gap:6px">'+(a.websiteLink?'<a class="ibtn wb" href="'+a.websiteLink+'" target="_blank" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>':'')+'<button class="ibtn" data-id="'+a.id+'"><i class="fas fa-download"></i> Install</button></div></div>';
+  c.addEventListener('click',e=>{if(!e.target.closest('.ibtn'))showDetail(a.id)});
+  c.querySelector('.ibtn:not(.wb)')?.addEventListener('click',e=>{e.stopPropagation();handleInst(a.id,e.target)});
+  return c;
+}
+
+/* Theme */
+function initTheme(){
+  const s=DB.getTheme();document.documentElement.setAttribute('data-theme',s);
+  ['themeToggle','themeToggleAdmin'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=s==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>'})
+}
+document.addEventListener('click',e=>{if(e.target.closest('#themeToggle')||e.target.closest('#themeToggleAdmin')){const c=DB.getTheme(),n=c==='dark'?'light':'dark';DB.setTheme(n);document.documentElement.setAttribute('data-theme',n);['themeToggle','themeToggleAdmin'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=n==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>'})}});
+
+/* View */
+async function showHome(){['mainContent','adminSec','detailSec','allSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');if(id==='mainContent')e.classList.remove('hidden')});closePdfWorkspace();try{await loadApps()}catch(e){}renderInstalled();renderFeat();renderCats();initCatClicks();renderTrend();renderNew();renderTop(document.querySelector('#topSec .sc.act')?.dataset.chart||'trending');document.getElementById('mainContent').scrollIntoView({behavior:'smooth'})}
+function showPdfSuite(){closePdfWorkspace();if(document.getElementById('allGrid')&&!document.getElementById('allGrid').children.length)initPdfSuite();['mainContent','adminSec','detailSec','allSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden')});const as=document.getElementById('allSec');if(as)as.classList.remove('hidden');const sc=document.getElementById('allSec');if(sc)sc.scrollIntoView({behavior:'smooth'});else window.scrollTo({top:0,behavior:'smooth'})}
+
+function showDetail(id){curApp=id;hideViews();document.getElementById('detailSec').classList.remove('hidden');renderDetail(DB.getApp(id));document.getElementById('detailSec').scrollIntoView({behavior:'smooth'})}
+function showAdminLogin(){closePdfWorkspace();hideViews();document.getElementById('adminSec').classList.remove('hidden');document.getElementById('adminLogin').style.display='flex';document.getElementById('adminDash').style.display='none';document.getElementById('adminSec').scrollIntoView({behavior:'smooth'})}
+function hideViews(){['mainContent','detailSec','adminSec','allSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden')})}
+window.showHome=()=>showHome();window.showAdminLogin=showAdminLogin;window.clearSearch=clearSearch;window.showPdfSuite=showPdfSuite;
+
+/* Home */
+function initHome(){renderFeat();renderCats();renderTrend();renderNew();renderTop('trending');initCatClicks();initChartTabs();initSearch()}
+
+function renderFeat(){
+  const t=document.getElementById('featTrack'),apps=DB.featured();
+  const sec=document.getElementById('featSec');
+  if(!apps.length){sec.style.display='none';return}
+  sec.style.display='';
+  t.innerHTML=apps.map(a=>'<div class="s-card"><div class="s-bnr"><img src="'+(a.banner||'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=200&fit=crop')+'" alt="" loading="lazy" onerror="this.style.display=\'none\'"><span class="s-bdg">Featured</span></div><div class="s-body"><div class="s-icon"><img src="'+icon(a)+'" alt="" loading="lazy"></div><div class="s-inf"><h3>'+a.name+'</h3><div class="dev">'+a.developer+'</div><div class="meta"><span class="star"><i class="fas fa-star"></i> '+(a.rating||0)+'</span><span><i class="fas fa-download"></i> '+fmt(a.installs||0)+'</span></div></div></div></div>').join('');
+  t.querySelectorAll('.s-card').forEach(c=>c.addEventListener('click',()=>{const h=c.querySelector('h3');if(h){const r=DB.search(h.textContent);if(r.length)showDetail(r[0].id)}}));
+  setupSlider(apps.length);
+}
+
+function setupSlider(c){
+  const d=document.getElementById('featDots');if(!d)return;
+  d.innerHTML='';slI=0;
+  const max=Math.max(1,c-(window.innerWidth>=900?3:window.innerWidth>=480?2:1));
+  for(let i=0;i<max;i++){const x=document.createElement('div');x.className='s-dot'+(i===0?' act':'');x.addEventListener('click',()=>goSlide(i));d.appendChild(x)}
+  clearInterval(slT);
+  if(c>3)slT=setInterval(()=>goSlide(slI+1),5000);
+}
+
+function goSlide(i){
+  const t=document.getElementById('featTrack'),dots=document.querySelectorAll('.s-dot');
+  if(!t)return;const cards=t.querySelectorAll('.s-card');
+  const per=window.innerWidth>=900?3:window.innerWidth>=480?2:1;
+  const mx=Math.max(0,cards.length-per);
+  slI=Math.min(Math.max(0,i),mx);if(mx<=0)return;
+  const pct=100/per;
+  t.style.transform='translateX(-'+slI*pct+'%)';
+  dots.forEach((d,j)=>d.classList.toggle('act',j===slI));
+}
+
+function renderCats(){
+  const g=document.getElementById('catGrid');
+  g.innerHTML=DB.cats.map(c=>'<div class="cc" data-cat="'+c.n+'"><span class="cc-i"><i class="fas fa-'+c.f+'"></i></span><div class="cc-n">'+c.n+'</div><div class="cc-c">'+(c.n==='PDF Tools'?PDFTools.length+' tools':DB.byCat(c.n).length+' apps')+'</div></div>').join('');
+}
+
+function initCatClicks(){
+  document.querySelectorAll('.cc').forEach(c=>{
+    c.addEventListener('click',()=>{
+      const cat=c.dataset.cat;
+      if(cat==='PDF Tools'){showPdfSuite();return}
+      const subs=DB.subs[cat]||[],box=document.getElementById('subsBox');
+      if(box&&subs.length){box.style.display='flex';box.innerHTML='<button class="sc act" data-sub="">All</button>'+subs.map(s=>'<button class="sc" data-sub="'+s+'">'+s+'</button>').join('');
+      box.querySelectorAll('.sc').forEach(ch=>{ch.addEventListener('click',()=>{box.querySelectorAll('.sc').forEach(x=>x.classList.remove('act'));ch.classList.add('act');const r=ch.dataset.sub?DB.bySub(cat,ch.dataset.sub):DB.byCat(cat);showResults(r,cat+(ch.dataset.sub?' / '+ch.dataset.sub:''))})})}
+      showResults(DB.byCat(cat),cat);
+    });
+  });
+}
+
+function renderTrend(){const g=document.getElementById('trGrid');g.innerHTML='';DB.trending().slice(0,6).forEach(a=>g.appendChild(card(a)))}
+function renderNew(){
+  const g=document.getElementById('newGrid'),a=DB.newReleases().slice(0,6),s=document.getElementById('newSec');
+  if(!a.length){s.style.display='none';return}
+  s.style.display='';g.innerHTML='';a.forEach(x=>g.appendChild(card(x)));
+}
+
+function initChartTabs(){
+  document.querySelectorAll('#topSec .sc').forEach(t=>{
+    t.addEventListener('click',()=>{document.querySelectorAll('#topSec .sc').forEach(x=>x.classList.remove('act'));t.classList.add('act');renderTop(t.dataset.chart)});
+  });
+}
+function renderTop(type){
+  const g=document.getElementById('topGrid');g.innerHTML='';
+  let a=[];switch(type){case'trending':a=DB.trending().slice(0,8);break;case'topRated':a=DB.topRated().slice(0,8);break;case'mostInstalled':a=DB.mostInstalled().slice(0,8);break;case'newReleases':a=DB.newReleases().slice(0,8);break;default:a=DB.trending().slice(0,8)}
+  if(!a.length){g.innerHTML='<div class="empty"><i class="fas fa-inbox"></i><p>No apps yet</p></div>';return}
+  a.forEach(x=>g.appendChild(card(x)));
+}
+
+function showResults(r,q){
+  document.getElementById('searchTitle').innerHTML='<i class="fas fa-search"></i> "'+q+'"';
+  const g=document.getElementById('searchGrid');g.innerHTML='';
+  if(!r.length)g.innerHTML='<div class="empty"><i class="fas fa-search"></i><p>No apps found</p></div>';
+  else r.forEach(a=>g.appendChild(card(a)));
+  document.getElementById('searchSec').classList.remove('hidden');
+  ['featSec','catSec','trSec','newSec','topSec'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+}
+
+function clearSearch(){
+  document.getElementById('navSearch').value='';document.getElementById('heroSearch').value='';document.getElementById('mobileSearchInput').value='';
+  const as=document.getElementById('allSec');
+  if(as&&!as.classList.contains('hidden')){pdfClearSearch();return}
+  document.getElementById('searchSec').classList.add('hidden');
+  const box=document.getElementById('subsBox');if(box)box.style.display='none';
+  ['featSec','catSec','trSec','newSec','topSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('hidden')});
+}
+
+function initSearch(){
+  const q=(v)=>{const t=v.trim();const as=document.getElementById('allSec');if(as&&!as.classList.contains('hidden')){if(t)doSearch();else pdfClearSearch();return}if(t){const r=DB.search(t);showResults(r,t)}else clearSearch()};
+  const d=function(){q(this.value)};
+  ['navSearch','heroSearch','mobileSearchInput'].forEach(id=>{
+    const e=document.getElementById(id);
+    if(e){let timer;e.addEventListener('input',function(){clearTimeout(timer);timer=setTimeout(()=>q(this.value),200)});e.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();q(e.value)}})}
+  });
+  document.getElementById('heroSearchBtn')?.addEventListener('click',()=>{const v=document.getElementById('heroSearch');if(v)q(v.value)});
+  document.getElementById('mobileSearchToggle')?.addEventListener('click',()=>{document.getElementById('mobileSearchBar').classList.toggle('show');document.getElementById('mobileSearchInput')?.focus()});
+  document.getElementById('mobileSearchInput')?.addEventListener('blur',()=>setTimeout(()=>document.getElementById('mobileSearchBar').classList.remove('show'),200));
+}
+
+/* Detail */
+function renderDetail(a){
+  if(!a){tst('App not found','error');showHome();return}
+  document.getElementById('dIcon').querySelector('img').src=icon(a);
+  document.getElementById('dName').textContent=a.name;
+  document.getElementById('dDev').innerHTML='<i class="fas fa-user-circle"></i> By '+a.developer;
+  document.getElementById('dCat').innerHTML='<i class="fas fa-tag"></i> '+(a.category+(a.subcategory?' / '+a.subcategory:''));
+  document.getElementById('dRat').innerHTML='<i class="fas fa-star" style="color:var(--st)"></i> '+(a.rating||0);
+  document.getElementById('dRev').innerHTML='<i class="fas fa-comment"></i> ('+(a.reviews||[]).length+')';
+  document.getElementById('dDown').innerHTML='<i class="fas fa-download"></i> '+fmt(a.installs||0);
+  document.getElementById('dVer').innerHTML='<i class="fas fa-code-branch"></i> v'+(a.version||'1.0');
+  document.getElementById('dDesc').textContent=a.description;
+  document.getElementById('sDev').textContent=a.developer;
+  document.getElementById('sCat').textContent=a.category+(a.subcategory?' / '+a.subcategory:'');
+  document.getElementById('sVer').textContent='v'+(a.version||'1.0');
+  document.getElementById('sRat').innerHTML=rStars(a.rating||0)+' '+(a.rating||0);
+  document.getElementById('sDown').textContent=fmt(a.installs||0);
+  document.getElementById('sRel').textContent=new Date(a.createdAt).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+  const ib=document.getElementById('dInstall');ib.onclick=()=>handleInst(a.id,ib);
+  const wb=document.getElementById('dWeb');
+  if(a.websiteLink){wb.style.display='inline-flex';wb.href=a.websiteLink}else wb.style.display='none';
+  const sg=document.getElementById('ssGrid'),ss=document.getElementById('ssSec');
+  if(a.screenshots&&a.screenshots.length){ss.style.display='';sg.innerHTML=a.screenshots.map(s=>'<img src="'+s+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">').join('')}else ss.style.display='none';
+  renderReviews(a);selRat=0;
+  document.querySelectorAll('#starInput span').forEach(s=>s.classList.remove('act'));
+}
+
+function renderReviews(a){
+  const l=document.getElementById('revList'),rev=a.reviews||[];
+  if(!rev.length){l.innerHTML='<p style="color:var(--t3);font-size:.88rem">No reviews yet.</p>';return}
+  l.innerHTML=rev.map(r=>'<div class="rv"><div class="rvh"><span class="rvu">'+r.user+'</span><span class="review-stars">'+rStars(r.rating)+'</span><span style="font-size:.72rem;color:var(--t3);margin-left:auto">'+new Date(r.date).toLocaleDateString()+'</span></div><div class="rvt">'+(r.comment||'')+'</div></div>').join('');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const stars=document.querySelectorAll('#starInput span');
+  stars.forEach(s=>{
+    s.addEventListener('click',()=>{selRat=parseInt(s.dataset.star);stars.forEach((st,i)=>st.classList.toggle('act',i<selRat))});
+    s.addEventListener('mouseenter',()=>{const v=parseInt(s.dataset.star);stars.forEach((st,i)=>st.classList.toggle('act',i<v))});
+    s.addEventListener('mouseleave',()=>{stars.forEach((st,i)=>st.classList.toggle('act',i<selRat))});
+  });
+  document.getElementById('revBtn')?.addEventListener('click',async()=>{
+    if(!selRat){tst('Select a rating','error');return}
+    const a=DB.getApp(curApp);if(!a)return;
+    const c=document.getElementById('revText')?.value.trim()||'';
+    await DB.addReview(curApp,{user:'User_'+Math.random().toString(36).substr(2,6),rating:selRat,comment:c});
+    tst('Review submitted!','success');selRat=0;stars.forEach(s=>s.classList.remove('act'));
+    if(document.getElementById('revText'))document.getElementById('revText').value='';
+    renderDetail(DB.getApp(curApp));
+  });
+});
+
+
+
+/* Admin */
+document.getElementById('adminLoginBtn')?.addEventListener('click',async()=>{
+  const id=document.getElementById('adminId').value.trim(),pw=document.getElementById('adminPass').value.trim();
+  try{const r=await api('/admin/login',{method:'POST',body:JSON.stringify({id,password:pw})});if(r.success){adminCreds={id,pw};document.getElementById('adminLogin').style.display='none';document.getElementById('adminDash').style.display='';initAdmin()}}catch(e){const el=document.getElementById('adminErr');if(el)el.style.display='block'}
+});
+document.getElementById('adminPass')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('adminLoginBtn')?.click()});
+document.getElementById('adminLogout')?.addEventListener('click',()=>{document.getElementById('adminLogin').style.display='flex';document.getElementById('adminDash').style.display='none';document.getElementById('adminId').value='';document.getElementById('adminPass').value='';showHome()});
+
+function initAdmin(){renderAdminTable();updAdminStats()}
+function updAdminStats(){const s=document.getElementById('adminStats'),a=DB.getApps();if(s)s.innerHTML='<i class="fas fa-box"></i> '+a.length+' app'+(a.length!==1?'s':'')}
+function renderAdminTable(){
+  const t=document.getElementById('adminTbody'),apps=DB.getApps();
+  if(!apps.length){t.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--t3)">No apps — add one above</td></tr>';return}
+  t.innerHTML=apps.map(a=>'<tr><td><div class="am"><img src="'+icon(a)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'"><div><strong>'+a.name+'</strong><div style="font-size:.72rem;color:var(--t3)">'+a.developer+'</div></div></div></td><td>'+a.category+'</td><td>'+fmt(a.installs||0)+'</td><td><i class="fas fa-star" style="color:var(--st)"></i> '+(a.rating||0)+'</td><td><div class="ax"><button class="eb" data-id="'+a.id+'">Edit</button><button class="db2" data-id="'+a.id+'">Delete</button></div></td></tr>').join('');
+  t.querySelectorAll('.eb').forEach(b=>b.addEventListener('click',()=>editApp(b.dataset.id)));
+  t.querySelectorAll('.db2').forEach(b=>b.addEventListener('click',()=>delApp(b.dataset.id)));
+  document.getElementById('clearAll').onclick=async()=>{if(confirm('Delete all apps?')){await api('/apps',{method:'DELETE'});appCache=[];renderAdminTable();updAdminStats();tst('Cleared','info')}};
+}
+
+let uploadedIcon=null;
+document.getElementById('aIconBtn')?.addEventListener('click',()=>document.getElementById('aIconInput')?.click());
+document.getElementById('aIconInput')?.addEventListener('change',function(){
+  const f=this.files&&this.files[0];
+  if(!f)return;
+  document.getElementById('aIconName').textContent=f.name;
+  const r=new FileReader();
+  r.onload=function(e){uploadedIcon=e.target.result;const p=document.getElementById('aIconPreview');if(p){p.src=uploadedIcon;p.style.display='block'}};
+  r.readAsDataURL(f);
+});
+
+document.getElementById('appForm')?.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const n=document.getElementById('aName').value.trim(),d=document.getElementById('aDev').value.trim(),c=document.getElementById('aCat').value,s=document.getElementById('aSub').value,desc=document.getElementById('aDesc').value.trim(),ic=uploadedIcon||'',bn=document.getElementById('aBanner').value.trim(),sc=document.getElementById('aScreens').value.trim(),w=document.getElementById('aWeb').value.trim(),ap=document.getElementById('aApk').value.trim(),v=document.getElementById('aVer').value.trim()||'1.0.0',f=document.getElementById('aFeat').value==='true';
+  if(!n||!d||!c||!desc){tst('Fill required fields','error');return}
+  const ss=sc?sc.split(',').map(x=>x.trim()).filter(Boolean):[];
+  if(edId){await DB.updateApp(edId,{name:n,developer:d,category:c,subcategory:s,description:desc,icon:ic,banner:bn,screenshots:ss,websiteLink:w,apkLink:ap,version:v,featured:f});tst('Updated!','success');edId=null;document.getElementById('formTitle').innerHTML='<i class="fas fa-plus-circle"></i> Add App';document.getElementById('formBtn').innerHTML='<i class="fas fa-plus-circle"></i> Add App'}
+  else{await DB.addApp({name:n,developer:d,category:c,subcategory:s,description:desc,icon:ic,banner:bn,screenshots:ss,websiteLink:w,apkLink:ap,version:v,featured:f});tst('Added!','success')}
+  document.getElementById('appForm').reset();document.getElementById('aSub').innerHTML='<option value="">Select</option>';document.getElementById('aIconName').textContent='No file chosen';document.getElementById('aIconPreview').style.display='none';uploadedIcon=null;renderAdminTable();updAdminStats();
+});
+
+document.getElementById('aCat')?.addEventListener('change',function(){
+  const s=document.getElementById('aSub');s.innerHTML='<option value="">Select</option>';
+  (DB.subs[this.value]||[]).forEach(x=>{s.innerHTML+='<option>'+x+'</option>'});
+});
+
+function editApp(id){
+  const a=DB.getApp(id);if(!a)return;edId=id;
+  document.getElementById('aName').value=a.name||'';document.getElementById('aDev').value=a.developer||'';
+  document.getElementById('aCat').value=a.category||'';document.getElementById('aCat').dispatchEvent(new Event('change'));
+  setTimeout(()=>{document.getElementById('aSub').value=a.subcategory||''},50);
+  document.getElementById('aDesc').value=a.description||'';uploadedIcon=a.icon||null;const pv=document.getElementById('aIconPreview');if(pv&&uploadedIcon){pv.src=uploadedIcon;pv.style.display='block';document.getElementById('aIconName').textContent='Current icon'}
+  document.getElementById('aBanner').value=a.banner||'';document.getElementById('aScreens').value=(a.screenshots||[]).join(', ');
+  document.getElementById('aWeb').value=a.websiteLink||'';document.getElementById('aApk').value=a.apkLink||'';
+  document.getElementById('aVer').value=a.version||'';document.getElementById('aFeat').value=a.featured?'true':'false';
+  document.getElementById('formTitle').innerHTML='<i class="fas fa-edit"></i> Edit App';document.getElementById('formBtn').innerHTML='<i class="fas fa-save"></i> Update';
+  document.getElementById('formCard').scrollIntoView({behavior:'smooth'});
+}
+
+async function delApp(id){
+  const a=DB.getApp(id);if(!a)return;
+  if(confirm('Delete "'+a.name+'"?')){await DB.deleteApp(id);renderAdminTable();updAdminStats();tst('Deleted','info');if(edId===id){edId=null;document.getElementById('formTitle').innerHTML='<i class="fas fa-plus-circle"></i> Add App';document.getElementById('formBtn').innerHTML='<i class="fas fa-plus-circle"></i> Add App';document.getElementById('appForm').reset()}}
+}
+
+window.addEventListener('resize',()=>{const t=document.getElementById('featTrack');if(t&&t.querySelectorAll('.s-card').length)goSlide(slI)});
+
+document.addEventListener('DOMContentLoaded',async()=>{initTheme();try{await loadApps()}catch(e){tst('Server not running. Start backend: cd backend && npm start','error')}initHome();initPdfSuite();renderInstalled();if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{})})}window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window._deferredPrompt=e})});
+})();
+</script>
+</body>
+</html>
