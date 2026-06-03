@@ -12,8 +12,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#f5f5f5;--srf:#fff;--crg:rgba(255,255,255,0.7);--t1:#111;--t2:#555;--t3:#999;--gb:rgba(255,255,255,0.25);--ge:rgba(0,0,0,0.08);--gs:0 8px 32px rgba(0,0,0,0.08);--ac:#000;--ah:#333;--al:rgba(0,0,0,0.06);--ai:#fff;--md:0 4px 20px rgba(0,0,0,0.08);--lg:0 8px 40px rgba(0,0,0,0.12);--r1:8px;--r2:14px;--r3:20px;--nh:64px;--tr:all 0.3s cubic-bezier(0.4,0,0.2,1);--st:#888}
-[data-theme="dark"]{--bg:#0a0a0a;--srf:#161616;--crg:rgba(22,22,22,0.7);--t1:#eee;--t2:#999;--t3:#555;--gb:rgba(22,22,22,0.4);--ge:rgba(255,255,255,0.06);--gs:0 8px 32px rgba(0,0,0,0.4);--ac:#fff;--ah:#ccc;--al:rgba(255,255,255,0.08);--ai:#111;--st:#bbb;--md:0 4px 20px rgba(0,0,0,0.4);--lg:0 8px 40px rgba(0,0,0,0.5)}
+:root{--bg:#fff;--srf:#fff;--crg:rgba(255,255,255,0.7);--t1:#000;--t2:#222;--t3:#666;--gb:rgba(255,255,255,0.8);--ge:rgba(0,0,0,0.1);--gs:0 4px 20px rgba(0,0,0,0.08);--ac:#000;--ah:#333;--al:rgba(0,0,0,0.05);--ai:#fff;--md:0 4px 20px rgba(0,0,0,0.08);--lg:0 8px 40px rgba(0,0,0,0.12);--r1:8px;--r2:14px;--r3:20px;--nh:64px;--tr:all 0.3s cubic-bezier(0.4,0,0.2,1);--st:#000;--rd:#e74c3c;--gr:#2ecc71}
+[data-theme="dark"]{--bg:#000;--srf:#000;--crg:rgba(0,0,0,0.7);--t1:#fff;--t2:#ddd;--t3:#888;--gb:rgba(0,0,0,0.8);--ge:rgba(255,255,255,0.12);--gs:0 4px 20px rgba(0,0,0,0.4);--ac:#fff;--ah:#ccc;--al:rgba(255,255,255,0.08);--ai:#000;--md:0 4px 20px rgba(0,0,0,0.4);--lg:0 8px 40px rgba(0,0,0,0.5);--st:#fff;--rd:#e74c3c;--gr:#2ecc71}
 html{scroll-behavior:smooth}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;background:var(--bg);color:var(--t1);min-height:100dvh;transition:var(--tr);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
 a{text-decoration:none;color:inherit}
@@ -218,26 +218,27 @@ section{padding:32px 0}
 .nav-admin{padding:8px 16px;border-radius:50px;background:var(--ac);color:var(--ai);font-weight:600;font-size:.82rem;transition:var(--tr);display:flex;align-items:center;gap:6px}
 .nav-admin:hover{background:var(--ah)}
 @media(max-width:600px){.nav-admin span{display:none}}
-.al{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#111;padding:20px}
-.alc{width:100%;max-width:400px;padding:36px 28px;border-radius:var(--r3);background:rgba(255,255,255,0.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08)}
-.alc h1{text-align:center;margin-bottom:6px;font-size:1.6rem;color:#fff}
-.alc>p{text-align:center;color:rgba(255,255,255,0.4);margin-bottom:24px;font-size:.9rem}
+.al{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:16px}
+.alc{width:100%;max-width:400px;padding:32px 24px;border-radius:var(--r3);background:var(--srf);border:1px solid var(--ge)}
+.alc h1{text-align:center;margin-bottom:6px;font-size:1.5rem;color:var(--t1)}
+.alc>p{text-align:center;color:var(--t2);margin-bottom:24px;font-size:.88rem}
 .alc .fg{margin-bottom:14px}
-.alc label{display:block;color:rgba(255,255,255,0.7);font-weight:500;margin-bottom:5px;font-size:.85rem}
-.alc input{width:100%;padding:13px 14px;border-radius:var(--r1);background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.08);color:#fff;transition:var(--tr);font-size:.92rem}
-.alc input:focus{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.1)}
-.alc input::placeholder{color:rgba(255,255,255,0.25)}
-.alb{width:100%;padding:13px;border-radius:var(--r1);background:#fff;color:#111;font-weight:700;transition:var(--tr);margin-top:4px}
-.alb:hover{background:#ddd}
-.aerr{color:#888;font-size:.82rem;text-align:center;margin-top:8px;display:none}
+.alc label{display:block;color:var(--t2);font-weight:500;margin-bottom:5px;font-size:.82rem}
+.alc input{width:100%;padding:12px 14px;border-radius:var(--r1);background:var(--bg);border:1.5px solid var(--ge);color:var(--t1);transition:var(--tr);font-size:.9rem}
+.alc input:focus{border-color:var(--ac);background:var(--srf)}
+.alc input::placeholder{color:var(--t3)}
+.alb{width:100%;padding:13px;border-radius:var(--r1);background:var(--ac);color:var(--ai);font-weight:700;transition:var(--tr);margin-top:4px;font-size:.92rem}
+.alb:hover{background:var(--ah)}
+.aerr{color:var(--t3);font-size:.82rem;text-align:center;margin-top:8px;display:none}
 .ap{padding-top:calc(var(--nh) + 16px)}
 .ah{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
 .ah h1{font-size:1.5rem;font-weight:800}
 .abg{padding:5px 12px;border-radius:50px;background:var(--al);color:var(--t2);font-weight:600;font-size:.78rem;border:1px solid var(--ge);display:flex;align-items:center;gap:6px}
-.alo{padding:9px 18px;border-radius:50px;background:#333;color:#fff;font-weight:600;transition:var(--tr);display:flex;align-items:center;gap:6px;font-size:.85rem}
+.alo{padding:9px 18px;border-radius:50px;background:var(--ac);color:var(--ai);font-weight:600;transition:var(--tr);display:flex;align-items:center;gap:6px;font-size:.85rem}
 .alo:hover{opacity:.85}
 .ag{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-@media(max-width:850px){.ag{grid-template-columns:1fr}}
+.ag-tbl{order:2}.ag-frm{order:1}
+@media(max-width:850px){.ag{grid-template-columns:1fr}.ag-tbl{order:1}.ag-frm{order:2}}
 .afc{background:var(--crg);backdrop-filter:blur(12px);border:1px solid var(--ge);border-radius:var(--r2);padding:24px;box-shadow:var(--gs);position:sticky;top:calc(var(--nh) + 16px)}
 .afc h2{font-size:1.1rem;font-weight:700;margin-bottom:16px}
 .fg{margin-bottom:14px}
@@ -260,9 +261,8 @@ section{padding:32px 0}
 .at .ax button{padding:5px 12px;border-radius:var(--r1);font-size:.78rem;font-weight:600;transition:var(--tr)}
 .eb{background:var(--al);color:var(--t2);border:1px solid var(--ge)}
 .eb:hover{background:var(--ac);color:var(--ai)}
-.db2{background:rgba(0,0,0,0.05);color:var(--t2);border:1px solid var(--ge)}
-[data-theme="dark"] .db2{background:rgba(255,255,255,0.06)}
-.db2:hover{background:#333;color:#fff}
+.db2{background:var(--al);color:var(--t2);border:1px solid var(--ge)}
+.db2:hover{background:var(--rd);color:#fff}
 
 /* PDF Suite */
 .pdf-overlay{position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity .3s}
@@ -521,7 +521,7 @@ section{padding:32px 0}
 </div>
 <button class="alb" id="adminLoginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
 <div class="aerr" id="adminErr"><i class="fas fa-exclamation-circle"></i> Invalid credentials</div>
-<button class="bb" style="margin:14px auto 0;background:rgba(255,255,255,0.06);color:#fff;border-color:rgba(255,255,255,0.1)" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back</button>
+<button class="bb" style="margin:14px auto 0" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back</button>
 </div>
 </div>
 <div class="ap" id="adminDash" style="display:none">
@@ -547,10 +547,10 @@ section{padding:32px 0}
 <span class="abg"><i class="fas fa-shield-alt"></i> Admin</span>
 </div>
 <div class="ag">
-<div style="order:2">
+<div class="ag-tbl">
 <div class="flex items-c justify-b" style="margin-bottom:12px">
 <h2 style="font-size:1.05rem;font-weight:700"><i class="fas fa-mobile-alt"></i> Apps</h2>
-<button class="ibtn" id="clearAll" style="background:#555"><i class="fas fa-trash-alt"></i> Clear</button>
+<button class="ibtn" id="clearAll"><i class="fas fa-trash-alt"></i> Clear</button>
 </div>
 <div class="atw">
 <table class="at">
@@ -559,8 +559,7 @@ section{padding:32px 0}
 </table>
 </div>
 </div>
-<div style="order:1">
-<div class="afc" id="formCard">
+<div class="ag-frm">
 <h2 id="formTitle"><i class="fas fa-plus-circle"></i> Add App</h2>
 <form id="appForm" autocomplete="off">
 <div class="fr">
@@ -756,6 +755,12 @@ const DB={
 }
 
 let curApp=null,selRat=0,edId=null,slI=0,slT=null;
+
+function pushNotif(title,body){
+  if(!('Notification'in window))return;
+  if(Notification.permission==='granted'){new Notification(title,{body,icon:'logo.svg'})}
+  else if(Notification.permission!=='denied'){Notification.requestPermission().then(p=>{if(p==='granted')new Notification(title,{body,icon:'logo.svg'})})}
+}
 
 function tst(m,t='success'){
   const o=document.getElementById('toast'),msg=document.getElementById('toastMsg');
@@ -1021,7 +1026,7 @@ document.getElementById('appForm')?.addEventListener('submit',async e=>{
   if(!n||!d||!c||!desc){tst('Fill required fields','error');return}
   const ss=sc?sc.split(',').map(x=>x.trim()).filter(Boolean):[];
   if(edId){await DB.updateApp(edId,{name:n,developer:d,category:c,subcategory:s,description:desc,icon:ic,banner:bn,screenshots:ss,websiteLink:w,apkLink:ap,version:v,featured:f});tst('Updated!','success');edId=null;document.getElementById('formTitle').innerHTML='<i class="fas fa-plus-circle"></i> Add App';document.getElementById('formBtn').innerHTML='<i class="fas fa-plus-circle"></i> Add App'}
-  else{await DB.addApp({name:n,developer:d,category:c,subcategory:s,description:desc,icon:ic,banner:bn,screenshots:ss,websiteLink:w,apkLink:ap,version:v,featured:f});tst('Added!','success')}
+  else{await DB.addApp({name:n,developer:d,category:c,subcategory:s,description:desc,icon:ic,banner:bn,screenshots:ss,websiteLink:w,apkLink:ap,version:v,featured:f});tst('Added!','success');pushNotif('TS Store','New app added: '+n)}
   document.getElementById('appForm').reset();document.getElementById('aSub').innerHTML='<option value="">Select</option>';document.getElementById('aIconName').textContent='No file chosen';document.getElementById('aIconPreview').style.display='none';uploadedIcon=null;renderAdminTable();updAdminStats();
 });
 
