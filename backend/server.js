@@ -4,17 +4,28 @@ import initSqlJs from 'sql.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import multer from 'multer';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.join(__dirname, 'db.sqlite');
+const UPLOADS_DIR = path.join(__dirname, '..', 'uploads');
+
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 const ADMIN_ID = process.env.ADMIN_ID || 'shubham';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '1234';
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, UPLOADS_DIR),
+  filename: (req, file, cb) => cb(null, Date.now() + '_' + Math.random().toString(36).substring(2, 9) + path.extname(file.originalname))
+});
+const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } });
 
 const app = express();
 app.use(cors());
 app.use(express.json({limit:'10mb'}));
 app.use(express.static(path.join(__dirname, '..'), {maxAge:0,etag:false,lastModified:false}));
+app.use('/uploads', express.static(UPLOADS_DIR));
 
 let db;
 
@@ -79,6 +90,40 @@ async function initDb() {
     password TEXT NOT NULL
   )`);
 
+  db.run(`CREATE TABLE IF NOT EXISTS users (
+    id TEXT PRIMARY KEY,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    email TEXT DEFAULT '',
+    createdAt TEXT DEFAULT (datetime('now'))
+  )`);
+  try { db.run(`ALTER TABLE users ADD COLUMN email TEXT DEFAULT ''`); } catch (e) {}
+
+  db.run(`CREATE TABLE IF NOT EXISTS categories (
+    name TEXT PRIMARY KEY,
+    icon TEXT DEFAULT 'folder',
+    subcategories TEXT DEFAULT '[]',
+    createdAt TEXT DEFAULT (datetime('now'))
+  )`);
+
+  // Seed default categories if empty
+  const existingCats = query("SELECT COUNT(*) as cnt FROM categories");
+  if (!existingCats.length || existingCats[0].cnt === 0) {
+    const defaults = [
+      ['Games', 'gamepad', JSON.stringify(['Action', 'Racing', 'Puzzle', 'Adventure'])],
+      ['AI Tools', 'robot', JSON.stringify(['Chatbots', 'Image Generators', 'Productivity AI', 'Coding AI'])],
+      ['Business', 'briefcase', JSON.stringify(['CRM', 'Finance', 'Marketing', 'Startup Tools'])],
+      ['Jobs', 'laptop-code', JSON.stringify(['Internship', 'Remote Jobs', 'Freelance', 'Full Time'])],
+      ['Skills', 'book-open', JSON.stringify(['Programming', 'Data Science', 'Design', 'Marketing', 'AI & ML'])],
+      ['Education', 'graduation-cap', JSON.stringify(['Learning Apps', 'Courses', 'Exam Preparation'])],
+      ['Productivity', 'tasks', JSON.stringify(['Notes', 'To-Do', 'Calculator', 'Utility Tools'])]
+    ];
+    const stmt = db.prepare("INSERT INTO categories (name, icon, subcategories) VALUES (?, ?, ?)");
+    defaults.forEach(d => { stmt.bind(d); stmt.run(); });
+    stmt.free();
+    saveDb();
+  }
+
   db.run("DELETE FROM admin");
   db.run("INSERT INTO admin (id, password) VALUES (?, ?)", [ADMIN_ID, ADMIN_PASSWORD]);
   saveDb();
@@ -104,6 +149,18 @@ function adminAuth(req, res, next) {
   const [id, pw] = creds.split(':');
   const row = getOne('SELECT * FROM admin WHERE id=? AND password=?', [id, pw]);
   if (!row) return res.status(401).json({ error: 'Invalid credentials' });
+  next();
+}
+
+// User auth middleware
+function userAuth(req, res, next) {
+  const auth = req.headers.authorization;
+  if (!auth || !auth.startsWith('Basic ')) return res.status(401).json({ error: 'Unauthorized' });
+  const creds = Buffer.from(auth.slice(6), 'base64').toString();
+  const [id, pw] = creds.split(':');
+  const row = getOne('SELECT * FROM users WHERE username=? AND password=?', [id, pw]);
+  if (!row) return res.status(401).json({ error: 'Invalid credentials' });
+  req.user = row;
   next();
 }
 
@@ -173,6 +230,94 @@ app.post('/api/apps/:id/review', (req, res) => {
   query('UPDATE apps SET reviews=?, rating=?, updatedAt=datetime(\'now\') WHERE id=?', [JSON.stringify(reviews), Math.round(avg * 10) / 10, req.params.id]);
   const updated = getOne('SELECT * FROM apps WHERE id=?', [req.params.id]);
   res.json(parseApp(updated));
+});
+
+// Category routes (public read, admin write)
+app.get('/api/categories', (req, res) => {
+  const rows = query('SELECT * FROM categories ORDER BY name ASC');
+  res.json(rows.map(r => ({
+    ...r,
+    subcategories: (() => { try { return JSON.parse(r.subcategories || '[]'); } catch { return []; } })()
+  })));
+});
+
+app.post('/api/categories', adminAuth, (req, res) => {
+  const { name, icon, subcategories } = req.body;
+  if (!name) return res.status(400).json({ error: 'Category name required' });
+  const existing = getOne('SELECT * FROM categories WHERE name=?', [name]);
+  if (existing) return res.status(409).json({ error: 'Category already exists' });
+  query('INSERT INTO categories (name, icon, subcategories) VALUES (?, ?, ?)',
+    [name, icon || 'folder', JSON.stringify(subcategories || [])]);
+  const row = getOne('SELECT * FROM categories WHERE name=?', [name]);
+  res.status(201).json({ ...row, subcategories: (() => { try { return JSON.parse(row.subcategories || '[]'); } catch { return []; } })() });
+});
+
+app.put('/api/categories/:name', adminAuth, (req, res) => {
+  const existing = getOne('SELECT * FROM categories WHERE name=?', [req.params.name]);
+  if (!existing) return res.status(404).json({ error: 'Not found' });
+  const { name, icon, subcategories } = req.body;
+  query('UPDATE categories SET name=?, icon=?, subcategories=? WHERE name=?',
+    [name || existing.name, icon || existing.icon,
+     subcategories ? JSON.stringify(subcategories) : existing.subcategories,
+     req.params.name]);
+  const row = getOne('SELECT * FROM categories WHERE name=?', [name || req.params.name]);
+  res.json({ ...row, subcategories: (() => { try { return JSON.parse(row.subcategories || '[]'); } catch { return []; } })() });
+});
+
+app.delete('/api/categories/:name', adminAuth, (req, res) => {
+  query('DELETE FROM categories WHERE name=?', [req.params.name]);
+  res.json({ success: true });
+});
+
+// File upload endpoint
+app.post('/api/upload', adminAuth, upload.single('file'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  const url = '/uploads/' + req.file.filename;
+  res.json({ url, filename: req.file.filename });
+});
+
+app.post('/api/upload/multiple', adminAuth, upload.array('files', 10), (req, res) => {
+  if (!req.files || !req.files.length) return res.status(400).json({ error: 'No files uploaded' });
+  const urls = req.files.map(f => ({ url: '/uploads/' + f.filename, filename: f.filename }));
+  res.json({ files: urls });
+});
+
+// User auth endpoints
+app.post('/api/users/register', (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
+  if (username.length < 3) return res.status(400).json({ error: 'Username must be at least 3 characters' });
+  if (password.length < 4) return res.status(400).json({ error: 'Password must be at least 4 characters' });
+  const existing = getOne('SELECT * FROM users WHERE username=?', [username]);
+  if (existing) return res.status(409).json({ error: 'Username already taken' });
+  const id = 'u_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+  query('INSERT INTO users (id, username, password) VALUES (?, ?, ?)', [id, username, password]);
+  res.status(201).json({ success: true, user: { id, username } });
+});
+
+app.post('/api/users/login', (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
+  const row = getOne('SELECT * FROM users WHERE username=? AND password=?', [username, password]);
+  if (!row) return res.status(401).json({ error: 'Invalid credentials' });
+  res.json({ success: true, user: { id: row.id, username: row.username } });
+});
+
+app.post('/api/users/google', (req, res) => {
+  const { email, name, idToken } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email required' });
+  const displayName = name || email.split('@')[0] || email;
+  try {
+    let user = getOne('SELECT * FROM users WHERE email=?', [email]);
+    if (!user) {
+      const id = 'u_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+      query('INSERT INTO users (id, username, password, email) VALUES (?, ?, ?, ?)', [id, 'google_' + displayName, 'firebase_' + (idToken ? idToken.substring(0, 16) : 'auto'), email]);
+      user = getOne('SELECT * FROM users WHERE id=?', [id]);
+    }
+    res.json({ success: true, user: { id: user.id, username: user.username.replace('google_', '') } });
+  } catch (e) {
+    res.status(400).json({ error: 'Google sign-in failed' });
+  }
 });
 
 // Admin auth endpoint

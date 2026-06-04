@@ -218,51 +218,119 @@ section{padding:32px 0}
 .nav-admin{padding:8px 16px;border-radius:50px;background:var(--ac);color:var(--ai);font-weight:600;font-size:.82rem;transition:var(--tr);display:flex;align-items:center;gap:6px}
 .nav-admin:hover{background:var(--ah)}
 @media(max-width:600px){.nav-admin span{display:none}}
+.nav-user{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;transition:var(--tr);font-size:1rem;background:var(--al);border:1px solid var(--ge);position:relative}
+.nav-user:hover{background:var(--ac);color:var(--ai)}
+.nav-user.logged{background:var(--gr);color:#fff;border-color:var(--gr)}
+.um{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;padding:16px}
+.um.active{display:flex}
+.umc{width:100%;max-width:380px;padding:28px 24px;border-radius:var(--r3);background:var(--srf);border:1px solid var(--ge);position:relative;animation:fi .3s ease}
+.umc h2{text-align:center;margin-bottom:4px;font-size:1.3rem}
+.umc>p{text-align:center;color:var(--t2);margin-bottom:20px;font-size:.85rem}
+.umc .fg{margin-bottom:12px}
+.umc .fg label{font-size:.82rem;font-weight:500;margin-bottom:4px}
+.umc .fg input{padding:10px 12px;border-radius:var(--r1);background:var(--bg);border:1.5px solid var(--ge);color:var(--t1);width:100%;font-size:.88rem}
+.umc .fg input:focus{border-color:var(--ac)}
+.um-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;transition:var(--tr);font-size:1rem}
+.um-close:hover{background:var(--al)}
+.um-err{color:var(--rd);font-size:.8rem;text-align:center;margin-top:6px;display:none}
 .al{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:16px}
-.alc{width:100%;max-width:400px;padding:32px 24px;border-radius:var(--r3);background:var(--srf);border:1px solid var(--ge)}
-.alc h1{text-align:center;margin-bottom:6px;font-size:1.5rem;color:var(--t1)}
-.alc>p{text-align:center;color:var(--t2);margin-bottom:24px;font-size:.88rem}
+.alc{width:100%;max-width:400px;padding:36px 28px;border-radius:var(--r3);background:var(--srf);border:1px solid var(--ge);box-shadow:var(--lg)}
+.alc h1{text-align:center;margin-bottom:6px;font-size:1.5rem;color:var(--t1);display:flex;align-items:center;justify-content:center;gap:8px}
+.alc>p{text-align:center;color:var(--t2);margin-bottom:24px;font-size:.85rem}
 .alc .fg{margin-bottom:14px}
 .alc label{display:block;color:var(--t2);font-weight:500;margin-bottom:5px;font-size:.82rem}
 .alc input{width:100%;padding:12px 14px;border-radius:var(--r1);background:var(--bg);border:1.5px solid var(--ge);color:var(--t1);transition:var(--tr);font-size:.9rem}
 .alc input:focus{border-color:var(--ac);background:var(--srf)}
 .alc input::placeholder{color:var(--t3)}
-.alb{width:100%;padding:13px;border-radius:var(--r1);background:var(--ac);color:var(--ai);font-weight:700;transition:var(--tr);margin-top:4px;font-size:.92rem}
+.alb{width:100%;padding:13px;border-radius:var(--r1);background:var(--ac);color:var(--ai);font-weight:700;transition:var(--tr);margin-top:4px;font-size:.92rem;display:flex;align-items:center;justify-content:center;gap:6px}
 .alb:hover{background:var(--ah)}
-.aerr{color:var(--t3);font-size:.82rem;text-align:center;margin-top:8px;display:none}
-.ap{padding-top:calc(var(--nh) + 16px)}
-.ah{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
-.ah h1{font-size:1.5rem;font-weight:800}
-.abg{padding:5px 12px;border-radius:50px;background:var(--al);color:var(--t2);font-weight:600;font-size:.78rem;border:1px solid var(--ge);display:flex;align-items:center;gap:6px}
-.alo{padding:9px 18px;border-radius:50px;background:var(--ac);color:var(--ai);font-weight:600;transition:var(--tr);display:flex;align-items:center;gap:6px;font-size:.85rem}
+.alb:disabled{opacity:.5;cursor:not-allowed}
+.aerr{color:var(--rd);font-size:.82rem;text-align:center;margin-top:10px;display:none;padding:8px 12px;background:rgba(231,76,60,0.08);border-radius:var(--r1)}
+.ap{padding-top:calc(var(--nh) + 16px);min-height:100vh;background:var(--bg)}
+/* Dashboard header */
+.ah{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.ah h1{font-size:1.4rem;font-weight:800;display:flex;align-items:center;gap:8px}
+.abg{padding:4px 12px;border-radius:50px;background:var(--al);color:var(--t2);font-weight:600;font-size:.75rem;border:1px solid var(--ge);display:flex;align-items:center;gap:5px}
+.alo{padding:8px 16px;border-radius:50px;background:var(--ac);color:var(--ai);font-weight:600;transition:var(--tr);display:flex;align-items:center;gap:6px;font-size:.82rem;border:none;cursor:pointer}
 .alo:hover{opacity:.85}
-.ag{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.ag-tbl{order:2}.ag-frm{order:1}
-@media(max-width:850px){.ag{grid-template-columns:1fr}.ag-tbl{order:1}.ag-frm{order:2}}
-.afc{background:var(--crg);backdrop-filter:blur(12px);border:1px solid var(--ge);border-radius:var(--r2);padding:24px;box-shadow:var(--gs);position:sticky;top:calc(var(--nh) + 16px)}
-.afc h2{font-size:1.1rem;font-weight:700;margin-bottom:16px}
-.fg{margin-bottom:14px}
-.fg label{display:block;font-weight:600;margin-bottom:5px;font-size:.85rem}
-.fg input,.fg textarea,.fg select{width:100%;padding:11px 12px;border-radius:var(--r1);background:var(--srf);border:1.5px solid var(--ge);transition:var(--tr);font-size:.9rem}
-.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--t3);box-shadow:0 0 0 3px var(--al)}
-.fg textarea{resize:vertical;min-height:70px}
-.fg select{cursor:pointer}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:500px){.fr{grid-template-columns:1fr}}
-.sbtn{width:100%;padding:13px;border-radius:var(--r1);background:var(--ac);color:var(--ai);font-weight:700;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:6px}
-.sbtn:hover{background:var(--ah)}
-.atw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* Admin tabs */
+.atabs{display:flex;gap:0;margin-bottom:20px;border-radius:var(--r1);overflow:hidden;border:1px solid var(--ge);width:fit-content}
+.atab{padding:9px 20px;font-weight:600;font-size:.85rem;cursor:pointer;transition:var(--tr);background:var(--srf);color:var(--t3);border:none;border-right:1px solid var(--ge);display:flex;align-items:center;gap:6px}
+.atab:last-child{border-right:none}
+.atab.act{background:var(--ac);color:var(--ai)}
+.atab:hover:not(.act){background:var(--al)}
+/* Admin panels */
+.apn{display:none}.apn.act{display:block}
+/* Stats row in panel header */
+.apn-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.apn-hdr h2{font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.apn-hdr .apn-actions{display:flex;gap:6px;flex-wrap:wrap}
+/* Tables */
+.atw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--ge);border-radius:var(--r1);background:var(--srf)}
 .at{width:100%;border-collapse:collapse;min-width:500px}
-.at th{text-align:left;padding:12px 10px;font-size:.75rem;text-transform:uppercase;letter-spacing:.4px;color:var(--t3);border-bottom:2px solid var(--ge);font-weight:600}
-.at td{padding:12px 10px;border-bottom:1px solid var(--ge);font-size:.85rem;vertical-align:middle}
+@media(max-width:600px){.at{min-width:0;display:block}.at thead{display:none}.at tbody,.at tr,.at td{display:block}.at tr{padding:12px 10px;border-bottom:1px solid var(--ge)}.at tr:last-child{border-bottom:none}.at td{padding:4px 0;border:none;font-size:.82rem;display:flex;align-items:center;gap:8px}.at td::before{content:attr(data-label);font-weight:600;color:var(--t3);font-size:.75rem;text-transform:uppercase;min-width:80px;flex-shrink:0}}
+.at th{text-align:left;padding:10px 12px;font-size:.72rem;text-transform:uppercase;letter-spacing:.4px;color:var(--t3);border-bottom:2px solid var(--ge);font-weight:600}
+.at td{padding:10px 12px;border-bottom:1px solid var(--ge);font-size:.85rem;vertical-align:middle}
+.at tr:last-child td{border-bottom:none}
 .at td .am{display:flex;align-items:center;gap:8px}
-.at td .am img{width:32px;height:32px;border-radius:8px;background:var(--t3)}
+.at td .am img{width:32px;height:32px;border-radius:8px;background:var(--t3);object-fit:cover;flex-shrink:0}
+.at td .am .am-i{min-width:0}
+.at td .am .am-i strong{font-size:.85rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.at td .am .am-i span{font-size:.72rem;color:var(--t3)}
 .at .ax{display:flex;gap:4px}
-.at .ax button{padding:5px 12px;border-radius:var(--r1);font-size:.78rem;font-weight:600;transition:var(--tr)}
+.at .ax button{padding:5px 12px;border-radius:var(--r1);font-size:.75rem;font-weight:600;transition:var(--tr);cursor:pointer;border:none}
 .eb{background:var(--al);color:var(--t2);border:1px solid var(--ge)}
 .eb:hover{background:var(--ac);color:var(--ai)}
 .db2{background:var(--al);color:var(--t2);border:1px solid var(--ge)}
 .db2:hover{background:var(--rd);color:#fff}
+.ibtn{padding:7px 14px;border-radius:var(--r1);border:1px solid var(--ge);background:var(--srf);color:var(--t2);font-size:.8rem;font-weight:600;cursor:pointer;transition:var(--tr);display:flex;align-items:center;gap:5px}
+.ibtn:hover{background:var(--al)}
+.ibtn.dg{background:var(--rd);color:#fff;border-color:var(--rd)}
+.ibtn.dg:hover{opacity:.85}
+/* Form card */
+.ag-frm{background:var(--srf);border:1px solid var(--ge);border-radius:var(--r2);padding:20px;box-shadow:var(--gs)}
+.ag-frm h2{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.ag-frm .fsec{border:1px solid var(--ge);border-radius:var(--r1);padding:14px;margin-bottom:14px}
+.ag-frm .fsec-h{font-size:.82rem;font-weight:600;margin-bottom:10px;color:var(--t2);display:flex;align-items:center;gap:6px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-weight:600;margin-bottom:5px;font-size:.82rem}
+.fg input,.fg textarea,.fg select{width:100%;padding:10px 12px;border-radius:var(--r1);background:var(--bg);border:1.5px solid var(--ge);transition:var(--tr);font-size:.88rem}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--ac);box-shadow:0 0 0 2px var(--al)}
+.fg textarea{resize:vertical;min-height:60px}
+.fg select{cursor:pointer}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.fr{grid-template-columns:1fr}}
+.sbtn{width:100%;padding:12px;border-radius:var(--r1);background:var(--ac);color:var(--ai);font-weight:700;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;border:none;font-size:.9rem}
+.sbtn:hover{background:var(--ah)}
+/* Preview images */
+.pv{display:none;border-radius:6px;border:1px solid var(--ge);object-fit:cover;margin-top:6px}
+.pv-sm{width:50px;height:50px}
+.pv-md{width:100%;height:70px}
+.pv-thumbs{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.pv-thumbs img{height:55px;border-radius:6px;border:1px solid var(--ge);object-fit:cover}
+/* Media upload row */
+.ur{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ur input[type="url"]{flex:1;min-width:100px;padding:8px 10px;border-radius:var(--r1);border:1.5px solid var(--ge);font-size:.82rem;background:var(--bg);transition:var(--tr)}
+.ur input[type="url"]:focus{border-color:var(--ac);box-shadow:0 0 0 2px var(--al)}
+.ur .ufn{font-size:.75rem;color:var(--t3);white-space:nowrap}
+/* Responsive admin */
+@media(max-width:850px){
+  .ag-frm{padding:14px}
+}
+@media(max-width:600px){
+  .ap{padding-top:calc(var(--nh) + 8px)}
+  .ah{flex-direction:column;align-items:flex-start}
+  .ah h1{font-size:1.2rem}
+  .atabs{width:100%}.atab{flex:1;justify-content:center;font-size:.8rem;padding:9px 10px}
+  .fg input,.fg textarea,.fg select{padding:9px 10px;font-size:.84rem}
+  .at td .am img{width:26px;height:26px}
+  .at .ax button{padding:4px 10px;font-size:.72rem}
+  .sbtn{padding:11px;font-size:.85rem}
+}
+@media(max-width:400px){
+  .ap .nav-inner .nav-logo span{display:none}
+  .ap .nav-inner .alo{padding:6px 10px;font-size:.78rem}
+}
 
 /* PDF Suite */
 .pdf-overlay{position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity .3s}
@@ -334,6 +402,7 @@ section{padding:32px 0}
 <div class="nav-act">
 <button class="nav-menu" id="mobileSearchToggle" aria-label="Search"><i class="fas fa-search"></i></button>
 <button class="nav-btn" id="themeToggle" aria-label="Theme"><i class="fas fa-moon"></i></button>
+<button class="nav-user" id="userBtn" onclick="openUserModal()" title="User"><i class="fas fa-user"></i></button>
 <button class="nav-admin" onclick="showAdminLogin()"><i class="fas fa-cog"></i> <span>Admin</span></button>
 </div>
 </div>
@@ -419,7 +488,10 @@ section{padding:32px 0}
 <div class="ct">
 <div class="s-hdr">
 <h2 id="searchTitle"><i class="fas fa-search"></i> Results</h2>
+<div style="display:flex;gap:8px">
+<button class="s-all" id="backFromCat" style="display:none" onclick="clearSearch()"><i class="fas fa-arrow-left"></i> Back</button>
 <button class="s-all" onclick="clearSearch()">Clear</button>
+</div>
 </div>
 <div class="g" id="searchGrid"></div>
 </div>
@@ -509,19 +581,22 @@ section{padding:32px 0}
 <section id="adminSec" class="hidden">
 <div class="al" id="adminLogin">
 <div class="alc">
-<h1><i class="fas fa-lock"></i> Admin Panel</h1>
-<p>Sign in to manage apps</p>
+<div style="text-align:center;margin-bottom:20px">
+<div style="width:56px;height:56px;border-radius:16px;background:var(--ac);color:var(--ai);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.5rem"><i class="fas fa-lock"></i></div>
+<h1>Admin Panel</h1>
+<p style="color:var(--t3);font-size:.85rem">Sign in to manage your store</p>
+</div>
 <div class="fg">
-<label><i class="fas fa-user"></i> Admin ID</label>
+<label>Admin ID</label>
 <input type="text" id="adminId" placeholder="Enter admin ID" autocomplete="off">
 </div>
 <div class="fg">
-<label><i class="fas fa-key"></i> Password</label>
+<label>Password</label>
 <input type="password" id="adminPass" placeholder="Enter password">
 </div>
 <button class="alb" id="adminLoginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
-<div class="aerr" id="adminErr"><i class="fas fa-exclamation-circle"></i> Invalid credentials</div>
-<button class="bb" style="margin:14px auto 0" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back</button>
+<div class="aerr" id="adminErr">Invalid credentials</div>
+<button style="display:block;margin:16px auto 0;background:none;border:none;color:var(--t3);font-size:.82rem;cursor:pointer;padding:6px 12px" onclick="showHome()"><i class="fas fa-arrow-left"></i> Back to Store</button>
 </div>
 </div>
 <div class="ap" id="adminDash" style="display:none">
@@ -540,17 +615,23 @@ section{padding:32px 0}
 </nav>
 <div class="ct" style="padding-top:16px">
 <div class="ah">
-<div>
 <h1><i class="fas fa-chart-bar"></i> Dashboard</h1>
-<p style="color:var(--t2);margin-top:2px;font-size:.88rem" id="adminStats"><i class="fas fa-box"></i> 0 apps</p>
-</div>
 <span class="abg"><i class="fas fa-shield-alt"></i> Admin</span>
 </div>
-<div class="ag">
+
+<div class="atabs">
+<button class="atab act" data-tab="apps" onclick="switchAdminTab('apps')"><i class="fas fa-mobile-alt"></i> Apps</button>
+<button class="atab" data-tab="cats" onclick="switchAdminTab('cats')"><i class="fas fa-th-large"></i> Categories</button>
+</div>
+
+<div class="apn act" id="apnApps">
+<div class="ag" style="margin-bottom:24px">
 <div class="ag-tbl">
-<div class="flex items-c justify-b" style="margin-bottom:12px">
-<h2 style="font-size:1.05rem;font-weight:700"><i class="fas fa-mobile-alt"></i> Apps</h2>
-<button class="ibtn" id="clearAll"><i class="fas fa-trash-alt"></i> Clear</button>
+<div class="apn-hdr">
+<h2><i class="fas fa-mobile-alt"></i> All Apps</h2>
+<div class="apn-actions">
+<button class="ibtn dg" id="clearAll"><i class="fas fa-trash-alt"></i> Clear All</button>
+</div>
 </div>
 <div class="atw">
 <table class="at">
@@ -563,41 +644,125 @@ section{padding:32px 0}
 <h2 id="formTitle"><i class="fas fa-plus-circle"></i> Add App</h2>
 <form id="appForm" autocomplete="off">
 <div class="fr">
-<div class="fg"><label><i class="fas fa-heading"></i> App Name *</label><input type="text" id="aName" placeholder="App name" required></div>
-<div class="fg"><label><i class="fas fa-user"></i> Developer *</label><input type="text" id="aDev" placeholder="Developer" required></div>
+<div class="fg"><label>App Name *</label><input type="text" id="aName" placeholder="Enter app name" required></div>
+<div class="fg"><label>Developer *</label><input type="text" id="aDev" placeholder="Developer name" required></div>
 </div>
 <div class="fr">
-<div class="fg"><label><i class="fas fa-tag"></i> Category *</label>
-<select id="aCat" required>
-<option value="">Select</option>
-<option>Games</option><option>AI Tools</option><option>Business</option>
-<option>Jobs</option><option>Skills</option><option>Education</option><option>Productivity</option>
-</select></div>
-<div class="fg"><label><i class="fas fa-layer-group"></i> Subcategory <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional)</span></label>
-<select id="aSub"><option value="">Select</option></select></div>
+<div class="fg"><label>Category *</label>
+<select id="aCat" required><option value="">Select category</option></select></div>
+<div class="fg"><label>Subcategory <span style="font-weight:400;color:var(--t3);font-size:.75rem">(optional)</span></label>
+<select id="aSub"><option value="">Select subcategory</option></select></div>
 </div>
-<div class="fg"><label><i class="fas fa-align-left"></i> Description *</label><textarea id="aDesc" placeholder="Describe your app..." required></textarea></div>
+<div class="fg"><label>Description *</label><textarea id="aDesc" placeholder="Describe your app..." rows="3" required></textarea></div>
+<div class="fsec">
+<div class="fsec-h"><i class="fas fa-images"></i> Media Assets</div>
 <div class="fr">
-<div class="fg"><label><i class="fas fa-image"></i> App Icon</label><div style="display:flex;gap:10px;align-items:center"><input type="file" id="aIconInput" accept="image/*" style="display:none"><button type="button" id="aIconBtn" class="ibtn" style="font-size:.82rem;padding:9px 16px"><i class="fas fa-cloud-upload-alt"></i> Upload Icon</button><span id="aIconName" style="font-size:.82rem;color:var(--t3)">No file chosen</span></div><img id="aIconPreview" style="display:none;width:50px;height:50px;border-radius:10px;margin-top:8px;object-fit:cover;border:1px solid var(--ge)" alt=""></div>
-<div class="fg"><label><i class="fas fa-image"></i> Banner URL <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional)</span></label><input type="url" id="aBanner" placeholder="https://..."></div>
+<div class="fg"><label>App Icon</label>
+<div class="ur">
+<input type="file" id="aIconInput" accept="image/*" style="display:none">
+<button type="button" id="aIconBtn" class="ibtn"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
+<input type="url" id="aIconUrl" placeholder="Or paste icon URL...">
 </div>
-<div class="fg"><label><i class="fas fa-images"></i> Screenshots <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional, comma separated)</span></label><input type="text" id="aScreens" placeholder="https://..., https://..."></div>
+<img class="pv pv-sm" id="aIconPreview" alt=""><span class="ufn" id="aIconName"></span>
+</div>
+<div class="fg"><label>Banner Image</label>
+<div class="ur">
+<input type="url" id="aBanner" placeholder="https://...">
+<input type="file" id="aBannerInput" accept="image/*" style="display:none">
+<button type="button" id="aBannerBtn" class="ibtn"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
+</div>
+<img class="pv pv-md" id="aBannerPreview" alt="">
+</div>
+</div>
+<div class="fg"><label>Screenshots <span style="font-weight:400;color:var(--t3);font-size:.75rem">(upload or URL)</span></label>
+<div class="ur">
+<input type="url" id="aScreens" placeholder="https://...">
+<input type="file" id="aScreensInput" accept="image/*" multiple style="display:none">
+<button type="button" id="aScreensBtn" class="ibtn"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
+</div>
+<div class="pv-thumbs" id="aScreensPreview"></div>
+<input type="hidden" id="aScreensList" value="">
+</div>
+</div>
+<div class="fsec">
+<div class="fsec-h"><i class="fas fa-link"></i> Links & Info</div>
 <div class="fr">
-<div class="fg"><label><i class="fas fa-globe"></i> Website <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional)</span></label><input type="url" id="aWeb" placeholder="https://..."></div>
-<div class="fg"><label><i class="fas fa-file-archive"></i> APK Link <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional)</span></label><input type="url" id="aApk" placeholder="https://..."></div>
+<div class="fg"><label>Version <span style="font-weight:400;color:var(--t3);font-size:.75rem">(optional)</span></label><input type="text" id="aVer" placeholder="1.0.0"></div>
+<div class="fg"><label>Featured</label>
+<select id="aFeat"><option value="false">Not Featured</option><option value="true">Featured</option></select></div>
 </div>
 <div class="fr">
-<div class="fg"><label><i class="fas fa-code-branch"></i> Version <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional)</span></label><input type="text" id="aVer" placeholder="1.0.0"></div>
-<div class="fg"><label><i class="fas fa-star"></i> Featured <span style="font-weight:400;color:var(--t3);font-size:.78rem">(optional)</span></label><select id="aFeat"><option value="false">No</option><option value="true">Yes</option></select></div>
+<div class="fg"><label>Website <span style="font-weight:400;color:var(--t3);font-size:.75rem">(optional)</span></label><input type="url" id="aWeb" placeholder="https://..."></div>
+<div class="fg"><label>APK Link <span style="font-weight:400;color:var(--t3);font-size:.75rem">(optional)</span></label><input type="url" id="aApk" placeholder="https://..."></div>
 </div>
+</div>
+<div style="display:flex;gap:8px">
 <button type="submit" class="sbtn" id="formBtn"><i class="fas fa-plus-circle"></i> Add App</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+
+<div class="apn" id="apnCats">
+<div class="ag">
+<div class="ag-tbl">
+<div class="apn-hdr">
+<h2><i class="fas fa-th-large"></i> All Categories</h2>
+<div class="apn-actions">
+<button class="ibtn" id="refreshCatsBtn"><i class="fas fa-sync"></i> Refresh</button>
+</div>
+</div>
+<div class="atw">
+<table class="at">
+<thead><tr><th>Name</th><th>Subcategories</th><th>Actions</th></tr></thead>
+<tbody id="adminCatTbody"></tbody>
+</table>
+</div>
+</div>
+<div class="ag-frm">
+<h2 id="catFormTitle"><i class="fas fa-plus-circle"></i> Add Category</h2>
+<form id="catForm" autocomplete="off">
+<div class="fr">
+<div class="fg"><label>Category Name *</label><input type="text" id="cName" placeholder="Category name" required></div>
+<div class="fg"><label>Icon <span style="font-weight:400;color:var(--t3);font-size:.75rem">(Font Awesome)</span></label><input type="text" id="cIcon" placeholder="folder, gamepad, robot..." value="folder"></div>
+</div>
+<div class="fg"><label>Subcategories <span style="font-weight:400;color:var(--t3);font-size:.75rem">(comma separated)</span></label><input type="text" id="cSubs" placeholder="Action, Racing, Puzzle..."></div>
+<button type="submit" class="sbtn" id="catFormBtn"><i class="fas fa-plus-circle"></i> Add Category</button>
 </form>
 </div>
 </div>
 </div>
 </div>
-</div>
 </section>
+
+<div class="um" id="userModal">
+<div class="umc">
+<button class="um-close" onclick="closeUserModal()"><i class="fas fa-times"></i></button>
+<h2><i class="fas fa-user-circle"></i> Sign In</h2>
+<p id="umSubtext">Access your account</p>
+<div id="umGoogleSection" style="margin-bottom:16px">
+<button type="button" id="googleBtn" onclick="handleGoogleClick()" style="width:100%;padding:11px;border-radius:var(--r1);background:#fff;color:#333;font-weight:600;font-size:.9rem;border:1.5px solid #dadce0;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:all .2s" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='#fff'">
+<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+Sign in with Google
+</button>
+<div class="um-err" id="geErr" style="margin-top:6px"></div>
+</div>
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;color:var(--t3);font-size:.82rem">
+<div style="flex:1;height:1px;background:var(--ge)"></div><span>or</span><div style="flex:1;height:1px;background:var(--ge)"></div>
+</div>
+<form id="userLoginForm">
+<div class="fg"><label>Username</label><input type="text" id="ulUser" placeholder="Enter username" autocomplete="off"></div>
+<div class="fg"><label>Password</label><input type="password" id="ulPass" placeholder="Enter password"></div>
+<div class="um-err" id="ulErr">Invalid credentials</div>
+<button type="submit" class="alb" id="ulBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+</form>
+<div style="text-align:center;margin-top:12px" id="userLoggedView" style="display:none">
+<p style="color:var(--t2);margin-bottom:12px">Logged in as <strong id="loggedUsername">-</strong></p>
+<button class="alb" id="userLogoutBtn" style="background:var(--rd)"><i class="fas fa-sign-out-alt"></i> Logout</button>
+</div>
+</div>
+</div>
 
 <div class="tst" id="toast"><i class="fas fa-check-circle toast-icon" style="font-size:1.2rem"></i><span id="toastMsg">Success!</span></div>
 
@@ -616,6 +781,8 @@ section{padding:32px 0}
 </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
@@ -719,8 +886,8 @@ ToolInitializers['organize']=function(){let d=null,n='',pages=[];const i=documen
 <script>
 (function(){
 'use strict';
-const TK='ts_store_theme',API_BASE='https://ts-store-1.onrender.com/api';
-let appCache=[],adminCreds=null;
+const TK='ts_store_theme',API_BASE=location.hostname==='127.0.0.1'||location.hostname==='localhost'?'http://localhost:3000/api':'https://ts-store-1.onrender.com/api';
+let appCache=[],adminCreds=null,catCache=[];
 
 async function api(path,opts={}){
   const h={'Content-Type':'application/json'};
@@ -731,6 +898,20 @@ async function api(path,opts={}){
 }
 
 async function loadApps(){appCache=await api('/apps')}
+async function loadCategories(){catCache=await api('/categories')}
+function getCats(){
+  const db=(catCache.length?catCache:[
+    {name:'Games',icon:'gamepad',subcategories:['Action','Racing','Puzzle','Adventure']},
+    {name:'AI Tools',icon:'robot',subcategories:['Chatbots','Image Generators','Productivity AI','Coding AI']},
+    {name:'Business',icon:'briefcase',subcategories:['CRM','Finance','Marketing','Startup Tools']},
+    {name:'Jobs',icon:'laptop-code',subcategories:['Internship','Remote Jobs','Freelance','Full Time']},
+    {name:'Skills',icon:'book-open',subcategories:['Programming','Data Science','Design','Marketing','AI & ML']},
+    {name:'Education',icon:'graduation-cap',subcategories:['Learning Apps','Courses','Exam Preparation']},
+    {name:'Productivity',icon:'tasks',subcategories:['Notes','To-Do','Calculator','Utility Tools']}
+  ]);
+  return [...db,{name:'PDF Tools',icon:'file-pdf',subcategories:[]}];
+}
+function getSubs(cat){const c=getCats().find(x=>x.name===cat);return c?c.subcategories:[]}
 
 const DB={
   getApps(){return appCache},
@@ -750,8 +931,8 @@ const DB={
   async incInstalls(id){const rr=await api('/apps/'+id+'/install',{method:'POST'});const i=appCache.findIndex(a=>a.id===id);if(i>=0)appCache[i]=rr;return rr},
   getTheme(){return localStorage.getItem(TK)||'light'},
   setTheme(t){localStorage.setItem(TK,t)},
-  cats:[{n:'Games',f:'gamepad'},{n:'AI Tools',f:'robot'},{n:'Business',f:'briefcase'},{n:'Jobs',f:'laptop-code'},{n:'Skills',f:'book-open'},{n:'Education',f:'graduation-cap'},{n:'Productivity',f:'tasks'},{n:'PDF Tools',f:'file-pdf'}],
-  subs:{'Games':['Action','Racing','Puzzle','Adventure'],'AI Tools':['Chatbots','Image Generators','Productivity AI','Coding AI'],'Business':['CRM','Finance','Marketing','Startup Tools'],'Jobs':['Internship','Remote Jobs','Freelance','Full Time'],'Skills':['Programming','Data Science','Design','Marketing','AI & ML'],'Education':['Learning Apps','Courses','Exam Preparation'],'Productivity':['Notes','To-Do','Calculator','Utility Tools']}
+  get cats(){return getCats().map(c=>({n:c.name,f:c.icon}))},
+  subs(name){const c=getCats().find(x=>x.name===name);return c?c.subcategories:[]}
 }
 
 let curApp=null,selRat=0,edId=null,slI=0,slT=null;
@@ -829,7 +1010,7 @@ function initTheme(){
 document.addEventListener('click',e=>{if(e.target.closest('#themeToggle')||e.target.closest('#themeToggleAdmin')){const c=DB.getTheme(),n=c==='dark'?'light':'dark';DB.setTheme(n);document.documentElement.setAttribute('data-theme',n);['themeToggle','themeToggleAdmin'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=n==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>'})}});
 
 /* View */
-async function showHome(){['mainContent','adminSec','detailSec','allSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');if(id==='mainContent')e.classList.remove('hidden')});closePdfWorkspace();try{await loadApps()}catch(e){}renderInstalled();renderFeat();renderCats();initCatClicks();renderTrend();renderNew();renderTop(document.querySelector('#topSec .sc.act')?.dataset.chart||'trending');document.getElementById('mainContent').scrollIntoView({behavior:'smooth'})}
+async function showHome(){['mainContent','adminSec','detailSec','allSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');if(id==='mainContent')e.classList.remove('hidden')});closePdfWorkspace();try{await loadApps();await loadCategories()}catch(e){}renderInstalled();renderFeat();renderCats();initCatClicks();renderTrend();renderNew();renderTop(document.querySelector('#topSec .sc.act')?.dataset.chart||'trending');document.getElementById('mainContent').scrollIntoView({behavior:'smooth'})}
 function showPdfSuite(){closePdfWorkspace();if(document.getElementById('allGrid')&&!document.getElementById('allGrid').children.length)initPdfSuite();['mainContent','adminSec','detailSec','allSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden')});const as=document.getElementById('allSec');if(as)as.classList.remove('hidden');const sc=document.getElementById('allSec');if(sc)sc.scrollIntoView({behavior:'smooth'});else window.scrollTo({top:0,behavior:'smooth'})}
 
 function showDetail(id){curApp=id;hideViews();document.getElementById('detailSec').classList.remove('hidden');renderDetail(DB.getApp(id));document.getElementById('detailSec').scrollIntoView({behavior:'smooth'})}
@@ -845,8 +1026,7 @@ function renderFeat(){
   const sec=document.getElementById('featSec');
   if(!apps.length){sec.style.display='none';return}
   sec.style.display='';
-  t.innerHTML=apps.map(a=>'<div class="s-card"><div class="s-bnr"><img src="'+(a.banner||'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=200&fit=crop')+'" alt="" loading="lazy" onerror="this.style.display=\'none\'"><span class="s-bdg">Featured</span></div><div class="s-body"><div class="s-icon"><img src="'+icon(a)+'" alt="" loading="lazy"></div><div class="s-inf"><h3>'+a.name+'</h3><div class="dev">'+a.developer+'</div><div class="meta"><span class="star"><i class="fas fa-star"></i> '+(a.rating||0)+'</span><span><i class="fas fa-download"></i> '+fmt(a.installs||0)+'</span></div></div></div></div>').join('');
-  t.querySelectorAll('.s-card').forEach(c=>c.addEventListener('click',()=>{const h=c.querySelector('h3');if(h){const r=DB.search(h.textContent);if(r.length)showDetail(r[0].id)}}));
+  t.innerHTML=apps.map(a=>'<div class="s-card" data-appid="'+a.id+'"><a class="s-bnr" href="javascript:void(0)" onclick="event.stopPropagation();showDetail(\''+a.id+'\')"><img src="'+(a.banner||'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=200&fit=crop')+'" alt="" loading="lazy" onerror="this.style.display=\'none\'"><span class="s-bdg">Featured</span></a><div class="s-body" onclick="showDetail(\''+a.id+'\')"><div class="s-icon"><img src="'+icon(a)+'" alt="" loading="lazy"></div><div class="s-inf"><h3>'+a.name+'</h3><div class="dev">'+a.developer+'</div><div class="meta"><span class="star"><i class="fas fa-star"></i> '+(a.rating||0)+'</span><span><i class="fas fa-download"></i> '+fmt(a.installs||0)+'</span></div></div></div></div>').join('');
   setupSlider(apps.length);
 }
 
@@ -880,10 +1060,10 @@ function initCatClicks(){
     c.addEventListener('click',()=>{
       const cat=c.dataset.cat;
       if(cat==='PDF Tools'){showPdfSuite();return}
-      const subs=DB.subs[cat]||[],box=document.getElementById('subsBox');
+      const subs=DB.subs(cat)||[],box=document.getElementById('subsBox');
       if(box&&subs.length){box.style.display='flex';box.innerHTML='<button class="sc act" data-sub="">All</button>'+subs.map(s=>'<button class="sc" data-sub="'+s+'">'+s+'</button>').join('');
-      box.querySelectorAll('.sc').forEach(ch=>{ch.addEventListener('click',()=>{box.querySelectorAll('.sc').forEach(x=>x.classList.remove('act'));ch.classList.add('act');const r=ch.dataset.sub?DB.bySub(cat,ch.dataset.sub):DB.byCat(cat);showResults(r,cat+(ch.dataset.sub?' / '+ch.dataset.sub:''))})})}
-      showResults(DB.byCat(cat),cat);
+      box.querySelectorAll('.sc').forEach(ch=>{ch.addEventListener('click',()=>{box.querySelectorAll('.sc').forEach(x=>x.classList.remove('act'));ch.classList.add('act');const r=ch.dataset.sub?DB.bySub(cat,ch.dataset.sub):DB.byCat(cat);showResults(r,cat+(ch.dataset.sub?' / '+ch.dataset.sub:''),true)})})}
+      showResults(DB.byCat(cat),cat,true);
     });
   });
 }
@@ -907,12 +1087,14 @@ function renderTop(type){
   a.forEach(x=>g.appendChild(card(x)));
 }
 
-function showResults(r,q){
-  document.getElementById('searchTitle').innerHTML='<i class="fas fa-search"></i> "'+q+'"';
+function showResults(r,q,isCat){
+  document.getElementById('searchTitle').innerHTML='<i class="fas fa-'+(isCat?'th-large':'search')+'"></i> '+q;
   const g=document.getElementById('searchGrid');g.innerHTML='';
-  if(!r.length)g.innerHTML='<div class="empty"><i class="fas fa-search"></i><p>No apps found</p></div>';
+  if(!r.length)g.innerHTML='<div class="empty"><i class="fas fa-inbox"></i><p>No apps in this category</p></div>';
   else r.forEach(a=>g.appendChild(card(a)));
   document.getElementById('searchSec').classList.remove('hidden');
+  const backBtn=document.getElementById('backFromCat');
+  if(backBtn)backBtn.style.display=isCat?'':'none';
   ['featSec','catSec','trSec','newSec','topSec'].forEach(id=>document.getElementById(id).classList.add('hidden'));
 }
 
@@ -926,7 +1108,7 @@ function clearSearch(){
 }
 
 function initSearch(){
-  const q=(v)=>{const t=v.trim();const as=document.getElementById('allSec');if(as&&!as.classList.contains('hidden')){if(t)doSearch();else pdfClearSearch();return}if(t){const r=DB.search(t);showResults(r,t)}else clearSearch()};
+  const q=(v)=>{const t=v.trim();const as=document.getElementById('allSec');if(as&&!as.classList.contains('hidden')){if(t)doSearch();else pdfClearSearch();return}if(t){const r=DB.search(t);showResults(r,t,false)}else clearSearch()};
   const d=function(){q(this.value)};
   ['navSearch','heroSearch','mobileSearchInput'].forEach(id=>{
     const e=document.getElementById(id);
@@ -977,62 +1159,326 @@ document.addEventListener('DOMContentLoaded',()=>{
     s.addEventListener('mouseenter',()=>{const v=parseInt(s.dataset.star);stars.forEach((st,i)=>st.classList.toggle('act',i<v))});
     s.addEventListener('mouseleave',()=>{stars.forEach((st,i)=>st.classList.toggle('act',i<selRat))});
   });
-  document.getElementById('revBtn')?.addEventListener('click',async()=>{
+});
+
+/* User */
+let userCreds=JSON.parse(localStorage.getItem('ts_user')||'null');
+
+function updateUserUI(){
+  const btn=document.getElementById('userBtn');
+  if(!btn)return;
+  if(userCreds){
+    btn.classList.add('logged');
+    btn.innerHTML='<i class="fas fa-check"></i>';
+    btn.title=userCreds.username;
+  }else{
+    btn.classList.remove('logged');
+    btn.innerHTML='<i class="fas fa-user"></i>';
+    btn.title='User';
+  }
+  const lv=document.getElementById('userLoggedView');
+  const lf=document.getElementById('userLoginForm');
+  const gs=document.getElementById('umGoogleSection');
+  if(lv&&userCreds){
+    document.getElementById('loggedUsername').textContent=userCreds.username;
+    if(lf)lf.style.display='none';
+    if(gs)gs.style.display='none';
+    document.getElementById('umSubtext').textContent='Welcome, '+userCreds.username+'!';
+    lv.style.display='block';
+  }else if(lv){
+    lv.style.display='none';
+    if(lf)lf.style.display='';
+    if(gs)gs.style.display='';
+  }
+}
+updateUserUI();
+
+// Firebase config
+firebase.initializeApp({
+  apiKey: "AIzaSyCIUB0S-14yVPUIJkBnNBr0NFjm2qmRuM0",
+  authDomain: "ts-store-1.firebaseapp.com",
+  projectId: "ts-store-1",
+  storageBucket: "ts-store-1.firebasestorage.app",
+  messagingSenderId: "193743215287",
+  appId: "1:193743215287:web:f337a7c6a1228cb975cb32",
+  measurementId: "G-M1NW811E2Q"
+});
+const fireAuth=firebase.auth();
+fireAuth.useDeviceLanguage();
+
+function openUserModal(){document.getElementById('userModal').classList.add('active');document.getElementById('geErr').style.display='none'}
+function closeUserModal(){document.getElementById('userModal').classList.remove('active')}
+window.openUserModal=openUserModal;window.closeUserModal=closeUserModal;
+
+async function handleGoogleClick(){
+  const btn=document.getElementById('googleBtn');
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-pulse"></i> Signing In...';
+  const err=document.getElementById('geErr');err.style.display='none';
+  try{
+    const provider=new firebase.auth.GoogleAuthProvider();
+    provider.setCustomParameters({prompt:'select_account'});
+    const result=await fireAuth.signInWithPopup(provider);
+    const user=result.user;
+    const idToken=await user.getIdToken();
+    const r=await api('/users/google',{method:'POST',body:JSON.stringify({idToken,email:user.email,name:user.displayName||user.email.split('@')[0]})});
+    if(r.success){
+      userCreds=r.user;
+      localStorage.setItem('ts_user',JSON.stringify(r.user));
+      updateUserUI();
+      closeUserModal();
+      tst('Welcome, '+r.user.username+'!','success');
+    }
+  }catch(e){
+    if(e.code!=='auth/popup-closed-by-user'){
+      err.textContent='Google sign-in failed';
+      err.style.display='block';
+    }
+  }
+  btn.disabled=false;btn.innerHTML='<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Sign in with Google';
+}
+window.handleGoogleClick=handleGoogleClick;
+
+document.getElementById('userLoginForm')?.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const u=document.getElementById('ulUser').value.trim(),p=document.getElementById('ulPass').value.trim();
+  if(!u||!p){document.getElementById('ulErr').textContent='Fill all fields';document.getElementById('ulErr').style.display='block';return}
+  try{
+    const r=await api('/users/login',{method:'POST',body:JSON.stringify({username:u,password:p})});
+    if(r.success){
+      userCreds=r.user;
+      localStorage.setItem('ts_user',JSON.stringify(r.user));
+      updateUserUI();
+      closeUserModal();
+      tst('Welcome, '+r.user.username+'!','success');
+    }
+  }catch(e){
+    document.getElementById('ulErr').textContent='Invalid credentials';
+    document.getElementById('ulErr').style.display='block';
+  }
+});
+
+document.getElementById('userLogoutBtn')?.addEventListener('click',()=>{
+  userCreds=null;
+  localStorage.removeItem('ts_user');
+  updateUserUI();
+  closeUserModal();
+  tst('Logged out','info');
+});
+
+// Update review submit to use logged-in username
+(function(){
+  const origRev=document.getElementById('revBtn')?.click;
+  if(!origRev)return;
+  const btn=document.getElementById('revBtn');
+  const oldClick=btn.onclick||btn._listeners&&btn._listeners[0];
+  btn.addEventListener('click',async()=>{
     if(!selRat){tst('Select a rating','error');return}
     const a=DB.getApp(curApp);if(!a)return;
     const c=document.getElementById('revText')?.value.trim()||'';
-    await DB.addReview(curApp,{user:'User_'+Math.random().toString(36).substr(2,6),rating:selRat,comment:c});
-    tst('Review submitted!','success');selRat=0;stars.forEach(s=>s.classList.remove('act'));
+    const uname=userCreds?userCreds.username:'User_'+Math.random().toString(36).substr(2,6);
+    await DB.addReview(curApp,{user:uname,rating:selRat,comment:c});
+    tst('Review submitted!','success');selRat=0;
+    document.querySelectorAll('#starInput span').forEach(s=>s.classList.remove('act'));
     if(document.getElementById('revText'))document.getElementById('revText').value='';
     renderDetail(DB.getApp(curApp));
   });
-});
-
-
+})();
 
 /* Admin */
-document.getElementById('adminLoginBtn')?.addEventListener('click',async()=>{
-  const id=document.getElementById('adminId').value.trim(),pw=document.getElementById('adminPass').value.trim();
-  try{const r=await api('/admin/login',{method:'POST',body:JSON.stringify({id,password:pw})});if(r.success){adminCreds={id,pw};document.getElementById('adminLogin').style.display='none';document.getElementById('adminDash').style.display='';initAdmin()}}catch(e){const el=document.getElementById('adminErr');if(el)el.style.display='block'}
-});
-document.getElementById('adminPass')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('adminLoginBtn')?.click()});
-document.getElementById('adminLogout')?.addEventListener('click',()=>{document.getElementById('adminLogin').style.display='flex';document.getElementById('adminDash').style.display='none';document.getElementById('adminId').value='';document.getElementById('adminPass').value='';showHome()});
+const ADMIN_STORAGE_KEY='ts_admin';
+const savedAdmin=localStorage.getItem(ADMIN_STORAGE_KEY);
+if(savedAdmin)try{const p=JSON.parse(savedAdmin);if(p.id&&p.pw){adminCreds={id:p.id,pw:p.pw}}}catch(e){}
 
-function initAdmin(){renderAdminTable();updAdminStats()}
-function updAdminStats(){const s=document.getElementById('adminStats'),a=DB.getApps();if(s)s.innerHTML='<i class="fas fa-box"></i> '+a.length+' app'+(a.length!==1?'s':'')}
-function renderAdminTable(){
-  const t=document.getElementById('adminTbody'),apps=DB.getApps();
-  if(!apps.length){t.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--t3)">No apps — add one above</td></tr>';return}
-  t.innerHTML=apps.map(a=>'<tr><td><div class="am"><img src="'+icon(a)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'"><div><strong>'+a.name+'</strong><div style="font-size:.72rem;color:var(--t3)">'+a.developer+'</div></div></div></td><td>'+a.category+'</td><td>'+fmt(a.installs||0)+'</td><td><i class="fas fa-star" style="color:var(--st)"></i> '+(a.rating||0)+'</td><td><div class="ax"><button class="eb" data-id="'+a.id+'">Edit</button><button class="db2" data-id="'+a.id+'">Delete</button></div></td></tr>').join('');
-  t.querySelectorAll('.eb').forEach(b=>b.addEventListener('click',()=>editApp(b.dataset.id)));
-  t.querySelectorAll('.db2').forEach(b=>b.addEventListener('click',()=>delApp(b.dataset.id)));
-  document.getElementById('clearAll').onclick=async()=>{if(confirm('Delete all apps?')){await api('/apps',{method:'DELETE'});appCache=[];renderAdminTable();updAdminStats();tst('Cleared','info')}};
+function switchAdminTab(t){
+  document.querySelectorAll('.atab').forEach(x=>x.classList.toggle('act',x.dataset.tab===t));
+  document.querySelectorAll('.apn').forEach(x=>x.classList.toggle('act',x.id==='apn'+(t==='apps'?'Apps':'Cats')));
+}
+window.switchAdminTab=switchAdminTab;
+
+function resetAppForm(){
+  const f=document.getElementById('appForm');if(f)f.reset();
+  document.getElementById('aSub').innerHTML='<option value="">Select</option>';
+  document.getElementById('aIconPreview').style.display='none';document.getElementById('aIconName').textContent='';
+  document.getElementById('aBannerPreview').style.display='none';document.getElementById('aScreensPreview').innerHTML='';
+  uploadedIcon=null;uploadedBanner=null;screenshotUrls=[];edId=null;
+  document.getElementById('formTitle').innerHTML='<i class="fas fa-plus-circle"></i> Add App';
+  document.getElementById('formBtn').innerHTML='<i class="fas fa-plus-circle"></i> Add App';
 }
 
-let uploadedIcon=null;
+function resetCatForm(){
+  document.getElementById('catForm').reset();
+  document.getElementById('cIcon').value='folder';
+  editingCat=null;
+  document.getElementById('catFormTitle').innerHTML='<i class="fas fa-plus-circle"></i> Add Category';
+  document.getElementById('catFormBtn').innerHTML='<i class="fas fa-plus-circle"></i> Add Category';
+}
+
+document.getElementById('adminLoginBtn')?.addEventListener('click',async()=>{
+  const id=document.getElementById('adminId').value.trim(),pw=document.getElementById('adminPass').value.trim();
+  const btn=document.getElementById('adminLoginBtn');btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-pulse"></i> Signing In...';
+  try{const r=await api('/admin/login',{method:'POST',body:JSON.stringify({id,password:pw})});if(r.success){adminCreds={id,pw};localStorage.setItem(ADMIN_STORAGE_KEY,JSON.stringify({id,pw}));document.getElementById('adminLogin').style.display='none';document.getElementById('adminDash').style.display='';initAdmin()}}catch(e){const el=document.getElementById('adminErr');if(el)el.style.display='block'}
+  btn.disabled=false;btn.innerHTML='<i class="fas fa-sign-in-alt"></i> Sign In';
+});
+document.getElementById('adminPass')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('adminLoginBtn')?.click()});
+document.getElementById('adminLogout')?.addEventListener('click',()=>{localStorage.removeItem(ADMIN_STORAGE_KEY);adminCreds=null;document.getElementById('adminLogin').style.display='flex';document.getElementById('adminDash').style.display='none';document.getElementById('adminId').value='';document.getElementById('adminPass').value='';showHome()});
+
+// Auto-login if saved admin creds
+if(adminCreds){(async()=>{try{await api('/admin/login',{method:'POST',body:JSON.stringify({id:adminCreds.id,password:adminCreds.pw})});document.getElementById('adminLogin').style.display='none';document.getElementById('adminDash').style.display='';initAdmin()}catch(e){localStorage.removeItem(ADMIN_STORAGE_KEY);adminCreds=null}})()}
+
+function initAdmin(){populateCatSelect();renderAdminTable();renderAdminCats();updAdminStats()}
+
+function populateCatSelect(){
+  const sel=document.getElementById('aCat');
+  if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Select</option>';
+  getCats().forEach(c=>{sel.innerHTML+='<option>'+(c.name||c.n)+'</option>'});
+  sel.value=cur;
+}
+
+function renderAdminCats(){
+  const t=document.getElementById('adminCatTbody'),cats=getCats();
+  if(!t)return;
+  if(!cats.length){t.innerHTML='<tr><td colspan="3" style="text-align:center;padding:30px;color:var(--t3)">No categories</td></tr>';return}
+  t.innerHTML=cats.map(c=>'<tr><td data-label="Name"><strong><i class="fas fa-'+c.icon+'" style="margin-right:8px"></i>'+c.name+'</strong></td><td data-label="Subcategories">'+(c.subcategories||[]).join(', ')+'</td><td data-label="Actions"><div class="ax"><button class="eb" data-name="'+c.name+'" onclick="editCat(this.dataset.name)"><i class="fas fa-edit"></i></button><button class="db2" data-name="'+c.name+'" onclick="delCat(this.dataset.name)"><i class="fas fa-trash"></i></button></div></td></tr>').join('');
+}
+
+let editingCat=null;
+function editCat(name){
+  const c=getCats().find(x=>x.name===name);
+  if(!c)return;
+  editingCat=name;
+  document.getElementById('cName').value=c.name;
+  document.getElementById('cIcon').value=c.icon||'folder';
+  document.getElementById('cSubs').value=(c.subcategories||[]).join(', ');
+  document.getElementById('catFormTitle').innerHTML='<i class="fas fa-edit"></i> Edit Category';
+  document.getElementById('catFormBtn').innerHTML='<i class="fas fa-save"></i> Update';
+}
+
+async function delCat(name){
+  if(!confirm('Delete category "'+name+'"?'))return;
+  try{
+    await api('/categories/'+encodeURIComponent(name),{method:'DELETE'});
+    catCache=catCache.filter(c=>c.name!==name);
+    renderAdminCats();populateCatSelect();renderCats();tst('Category deleted','info');
+  }catch(e){tst('Error: '+e.message,'error')}
+}
+
+document.getElementById('catForm')?.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const n=document.getElementById('cName').value.trim(),ic=document.getElementById('cIcon').value.trim()||'folder',sb=document.getElementById('cSubs').value.trim().split(',').map(x=>x.trim()).filter(Boolean);
+  if(!n){tst('Enter category name','error');return}
+  try{
+    if(editingCat){
+      await api('/categories/'+encodeURIComponent(editingCat),{method:'PUT',body:JSON.stringify({name:n,icon:ic,subcategories:sb})});
+      const ci=catCache.findIndex(x=>x.name===editingCat);
+      if(ci>=0)catCache[ci]={name:n,icon:ic,subcategories:sb};
+      tst('Category updated!','success');
+    }else{
+      const r=await api('/categories',{method:'POST',body:JSON.stringify({name:n,icon:ic,subcategories:sb})});
+      catCache.push(r);
+      tst('Category added!','success');
+    }
+    editingCat=null;
+    document.getElementById('catForm').reset();
+    document.getElementById('cIcon').value='folder';
+    document.getElementById('catFormTitle').innerHTML='<i class="fas fa-plus-circle"></i> Add Category';
+    document.getElementById('catFormBtn').innerHTML='<i class="fas fa-plus-circle"></i> Add Category';
+    renderAdminCats();populateCatSelect();renderCats();resetCatForm();
+  }catch(e){tst('Error: '+e.message,'error')}
+});
+
+document.getElementById('refreshCatsBtn')?.addEventListener('click',async()=>{
+  try{await loadCategories();renderAdminCats();populateCatSelect();renderCats();tst('Categories refreshed','info')}catch(e){tst('Error: '+e.message,'error')}
+});
+
+// File upload helpers
+async function uploadFile(file){
+  const fd=new FormData();fd.append('file',file);
+  const r=await fetch(API_BASE+'/upload',{method:'POST',body:fd,headers:adminCreds?{'Authorization':'Basic '+btoa(adminCreds.id+':'+adminCreds.pw)}:{}});
+  if(!r.ok)throw new Error(await r.text());
+  return (await r.json()).url;
+}
+async function uploadFiles(files){
+  const fd=new FormData();
+  files.forEach(f=>fd.append('files',f));
+  const r=await fetch(API_BASE+'/upload/multiple',{method:'POST',body:fd,headers:adminCreds?{'Authorization':'Basic '+btoa(adminCreds.id+':'+adminCreds.pw)}:{}});
+  if(!r.ok)throw new Error(await r.text());
+  return (await r.json()).files.map(x=>x.url);
+}
+function updAdminStats(){} // stats removed from UI
+
+let uploadedIcon=null,uploadedBanner=null,screenshotUrls=[];
+
+// Icon upload
 document.getElementById('aIconBtn')?.addEventListener('click',()=>document.getElementById('aIconInput')?.click());
-document.getElementById('aIconInput')?.addEventListener('change',function(){
+document.getElementById('aIconInput')?.addEventListener('change',async function(){
   const f=this.files&&this.files[0];
   if(!f)return;
-  document.getElementById('aIconName').textContent=f.name;
-  const r=new FileReader();
-  r.onload=function(e){uploadedIcon=e.target.result;const p=document.getElementById('aIconPreview');if(p){p.src=uploadedIcon;p.style.display='block'}};
-  r.readAsDataURL(f);
+  document.getElementById('aIconName').textContent='Uploading...';
+  try{
+    const url=await uploadFile(f);
+    uploadedIcon=window.location.origin+url;
+    document.getElementById('aIconName').textContent='Uploaded!';
+    const p=document.getElementById('aIconPreview');
+    if(p){p.src=uploadedIcon;p.style.display='block'}
+    document.getElementById('aIconUrl').value=uploadedIcon;
+  }catch(e){document.getElementById('aIconName').textContent='Upload failed';tst('Upload error: '+e.message,'error')}
+});
+document.getElementById('aIconUrl')?.addEventListener('input',function(){
+  if(this.value.trim()){
+    uploadedIcon=this.value.trim();
+    const p=document.getElementById('aIconPreview');
+    if(p){p.src=uploadedIcon;p.style.display='block'}
+    document.getElementById('aIconName').textContent='URL set';
+  }
+});
+
+// Banner upload
+document.getElementById('aBannerBtn')?.addEventListener('click',()=>document.getElementById('aBannerInput')?.click());
+document.getElementById('aBannerInput')?.addEventListener('change',async function(){
+  const f=this.files&&this.files[0];
+  if(!f)return;
+  try{
+    const url=await uploadFile(f);
+    uploadedBanner=window.location.origin+url;
+    document.getElementById('aBanner').value=uploadedBanner;
+    const p=document.getElementById('aBannerPreview');
+    if(p){p.src=uploadedBanner;p.style.display='block'}
+    tst('Banner uploaded!','success');
+  }catch(e){tst('Upload error: '+e.message,'error')}
+});
+
+// Screenshots upload
+document.getElementById('aScreensBtn')?.addEventListener('click',()=>document.getElementById('aScreensInput')?.click());
+document.getElementById('aScreensInput')?.addEventListener('change',async function(){
+  const files=[...this.files];
+  if(!files.length)return;
+  try{
+    const urls=await uploadFiles(files);
+    urls.forEach(u=>{
+      const fullUrl=window.location.origin+u;
+      screenshotUrls.push(fullUrl);
+      const p=document.getElementById('aScreensPreview');
+      if(p)p.innerHTML+=`<img src="${fullUrl}" alt="">`;
+    });
+    document.getElementById('aScreensList').value=screenshotUrls.join(',');
+    tst(urls.length+' screenshot(s) uploaded!','success');
+  }catch(e){tst('Upload error: '+e.message,'error')}
 });
 
 document.getElementById('appForm')?.addEventListener('submit',async e=>{
   e.preventDefault();
-  const n=document.getElementById('aName').value.trim(),d=document.getElementById('aDev').value.trim(),c=document.getElementById('aCat').value,s=document.getElementById('aSub').value,desc=document.getElementById('aDesc').value.trim(),ic=uploadedIcon||'',bn=document.getElementById('aBanner').value.trim(),sc=document.getElementById('aScreens').value.trim(),w=document.getElementById('aWeb').value.trim(),ap=document.getElementById('aApk').value.trim(),v=document.getElementById('aVer').value.trim()||'1.0.0',f=document.getElementById('aFeat').value==='true';
+  const n=document.getElementById('aName').value.trim(),d=document.getElementById('aDev').value.trim(),c=document.getElementById('aCat').value,s=document.getElementById('aSub').value,desc=document.getElementById('aDesc').value.trim(),ic=document.getElementById('aIconUrl').value.trim()||uploadedIcon||'',bn=document.getElementById('aBanner').value.trim()||uploadedBanner||'',scList=screenshotUrls.length?screenshotUrls:document.getElementById('aScreens').value.trim().split(',').map(x=>x.trim()).filter(Boolean),w=document.getElementById('aWeb').value.trim(),ap=document.getElementById('aApk').value.trim(),v=document.getElementById('aVer').value.trim()||'1.0.0',f=document.getElementById('aFeat').value==='true';
   if(!n||!d||!c||!desc){tst('Fill required fields','error');return}
-  const ss=sc?sc.split(',').map(x=>x.trim()).filter(Boolean):[];
-  if(edId){await DB.updateApp(edId,{name:n,developer:d,category:c,subcategory:s,description:desc,icon:ic,banner:bn,screenshots:ss,websiteLink:w,apkLink:ap,version:v,featured:f});tst('Updated!','success');edId=null;document.getElementById('formTitle').innerHTML='<i class="fas fa-plus-circle"></i> Add App';document.getElementById('formBtn').innerHTML='<i class="fas fa-plus-circle"></i> Add App'}
-  else{await DB.addApp({name:n,developer:d,category:c,subcategory:s,description:desc,icon:ic,banner:bn,screenshots:ss,websiteLink:w,apkLink:ap,version:v,featured:f});tst('Added!','success');pushNotif('TS Store','New app added: '+n)}
-  document.getElementById('appForm').reset();document.getElementById('aSub').innerHTML='<option value="">Select</option>';document.getElementById('aIconName').textContent='No file chosen';document.getElementById('aIconPreview').style.display='none';uploadedIcon=null;renderAdminTable();updAdminStats();
+  if(edId){await DB.updateApp(edId,{name:n,developer:d,category:c,subcategory:s,description:desc,icon:ic,banner:bn,screenshots:scList,websiteLink:w,apkLink:ap,version:v,featured:f});tst('Updated!','success')}
+  else{await DB.addApp({name:n,developer:d,category:c,subcategory:s,description:desc,icon:ic,banner:bn,screenshots:scList,websiteLink:w,apkLink:ap,version:v,featured:f});tst('Added!','success');pushNotif('TS Store','New app added: '+n)}
+  resetAppForm();renderAdminTable();updAdminStats();
 });
 
 document.getElementById('aCat')?.addEventListener('change',function(){
   const s=document.getElementById('aSub');s.innerHTML='<option value="">Select</option>';
-  (DB.subs[this.value]||[]).forEach(x=>{s.innerHTML+='<option>'+x+'</option>'});
+  (DB.subs(this.value)||[]).forEach(x=>{s.innerHTML+='<option>'+x+'</option>'});
 });
 
 function editApp(id){
@@ -1040,22 +1486,28 @@ function editApp(id){
   document.getElementById('aName').value=a.name||'';document.getElementById('aDev').value=a.developer||'';
   document.getElementById('aCat').value=a.category||'';document.getElementById('aCat').dispatchEvent(new Event('change'));
   setTimeout(()=>{document.getElementById('aSub').value=a.subcategory||''},50);
-  document.getElementById('aDesc').value=a.description||'';uploadedIcon=a.icon||null;const pv=document.getElementById('aIconPreview');if(pv&&uploadedIcon){pv.src=uploadedIcon;pv.style.display='block';document.getElementById('aIconName').textContent='Current icon'}
-  document.getElementById('aBanner').value=a.banner||'';document.getElementById('aScreens').value=(a.screenshots||[]).join(', ');
+  document.getElementById('aDesc').value=a.description||'';
+  uploadedIcon=a.icon||null;uploadedBanner=a.banner||null;screenshotUrls=a.screenshots||[];
+  document.getElementById('aIconUrl').value=a.icon||'';
+  const pv=document.getElementById('aIconPreview');if(pv&&uploadedIcon){pv.src=uploadedIcon;pv.style.display='block';document.getElementById('aIconName').textContent='Current icon'}
+  const bp=document.getElementById('aBannerPreview');if(bp&&uploadedBanner){bp.src=uploadedBanner;bp.style.display='block'}
+  document.getElementById('aBanner').value=a.banner||'';
+  const sp=document.getElementById('aScreensPreview');
+  if(sp&&screenshotUrls.length){sp.innerHTML=screenshotUrls.map(u=>`<img src="${u}" alt="">`).join('')}
+  document.getElementById('aScreens').value='';document.getElementById('aScreensList').value=screenshotUrls.join(',');
   document.getElementById('aWeb').value=a.websiteLink||'';document.getElementById('aApk').value=a.apkLink||'';
   document.getElementById('aVer').value=a.version||'';document.getElementById('aFeat').value=a.featured?'true':'false';
   document.getElementById('formTitle').innerHTML='<i class="fas fa-edit"></i> Edit App';document.getElementById('formBtn').innerHTML='<i class="fas fa-save"></i> Update';
-  document.getElementById('formCard').scrollIntoView({behavior:'smooth'});
 }
 
 async function delApp(id){
   const a=DB.getApp(id);if(!a)return;
-  if(confirm('Delete "'+a.name+'"?')){await DB.deleteApp(id);renderAdminTable();updAdminStats();tst('Deleted','info');if(edId===id){edId=null;document.getElementById('formTitle').innerHTML='<i class="fas fa-plus-circle"></i> Add App';document.getElementById('formBtn').innerHTML='<i class="fas fa-plus-circle"></i> Add App';document.getElementById('appForm').reset()}}
+  if(confirm('Delete "'+a.name+'"?')){await DB.deleteApp(id);renderAdminTable();updAdminStats();tst('Deleted','info');if(edId===id)resetAppForm()}
 }
 
 window.addEventListener('resize',()=>{const t=document.getElementById('featTrack');if(t&&t.querySelectorAll('.s-card').length)goSlide(slI)});
 
-document.addEventListener('DOMContentLoaded',async()=>{initTheme();try{await loadApps()}catch(e){tst('Server not running. Start backend: cd backend && npm start','error')}initHome();initPdfSuite();renderInstalled();if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{})})}window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window._deferredPrompt=e})});
+document.addEventListener('DOMContentLoaded',async()=>{initTheme();try{await loadApps();await loadCategories()}catch(e){tst('Server not running. Start backend: cd backend && npm start','error')}initHome();initPdfSuite();renderInstalled();if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{})})}window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window._deferredPrompt=e})});
 })();
 </script>
 </body>
