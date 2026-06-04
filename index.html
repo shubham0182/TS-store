@@ -1230,7 +1230,10 @@ async function handleGoogleClick(){
     }
   }catch(e){
     if(e.code!=='auth/popup-closed-by-user'){
-      err.textContent='Google sign-in failed';
+      const msg=e.message||'Google sign-in failed';
+      if(msg.includes('unauthorized')||msg.includes('domain')||msg.includes('unauthorized-continue-uri'))
+        err.textContent='Add this domain to Firebase Auth > Authorized domains';
+      else err.textContent=msg;
       err.style.display='block';
     }
   }
