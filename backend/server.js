@@ -111,13 +111,23 @@ app.delete('/api/apps', adminAuth, async (req, res) => {
 
 app.post('/api/apps/:id/install', async (req, res) => {
   try {
-    const doc = await App.findByIdAndUpdate(
-      req.params.id,
-      { $inc: { installs: 1 } },
-      { new: true }
-    ).lean();
+    const doc = await App.findById(req.params.id);
     if (!doc) return res.status(404).json({ error: 'Not found' });
-    res.json({ ...doc, id: doc._id });
+    const { user } = req.body;
+    if (user) {
+      const usageCount = (doc.usage && doc.usage[user]) || 0;
+      if (usageCount >= 3) {
+        const hasReview = doc.reviews.some(r => r.user === user);
+        if (!hasReview) {
+          return res.json({ blocked: true, usageCount });
+        }
+      }
+      if (!doc.usage) doc.usage = {};
+      doc.usage[user] = usageCount + 1;
+    }
+    doc.installs = (doc.installs || 0) + 1;
+    await doc.save();
+    res.json({ ...doc.toObject(), id: doc._id });
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
@@ -127,6 +137,18 @@ app.post('/api/apps/:id/review', async (req, res) => {
     if (!doc) return res.status(404).json({ error: 'Not found' });
     const { user, rating, comment } = req.body;
     if (!rating) return res.status(400).json({ error: 'Rating required' });
+    if (user) {
+      const usageCount = (doc.usage && doc.usage[user]) || 0;
+      if (usageCount >= 3) {
+        const hasReview = doc.reviews.some(r => r.user === user);
+        if (!hasReview) {
+          const required = Math.min(usageCount, 5);
+          if (rating !== required) {
+            return res.status(400).json({ error: 'Rating must be ' + required + ' stars' });
+          }
+        }
+      }
+    }
     doc.reviews.push({ user: user || 'Anonymous', rating, comment: comment || '', date: new Date() });
     const avg = doc.reviews.reduce((s, r) => s + r.rating, 0) / doc.reviews.length;
     doc.rating = Math.round(avg * 10) / 10;

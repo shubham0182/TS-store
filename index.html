@@ -770,6 +770,23 @@ Sign in with Google
 </div>
 </div>
 
+<div class="um" id="usageRatingModal">
+<div class="umc">
+<button class="um-close" onclick="closeUsageRatingModal()"><i class="fas fa-times"></i></button>
+<h2><i class="fas fa-star" style="color:var(--st)"></i> Rate to Continue</h2>
+<p id="usageRatingMsg" style="color:var(--t2);font-size:.85rem;margin-bottom:16px">Rate this app to continue using it.</p>
+<div class="si" id="usageStarInput" style="justify-content:center;margin:0 0 16px">
+<span data-star="1"><i class="far fa-star"></i></span>
+<span data-star="2"><i class="far fa-star"></i></span>
+<span data-star="3"><i class="far fa-star"></i></span>
+<span data-star="4"><i class="far fa-star"></i></span>
+<span data-star="5"><i class="far fa-star"></i></span>
+</div>
+<button class="alb" id="usageRateBtn"><i class="fas fa-paper-plane"></i> Rate &amp; Continue</button>
+<div class="um-err" id="usageRatingErr"></div>
+</div>
+</div>
+
 <div class="tst" id="toast"><i class="fas fa-check-circle toast-icon" style="font-size:1.2rem"></i><span id="toastMsg">Success!</span></div>
 
 <div class="pdf-overlay" id="pdfOverlay" onclick="closePdfWorkspace()"></div>
@@ -934,7 +951,7 @@ const DB={
   mostInstalled(){return[...appCache].sort((a,b)=>b.installs-a.installs)},
   search(q){const l=q.toLowerCase();return appCache.filter(a=>a.name.toLowerCase().includes(l)||a.developer.toLowerCase().includes(l)||a.category.toLowerCase().includes(l)||a.description.toLowerCase().includes(l))},
   async addReview(id,r){const rr=await api('/apps/'+id+'/review',{method:'POST',body:JSON.stringify(r)});const i=appCache.findIndex(a=>a.id===id);if(i>=0)appCache[i]=rr;return rr},
-  async incInstalls(id){const rr=await api('/apps/'+id+'/install',{method:'POST'});const i=appCache.findIndex(a=>a.id===id);if(i>=0)appCache[i]=rr;return rr},
+  async incInstalls(id){const body={};if(userCreds)body.user=userCreds.username;const rr=await api('/apps/'+id+'/install',{method:'POST',body:JSON.stringify(body)});if(rr&&!rr.blocked){const i=appCache.findIndex(a=>a.id===id);if(i>=0)appCache[i]=rr}return rr},
   getTheme(){return localStorage.getItem(TK)||'light'},
   setTheme(t){localStorage.setItem(TK,t)},
   get cats(){return getCats().map(c=>({n:c.name,f:c.icon}))},
@@ -988,8 +1005,12 @@ function renderInstalled(){
 async function handleInst(id,btn){
   const a=DB.getApp(id);if(!a){tst('App not found','error');return}
   if(btn){btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Loading...';btn.style.opacity='.7';btn.disabled=true}
+  const r=await DB.incInstalls(id);
+  if(r&&r.blocked){
+    if(btn){btn.innerHTML='<i class="fas fa-download"></i> Install';btn.style.background='';btn.style.color='';btn.style.opacity='1';btn.disabled=false}
+    showUsageRatingModal(id,r.usageCount);return
+  }
   if(installedApps.indexOf(id)<0){installedApps.push(id);saveInstalled();renderInstalled()}
-  await DB.incInstalls(id);
   try{
     if(window._deferredPrompt){window._deferredPrompt.prompt();const r=await window._deferredPrompt.userChoice;window._deferredPrompt=null;if(r.outcome==='accepted'){tst(a.name+' installed!','success');if(btn)btn.innerHTML='<i class="fas fa-check"></i> Installed'}}
     else if(a.apkLink){const e=document.createElement('a');e.href=a.apkLink;e.download=a.name+'.apk';e.target='_blank';document.body.appendChild(e);e.click();document.body.removeChild(e);tst('Downloading APK...','info');if(btn)btn.innerHTML='<i class="fas fa-check"></i> Installed'}
@@ -1315,6 +1336,42 @@ document.getElementById('userLogoutBtn')?.addEventListener('click',()=>{
     renderDetail(DB.getApp(curApp));
   });
 })();
+
+/* Usage Rating Modal */
+let usageRatingAppId=null,usageRatingRequired=0,usageSelRat=0;
+function showUsageRatingModal(id,count){
+  usageRatingAppId=id;usageRatingRequired=Math.min(count,5);usageSelRat=0;
+  const a=DB.getApp(id);
+  document.getElementById('usageRatingMsg').textContent='You\'ve used "'+(a?a.name:'this app')+'" '+count+' times. Rate '+usageRatingRequired+' stars to continue.';
+  document.querySelectorAll('#usageStarInput span').forEach(s=>s.classList.remove('act'));
+  document.getElementById('usageRatingErr').style.display='none';
+  document.getElementById('usageRatingModal').classList.add('active');
+}
+function closeUsageRatingModal(){document.getElementById('usageRatingModal').classList.remove('active')}
+document.addEventListener('DOMContentLoaded',()=>{
+  const stars=document.querySelectorAll('#usageStarInput span');
+  stars.forEach(s=>{
+    s.addEventListener('click',()=>{usageSelRat=parseInt(s.dataset.star);stars.forEach((st,i)=>st.classList.toggle('act',i<usageSelRat))});
+    s.addEventListener('mouseenter',()=>{const v=parseInt(s.dataset.star);stars.forEach((st,i)=>st.classList.toggle('act',i<v))});
+    s.addEventListener('mouseleave',()=>{stars.forEach((st,i)=>st.classList.toggle('act',i<usageSelRat))});
+  });
+  document.getElementById('usageRateBtn')?.addEventListener('click',async()=>{
+    if(usageSelRat!==usageRatingRequired){
+      document.getElementById('usageRatingErr').textContent='Please select '+usageRatingRequired+' stars';
+      document.getElementById('usageRatingErr').style.display='block';return
+    }
+    if(!userCreds){closeUsageRatingModal();openUserModal();return}
+    try{
+      await DB.addReview(usageRatingAppId,{user:userCreds.username,rating:usageSelRat,comment:''});
+      tst('Review submitted!','success');closeUsageRatingModal();
+      const btn=document.querySelector('[data-id="'+usageRatingAppId+'"]')||document.getElementById('dInstall');
+      handleInst(usageRatingAppId,btn)
+    }catch(e){
+      document.getElementById('usageRatingErr').textContent=e.message||'Failed to submit review';
+      document.getElementById('usageRatingErr').style.display='block'
+    }
+  })
+});
 
 /* Admin */
 const ADMIN_STORAGE_KEY='ts_admin';

@@ -23,7 +23,8 @@ const appSchema = new mongoose.Schema({
   featured: { type: Boolean, default: false },
   rating: { type: Number, default: 0 },
   reviews: { type: [reviewSchema], default: [] },
-  installs: { type: Number, default: 0 }
+  installs: { type: Number, default: 0 },
+  usage: { type: Object, default: {} }
 }, { timestamps: true });
 
 appSchema.set('toJSON', {
