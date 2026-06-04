@@ -548,7 +548,11 @@ section{padding:32px 0}
 <div style="margin-top:28px">
 <h2 style="font-size:1.15rem;font-weight:700;margin-bottom:12px"><i class="fas fa-star" style="color:var(--st)"></i> Reviews</h2>
 <div class="sbc" style="margin-bottom:14px">
-<div class="rf">
+<div id="reviewLoginPrompt" style="text-align:center;padding:20px 0">
+<p style="color:var(--t3);margin-bottom:12px;font-size:.88rem"><i class="fas fa-lock" style="margin-right:6px"></i>Sign in to rate and review this app</p>
+<button onclick="openUserModal()" style="padding:10px 24px;border-radius:50px;background:var(--ac);color:var(--ai);font-weight:600;font-size:.88rem;transition:var(--tr);cursor:pointer;border:none;display:inline-flex;align-items:center;gap:8px"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+</div>
+<div class="rf" id="reviewForm" style="display:none">
 <h3 style="font-size:.9rem;font-weight:600;margin-bottom:6px"><i class="fas fa-pen"></i> Write a Review</h3>
 <div class="si" id="starInput">
 <span data-star="1"><i class="far fa-star"></i></span>
@@ -1147,6 +1151,12 @@ function renderDetail(a){
   if(a.screenshots&&a.screenshots.length){ss.style.display='';sg.innerHTML=a.screenshots.map(s=>'<img src="'+s+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">').join('')}else ss.style.display='none';
   renderReviews(a);selRat=0;
   document.querySelectorAll('#starInput span').forEach(s=>s.classList.remove('act'));
+  const rp=document.getElementById('reviewLoginPrompt');
+  const rf=document.getElementById('reviewForm');
+  if(rp&&rf){
+    if(userCreds){rp.style.display='none';rf.style.display=''}
+    else{rp.style.display='';rf.style.display='none'}
+  }
 }
 
 function renderReviews(a){
@@ -1200,6 +1210,14 @@ function updateUserUI(){
 }
 updateUserUI();
 
+function refreshReviewSection(){
+  const ds=document.getElementById('detailSec');
+  if(ds&&!ds.classList.contains('hidden')&&curApp){
+    const a=DB.getApp(curApp);
+    if(a)renderDetail(a);
+  }
+}
+
 // Firebase config
 firebase.initializeApp({
   apiKey: "AIzaSyCIUB0S-14yVPUIJkBnNBr0NFjm2qmRuM0",
@@ -1233,6 +1251,7 @@ async function handleGoogleClick(){
       userCreds.photoUrl=user.photoURL||'';
       localStorage.setItem('ts_user',JSON.stringify(userCreds));
       updateUserUI();
+      refreshReviewSection();
       closeUserModal();
       tst('Welcome, '+r.user.username+'!','success');
     }
@@ -1259,6 +1278,7 @@ document.getElementById('userLoginForm')?.addEventListener('submit',async e=>{
       userCreds=r.user;
       localStorage.setItem('ts_user',JSON.stringify(r.user));
       updateUserUI();
+      refreshReviewSection();
       closeUserModal();
       tst('Welcome, '+r.user.username+'!','success');
     }
@@ -1272,6 +1292,7 @@ document.getElementById('userLogoutBtn')?.addEventListener('click',()=>{
   userCreds=null;
   localStorage.removeItem('ts_user');
   updateUserUI();
+  refreshReviewSection();
   closeUserModal();
   tst('Logged out','info');
 });
@@ -1283,11 +1304,11 @@ document.getElementById('userLogoutBtn')?.addEventListener('click',()=>{
   const btn=document.getElementById('revBtn');
   const oldClick=btn.onclick||btn._listeners&&btn._listeners[0];
   btn.addEventListener('click',async()=>{
+    if(!userCreds){openUserModal();return}
     if(!selRat){tst('Select a rating','error');return}
     const a=DB.getApp(curApp);if(!a)return;
     const c=document.getElementById('revText')?.value.trim()||'';
-    const uname=userCreds?userCreds.username:'User_'+Math.random().toString(36).substr(2,6);
-    await DB.addReview(curApp,{user:uname,rating:selRat,comment:c});
+    await DB.addReview(curApp,{user:userCreds.username,rating:selRat,comment:c});
     tst('Review submitted!','success');selRat=0;
     document.querySelectorAll('#starInput span').forEach(s=>s.classList.remove('act'));
     if(document.getElementById('revText'))document.getElementById('revText').value='';

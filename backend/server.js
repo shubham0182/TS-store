@@ -1,19 +1,22 @@
 import express from 'express';
 import cors from 'cors';
-import initSqlJs from 'sql.js';
+import mongoose from 'mongoose';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
+import App from './models/App.js';
+import User from './models/User.js';
+import Category from './models/Category.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DB_PATH = path.join(__dirname, 'db.sqlite');
 const UPLOADS_DIR = path.join(__dirname, '..', 'uploads');
 
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 const ADMIN_ID = process.env.ADMIN_ID || 'shubham';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '1234';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ts-store';
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOADS_DIR),
@@ -27,249 +30,152 @@ app.use(express.json({limit:'10mb'}));
 app.use(express.static(path.join(__dirname, '..'), {maxAge:0,etag:false,lastModified:false}));
 app.use('/uploads', express.static(UPLOADS_DIR));
 
-let db;
-
-function saveDb() {
-  const data = db.export();
-  const buf = Buffer.from(data);
-  fs.writeFileSync(DB_PATH, buf);
-}
-
-function query(sql, params = []) {
-  const stmt = db.prepare(sql);
-  if (params.length) stmt.bind(params);
-  if (sql.trim().toUpperCase().startsWith('SELECT') || sql.trim().toUpperCase().startsWith('WITH') || sql.trim().toUpperCase().startsWith('PRAGMA')) {
-    const rows = [];
-    while (stmt.step()) rows.push(stmt.getAsObject());
-    stmt.free();
-    return rows;
-  }
-  stmt.run();
-  stmt.free();
-  saveDb();
-  return null;
-}
-
-function getOne(sql, params = []) {
-  const rows = query(sql, params);
-  return rows.length ? rows[0] : null;
-}
-
-async function initDb() {
-  const SQL = await initSqlJs();
-  if (fs.existsSync(DB_PATH)) {
-    const buf = fs.readFileSync(DB_PATH);
-    db = new SQL.Database(buf);
-  } else {
-    db = new SQL.Database();
-  }
-
-  db.run(`CREATE TABLE IF NOT EXISTS apps (
-    id TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    developer TEXT NOT NULL,
-    category TEXT NOT NULL,
-    subcategory TEXT DEFAULT '',
-    description TEXT NOT NULL,
-    icon TEXT DEFAULT '',
-    banner TEXT DEFAULT '',
-    screenshots TEXT DEFAULT '[]',
-    websiteLink TEXT DEFAULT '',
-    apkLink TEXT DEFAULT '',
-    version TEXT DEFAULT '1.0.0',
-    featured INTEGER DEFAULT 0,
-    rating REAL DEFAULT 0,
-    reviews TEXT DEFAULT '[]',
-    installs INTEGER DEFAULT 0,
-    createdAt TEXT DEFAULT (datetime('now')),
-    updatedAt TEXT DEFAULT (datetime('now'))
-  )`);
-
-  db.run(`CREATE TABLE IF NOT EXISTS admin (
-    id TEXT PRIMARY KEY,
-    password TEXT NOT NULL
-  )`);
-
-  db.run(`CREATE TABLE IF NOT EXISTS users (
-    id TEXT PRIMARY KEY,
-    username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL,
-    email TEXT DEFAULT '',
-    createdAt TEXT DEFAULT (datetime('now'))
-  )`);
-  try { db.run(`ALTER TABLE users ADD COLUMN email TEXT DEFAULT ''`); } catch (e) {}
-
-  db.run(`CREATE TABLE IF NOT EXISTS categories (
-    name TEXT PRIMARY KEY,
-    icon TEXT DEFAULT 'folder',
-    subcategories TEXT DEFAULT '[]',
-    createdAt TEXT DEFAULT (datetime('now'))
-  )`);
-
-  // Seed default categories if empty
-  const existingCats = query("SELECT COUNT(*) as cnt FROM categories");
-  if (!existingCats.length || existingCats[0].cnt === 0) {
-    const defaults = [
-      ['Games', 'gamepad', JSON.stringify(['Action', 'Racing', 'Puzzle', 'Adventure'])],
-      ['AI Tools', 'robot', JSON.stringify(['Chatbots', 'Image Generators', 'Productivity AI', 'Coding AI'])],
-      ['Business', 'briefcase', JSON.stringify(['CRM', 'Finance', 'Marketing', 'Startup Tools'])],
-      ['Jobs', 'laptop-code', JSON.stringify(['Internship', 'Remote Jobs', 'Freelance', 'Full Time'])],
-      ['Skills', 'book-open', JSON.stringify(['Programming', 'Data Science', 'Design', 'Marketing', 'AI & ML'])],
-      ['Education', 'graduation-cap', JSON.stringify(['Learning Apps', 'Courses', 'Exam Preparation'])],
-      ['Productivity', 'tasks', JSON.stringify(['Notes', 'To-Do', 'Calculator', 'Utility Tools'])]
-    ];
-    const stmt = db.prepare("INSERT INTO categories (name, icon, subcategories) VALUES (?, ?, ?)");
-    defaults.forEach(d => { stmt.bind(d); stmt.run(); });
-    stmt.free();
-    saveDb();
-  }
-
-  db.run("DELETE FROM admin");
-  db.run("INSERT INTO admin (id, password) VALUES (?, ?)", [ADMIN_ID, ADMIN_PASSWORD]);
-  saveDb();
-}
-
-function parseApp(row) {
-  if (!row) return null;
-  return {
-    ...row,
-    featured: !!row.featured,
-    screenshots: (() => { try { return JSON.parse(row.screenshots || '[]'); } catch { return []; } })(),
-    reviews: (() => { try { return JSON.parse(row.reviews || '[]'); } catch { return []; } })(),
-    installs: Number(row.installs || 0),
-    rating: Number(row.rating || 0)
-  };
-}
-
 // Admin auth middleware
 function adminAuth(req, res, next) {
   const auth = req.headers.authorization;
   if (!auth || !auth.startsWith('Basic ')) return res.status(401).json({ error: 'Unauthorized' });
   const creds = Buffer.from(auth.slice(6), 'base64').toString();
   const [id, pw] = creds.split(':');
-  const row = getOne('SELECT * FROM admin WHERE id=? AND password=?', [id, pw]);
-  if (!row) return res.status(401).json({ error: 'Invalid credentials' });
-  next();
-}
-
-// User auth middleware
-function userAuth(req, res, next) {
-  const auth = req.headers.authorization;
-  if (!auth || !auth.startsWith('Basic ')) return res.status(401).json({ error: 'Unauthorized' });
-  const creds = Buffer.from(auth.slice(6), 'base64').toString();
-  const [id, pw] = creds.split(':');
-  const row = getOne('SELECT * FROM users WHERE username=? AND password=?', [id, pw]);
-  if (!row) return res.status(401).json({ error: 'Invalid credentials' });
-  req.user = row;
+  if (id !== ADMIN_ID || pw !== ADMIN_PASSWORD) return res.status(401).json({ error: 'Invalid credentials' });
   next();
 }
 
 // API Routes
 
-app.get('/api/apps', (req, res) => {
-  const rows = query('SELECT * FROM apps ORDER BY createdAt DESC');
-  res.json(rows.map(parseApp));
+app.get('/api/apps', async (req, res) => {
+  try {
+    const rows = await App.find().sort({ createdAt: -1 }).lean();
+    res.json(rows.map(r => ({ ...r, id: r._id })));
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.get('/api/apps/:id', (req, res) => {
-  const row = getOne('SELECT * FROM apps WHERE id=?', [req.params.id]);
-  if (!row) return res.status(404).json({ error: 'Not found' });
-  res.json(parseApp(row));
+app.get('/api/apps/:id', async (req, res) => {
+  try {
+    const row = await App.findById(req.params.id).lean();
+    if (!row) return res.status(404).json({ error: 'Not found' });
+    res.json({ ...row, id: row._id });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.post('/api/apps', adminAuth, (req, res) => {
-  const { name, developer, category, subcategory, description, icon, banner, screenshots, websiteLink, apkLink, version, featured } = req.body;
-  if (!name || !developer || !category || !description) return res.status(400).json({ error: 'Missing required fields' });
-  const id = 'a_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
-  query(`INSERT INTO apps (id, name, developer, category, subcategory, description, icon, banner, screenshots, websiteLink, apkLink, version, featured, createdAt, updatedAt)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?, datetime('now'), datetime('now'))`,
-    [id, name, developer, category, subcategory || '', description, icon || '', banner || '', JSON.stringify(screenshots || []), websiteLink || '', apkLink || '', version || '1.0.0', featured ? 1 : 0]);
-  const row = getOne('SELECT * FROM apps WHERE id=?', [id]);
-  res.status(201).json(parseApp(row));
+app.post('/api/apps', adminAuth, async (req, res) => {
+  try {
+    const { name, developer, category, subcategory, description, icon, banner, screenshots, websiteLink, apkLink, version, featured } = req.body;
+    if (!name || !developer || !category || !description) return res.status(400).json({ error: 'Missing required fields' });
+    const id = 'a_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+    const doc = await App.create({
+      _id: id, name, developer, category, subcategory: subcategory || '', description,
+      icon: icon || '', banner: banner || '', screenshots: screenshots || [],
+      websiteLink: websiteLink || '', apkLink: apkLink || '', version: version || '1.0.0',
+      featured: !!featured
+    });
+    res.status(201).json({ ...doc.toObject(), id: doc._id });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.put('/api/apps/:id', adminAuth, (req, res) => {
-  const existing = getOne('SELECT * FROM apps WHERE id=?', [req.params.id]);
-  if (!existing) return res.status(404).json({ error: 'Not found' });
-  const { name, developer, category, subcategory, description, icon, banner, screenshots, websiteLink, apkLink, version, featured } = req.body;
-  query(`UPDATE apps SET name=?, developer=?, category=?, subcategory=?, description=?, icon=?, banner=?, screenshots=?, websiteLink=?, apkLink=?, version=?, featured=?, updatedAt=datetime('now') WHERE id=?`,
-    [name || existing.name, developer || existing.developer, category || existing.category, subcategory ?? existing.subcategory, description || existing.description,
-     icon !== undefined ? icon : existing.icon, banner !== undefined ? banner : existing.banner,
-     screenshots ? JSON.stringify(screenshots) : existing.screenshots,
-     websiteLink || existing.websiteLink, apkLink || existing.apkLink, version || existing.version,
-     featured !== undefined ? (featured ? 1 : 0) : existing.featured, req.params.id]);
-  const row = getOne('SELECT * FROM apps WHERE id=?', [req.params.id]);
-  res.json(parseApp(row));
+app.put('/api/apps/:id', adminAuth, async (req, res) => {
+  try {
+    const existing = await App.findById(req.params.id);
+    if (!existing) return res.status(404).json({ error: 'Not found' });
+    const { name, developer, category, subcategory, description, icon, banner, screenshots, websiteLink, apkLink, version, featured } = req.body;
+    const update = {};
+    if (name !== undefined) update.name = name;
+    if (developer !== undefined) update.developer = developer;
+    if (category !== undefined) update.category = category;
+    if (subcategory !== undefined) update.subcategory = subcategory;
+    if (description !== undefined) update.description = description;
+    if (icon !== undefined) update.icon = icon;
+    if (banner !== undefined) update.banner = banner;
+    if (screenshots !== undefined) update.screenshots = screenshots;
+    if (websiteLink !== undefined) update.websiteLink = websiteLink;
+    if (apkLink !== undefined) update.apkLink = apkLink;
+    if (version !== undefined) update.version = version;
+    if (featured !== undefined) update.featured = !!featured;
+    const doc = await App.findByIdAndUpdate(req.params.id, update, { new: true }).lean();
+    res.json({ ...doc, id: doc._id });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.delete('/api/apps/:id', adminAuth, (req, res) => {
-  query('DELETE FROM apps WHERE id=?', [req.params.id]);
-  res.json({ success: true });
+app.delete('/api/apps/:id', adminAuth, async (req, res) => {
+  try {
+    await App.findByIdAndDelete(req.params.id);
+    res.json({ success: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.delete('/api/apps', adminAuth, (req, res) => {
-  query('DELETE FROM apps');
-  res.json({ success: true });
+app.delete('/api/apps', adminAuth, async (req, res) => {
+  try {
+    await App.deleteMany({});
+    res.json({ success: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.post('/api/apps/:id/install', (req, res) => {
-  query('UPDATE apps SET installs = installs + 1 WHERE id=?', [req.params.id]);
-  const row = getOne('SELECT * FROM apps WHERE id=?', [req.params.id]);
-  if (!row) return res.status(404).json({ error: 'Not found' });
-  res.json(parseApp(row));
+app.post('/api/apps/:id/install', async (req, res) => {
+  try {
+    const doc = await App.findByIdAndUpdate(
+      req.params.id,
+      { $inc: { installs: 1 } },
+      { new: true }
+    ).lean();
+    if (!doc) return res.status(404).json({ error: 'Not found' });
+    res.json({ ...doc, id: doc._id });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.post('/api/apps/:id/review', (req, res) => {
-  const row = getOne('SELECT * FROM apps WHERE id=?', [req.params.id]);
-  if (!row) return res.status(404).json({ error: 'Not found' });
-  const { user, rating, comment } = req.body;
-  if (!rating) return res.status(400).json({ error: 'Rating required' });
-  const reviews = (() => { try { return JSON.parse(row.reviews || '[]'); } catch { return []; } })();
-  reviews.push({ user: user || 'Anonymous', rating, comment: comment || '', date: new Date().toISOString() });
-  const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
-  query('UPDATE apps SET reviews=?, rating=?, updatedAt=datetime(\'now\') WHERE id=?', [JSON.stringify(reviews), Math.round(avg * 10) / 10, req.params.id]);
-  const updated = getOne('SELECT * FROM apps WHERE id=?', [req.params.id]);
-  res.json(parseApp(updated));
+app.post('/api/apps/:id/review', async (req, res) => {
+  try {
+    const doc = await App.findById(req.params.id);
+    if (!doc) return res.status(404).json({ error: 'Not found' });
+    const { user, rating, comment } = req.body;
+    if (!rating) return res.status(400).json({ error: 'Rating required' });
+    doc.reviews.push({ user: user || 'Anonymous', rating, comment: comment || '', date: new Date() });
+    const avg = doc.reviews.reduce((s, r) => s + r.rating, 0) / doc.reviews.length;
+    doc.rating = Math.round(avg * 10) / 10;
+    await doc.save();
+    res.json({ ...doc.toObject(), id: doc._id });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// Category routes (public read, admin write)
-app.get('/api/categories', (req, res) => {
-  const rows = query('SELECT * FROM categories ORDER BY name ASC');
-  res.json(rows.map(r => ({
-    ...r,
-    subcategories: (() => { try { return JSON.parse(r.subcategories || '[]'); } catch { return []; } })()
-  })));
+// Category routes
+app.get('/api/categories', async (req, res) => {
+  try {
+    const rows = await Category.find().sort({ name: 1 }).lean();
+    res.json(rows.map(r => ({ ...r, id: r._id })));
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.post('/api/categories', adminAuth, (req, res) => {
-  const { name, icon, subcategories } = req.body;
-  if (!name) return res.status(400).json({ error: 'Category name required' });
-  const existing = getOne('SELECT * FROM categories WHERE name=?', [name]);
-  if (existing) return res.status(409).json({ error: 'Category already exists' });
-  query('INSERT INTO categories (name, icon, subcategories) VALUES (?, ?, ?)',
-    [name, icon || 'folder', JSON.stringify(subcategories || [])]);
-  const row = getOne('SELECT * FROM categories WHERE name=?', [name]);
-  res.status(201).json({ ...row, subcategories: (() => { try { return JSON.parse(row.subcategories || '[]'); } catch { return []; } })() });
+app.post('/api/categories', adminAuth, async (req, res) => {
+  try {
+    const { name, icon, subcategories } = req.body;
+    if (!name) return res.status(400).json({ error: 'Category name required' });
+    const existing = await Category.findOne({ name });
+    if (existing) return res.status(409).json({ error: 'Category already exists' });
+    const doc = await Category.create({ name, icon: icon || 'folder', subcategories: subcategories || [] });
+    res.status(201).json({ ...doc.toObject(), id: doc._id });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.put('/api/categories/:name', adminAuth, (req, res) => {
-  const existing = getOne('SELECT * FROM categories WHERE name=?', [req.params.name]);
-  if (!existing) return res.status(404).json({ error: 'Not found' });
-  const { name, icon, subcategories } = req.body;
-  query('UPDATE categories SET name=?, icon=?, subcategories=? WHERE name=?',
-    [name || existing.name, icon || existing.icon,
-     subcategories ? JSON.stringify(subcategories) : existing.subcategories,
-     req.params.name]);
-  const row = getOne('SELECT * FROM categories WHERE name=?', [name || req.params.name]);
-  res.json({ ...row, subcategories: (() => { try { return JSON.parse(row.subcategories || '[]'); } catch { return []; } })() });
+app.put('/api/categories/:name', adminAuth, async (req, res) => {
+  try {
+    const existing = await Category.findOne({ name: req.params.name });
+    if (!existing) return res.status(404).json({ error: 'Not found' });
+    const { name, icon, subcategories } = req.body;
+    const update = {};
+    if (name !== undefined) update.name = name;
+    if (icon !== undefined) update.icon = icon;
+    if (subcategories !== undefined) update.subcategories = subcategories;
+    const doc = await Category.findOneAndUpdate({ name: req.params.name }, update, { new: true }).lean();
+    res.json({ ...doc, id: doc._id });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-app.delete('/api/categories/:name', adminAuth, (req, res) => {
-  query('DELETE FROM categories WHERE name=?', [req.params.name]);
-  res.json({ success: true });
+app.delete('/api/categories/:name', adminAuth, async (req, res) => {
+  try {
+    await Category.findOneAndDelete({ name: req.params.name });
+    res.json({ success: true });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// File upload endpoint
+// File upload endpoints
 app.post('/api/upload', adminAuth, upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   const url = '/uploads/' + req.file.filename;
@@ -283,58 +189,82 @@ app.post('/api/upload/multiple', adminAuth, upload.array('files', 10), (req, res
 });
 
 // User auth endpoints
-app.post('/api/users/register', (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
-  if (username.length < 3) return res.status(400).json({ error: 'Username must be at least 3 characters' });
-  if (password.length < 4) return res.status(400).json({ error: 'Password must be at least 4 characters' });
-  const existing = getOne('SELECT * FROM users WHERE username=?', [username]);
-  if (existing) return res.status(409).json({ error: 'Username already taken' });
-  const id = 'u_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
-  query('INSERT INTO users (id, username, password) VALUES (?, ?, ?)', [id, username, password]);
-  res.status(201).json({ success: true, user: { id, username } });
-});
-
-app.post('/api/users/login', (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
-  const row = getOne('SELECT * FROM users WHERE username=? AND password=?', [username, password]);
-  if (!row) return res.status(401).json({ error: 'Invalid credentials' });
-  res.json({ success: true, user: { id: row.id, username: row.username } });
-});
-
-app.post('/api/users/google', (req, res) => {
-  const { email, name, idToken } = req.body;
-  if (!email) return res.status(400).json({ error: 'Email required' });
-  const displayName = name || email.split('@')[0] || email;
+app.post('/api/users/register', async (req, res) => {
   try {
-    let user = getOne('SELECT * FROM users WHERE email=?', [email]);
+    const { username, password } = req.body;
+    if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
+    if (username.length < 3) return res.status(400).json({ error: 'Username must be at least 3 characters' });
+    if (password.length < 4) return res.status(400).json({ error: 'Password must be at least 4 characters' });
+    const existing = await User.findOne({ username });
+    if (existing) return res.status(409).json({ error: 'Username already taken' });
+    const id = 'u_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+    const doc = await User.create({ _id: id, username, password });
+    res.status(201).json({ success: true, user: { id: doc._id, username: doc.username } });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/users/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
+    const row = await User.findOne({ username, password }).lean();
+    if (!row) return res.status(401).json({ error: 'Invalid credentials' });
+    res.json({ success: true, user: { id: row._id, username: row.username } });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+app.post('/api/users/google', async (req, res) => {
+  try {
+    const { email, name } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email required' });
+    const displayName = name || email.split('@')[0] || email;
+    let user = await User.findOne({ email }).lean();
     if (!user) {
       const id = 'u_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
-      query('INSERT INTO users (id, username, password, email) VALUES (?, ?, ?, ?)', [id, 'google_' + displayName, 'firebase_' + (idToken ? idToken.substring(0, 16) : 'auto'), email]);
-      user = getOne('SELECT * FROM users WHERE id=?', [id]);
+      await User.create({ _id: id, username: 'google_' + displayName, password: 'firebase_auto', email });
+      user = await User.findById(id).lean();
     }
-    res.json({ success: true, user: { id: user.id, username: user.username.replace('google_', '') } });
-  } catch (e) {
-    res.status(400).json({ error: 'Google sign-in failed' });
-  }
+    res.json({ success: true, user: { id: user._id, username: user.username.replace('google_', '') } });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 // Admin auth endpoint
 app.post('/api/admin/login', (req, res) => {
   const { id, password } = req.body;
   if (id === ADMIN_ID && password === ADMIN_PASSWORD) return res.json({ success: true });
-  try {
-    const row = getOne('SELECT * FROM admin WHERE id=? AND password=?', [id, password]);
-    if (row) return res.json({ success: true });
-  } catch(e) {}
   res.status(401).json({ error: 'Invalid credentials' });
 });
 
+// Seed default categories if empty
+async function seedCategories() {
+  const count = await Category.countDocuments();
+  if (count > 0) return;
+  const defaults = [
+    { name: 'Games', icon: 'gamepad', subcategories: ['Action', 'Racing', 'Puzzle', 'Adventure'] },
+    { name: 'AI Tools', icon: 'robot', subcategories: ['Chatbots', 'Image Generators', 'Productivity AI', 'Coding AI'] },
+    { name: 'Business', icon: 'briefcase', subcategories: ['CRM', 'Finance', 'Marketing', 'Startup Tools'] },
+    { name: 'Jobs', icon: 'laptop-code', subcategories: ['Internship', 'Remote Jobs', 'Freelance', 'Full Time'] },
+    { name: 'Skills', icon: 'book-open', subcategories: ['Programming', 'Data Science', 'Design', 'Marketing', 'AI & ML'] },
+    { name: 'Education', icon: 'graduation-cap', subcategories: ['Learning Apps', 'Courses', 'Exam Preparation'] },
+    { name: 'Productivity', icon: 'tasks', subcategories: ['Notes', 'To-Do', 'Calculator', 'Utility Tools'] }
+  ];
+  await Category.insertMany(defaults);
+  console.log('Default categories seeded');
+}
+
 const PORT = process.env.PORT || 3000;
-initDb().then(() => {
-  app.listen(PORT, () => {
-    console.log('TS Store server running on http://localhost:' + PORT);
+
+mongoose.connect(MONGO_URI)
+  .then(async () => {
+    console.log('Connected to MongoDB');
+    await seedCategories();
+    const count = await App.countDocuments();
+    console.log('Database initialized (' + count + ' apps loaded)');
+    app.listen(PORT, () => {
+      console.log('TS Store server running on http://localhost:' + PORT);
+    });
+  })
+  .catch(err => {
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1);
   });
-  console.log('Database initialized');
-});
