@@ -332,10 +332,9 @@ app.post('/api/admin/login', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log('TS Store server running on http://localhost:' + PORT);
-});
-
 initDb().then(() => {
+  app.listen(PORT, () => {
+    console.log('TS Store server running on http://localhost:' + PORT);
+  });
   console.log('Database initialized');
 });
