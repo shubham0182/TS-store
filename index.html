@@ -886,7 +886,7 @@ ToolInitializers['organize']=function(){let d=null,n='',pages=[];const i=documen
 <script>
 (function(){
 'use strict';
-const TK='ts_store_theme',API_BASE=location.hostname==='127.0.0.1'||location.hostname==='localhost'?'http://localhost:3000/api':'https://ts-store-fj1y.onrender.com/api';
+const TK='ts_store_theme',API_BASE=location.hostname==='127.0.0.1'||location.hostname==='localhost'?'http://localhost:3000/api':'https://ts-store-fj1y.onrender.com/api',API_ORIGIN=API_BASE.replace(/\/api$/,'');
 let appCache=[],adminCreds=null,catCache=[];
 
 async function api(path,opts={}){
@@ -1431,7 +1431,7 @@ document.getElementById('aIconInput')?.addEventListener('change',async function(
   document.getElementById('aIconName').textContent='Uploading...';
   try{
     const url=await uploadFile(f);
-    uploadedIcon=window.location.origin+url;
+    uploadedIcon=API_ORIGIN+url;
     document.getElementById('aIconName').textContent='Uploaded!';
     const p=document.getElementById('aIconPreview');
     if(p){p.src=uploadedIcon;p.style.display='block'}
@@ -1454,7 +1454,7 @@ document.getElementById('aBannerInput')?.addEventListener('change',async functio
   if(!f)return;
   try{
     const url=await uploadFile(f);
-    uploadedBanner=window.location.origin+url;
+    uploadedBanner=API_ORIGIN+url;
     document.getElementById('aBanner').value=uploadedBanner;
     const p=document.getElementById('aBannerPreview');
     if(p){p.src=uploadedBanner;p.style.display='block'}
@@ -1470,7 +1470,7 @@ document.getElementById('aScreensInput')?.addEventListener('change',async functi
   try{
     const urls=await uploadFiles(files);
     urls.forEach(u=>{
-      const fullUrl=window.location.origin+u;
+      const fullUrl=API_ORIGIN+u;
       screenshotUrls.push(fullUrl);
       const p=document.getElementById('aScreensPreview');
       if(p)p.innerHTML+=`<img src="${fullUrl}" alt="">`;
