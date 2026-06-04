@@ -1016,7 +1016,7 @@ function showPdfSuite(){closePdfWorkspace();if(document.getElementById('allGrid'
 function showDetail(id){curApp=id;hideViews();document.getElementById('detailSec').classList.remove('hidden');renderDetail(DB.getApp(id));document.getElementById('detailSec').scrollIntoView({behavior:'smooth'})}
 function showAdminLogin(){closePdfWorkspace();hideViews();document.getElementById('adminSec').classList.remove('hidden');document.getElementById('adminLogin').style.display='flex';document.getElementById('adminDash').style.display='none';document.getElementById('adminSec').scrollIntoView({behavior:'smooth'})}
 function hideViews(){['mainContent','detailSec','adminSec','allSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden')})}
-window.showHome=()=>showHome();window.showAdminLogin=showAdminLogin;window.clearSearch=clearSearch;window.showPdfSuite=showPdfSuite;
+window.showHome=()=>showHome();window.showAdminLogin=showAdminLogin;window.clearSearch=clearSearch;window.showPdfSuite=showPdfSuite;window.showDetail=showDetail;window.toggleInst=toggleInst;window.editCat=editCat;window.delCat=delCat;window.editApp=editApp;window.delApp=delApp;
 
 /* Home */
 function initHome(){renderFeat();renderCats();renderTrend();renderNew();renderTop('trending');initCatClicks();initChartTabs();initSearch()}
@@ -1316,7 +1316,8 @@ function resetCatForm(){
 document.getElementById('adminLoginBtn')?.addEventListener('click',async()=>{
   const id=document.getElementById('adminId').value.trim(),pw=document.getElementById('adminPass').value.trim();
   const btn=document.getElementById('adminLoginBtn');btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-pulse"></i> Signing In...';
-  try{const r=await api('/admin/login',{method:'POST',body:JSON.stringify({id,password:pw})});if(r.success){adminCreds={id,pw};localStorage.setItem(ADMIN_STORAGE_KEY,JSON.stringify({id,pw}));document.getElementById('adminLogin').style.display='none';document.getElementById('adminDash').style.display='';initAdmin()}}catch(e){const el=document.getElementById('adminErr');if(el)el.style.display='block'}
+  const el=document.getElementById('adminErr');
+  try{const r=await api('/admin/login',{method:'POST',body:JSON.stringify({id,password:pw})});if(r.success){adminCreds={id,pw};localStorage.setItem(ADMIN_STORAGE_KEY,JSON.stringify({id,pw}));document.getElementById('adminLogin').style.display='none';document.getElementById('adminDash').style.display='';initAdmin()}else{if(el){el.textContent='Invalid credentials';el.style.display='block'}}}catch(e){if(el){el.textContent=e.message.includes('Failed to fetch')||e.message.includes('NetworkError')?'Cannot connect to server. Make sure the backend is running (cd backend && npm start)':'Invalid credentials';el.style.display='block'}}
   btn.disabled=false;btn.innerHTML='<i class="fas fa-sign-in-alt"></i> Sign In';
 });
 document.getElementById('adminPass')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('adminLoginBtn')?.click()});
@@ -1324,6 +1325,11 @@ document.getElementById('adminLogout')?.addEventListener('click',()=>{localStora
 
 // Auto-login if saved admin creds
 if(adminCreds){(async()=>{try{await api('/admin/login',{method:'POST',body:JSON.stringify({id:adminCreds.id,password:adminCreds.pw})});document.getElementById('adminLogin').style.display='none';document.getElementById('adminDash').style.display='';initAdmin()}catch(e){localStorage.removeItem(ADMIN_STORAGE_KEY);adminCreds=null}})()}
+
+document.getElementById('clearAll')?.addEventListener('click',async()=>{
+  if(!confirm('Delete ALL apps? This cannot be undone.'))return;
+  try{await api('/apps',{method:'DELETE'});appCache=[];renderAdminTable();tst('All apps cleared','info')}catch(e){tst('Error: '+e.message,'error')}
+});
 
 function initAdmin(){populateCatSelect();renderAdminTable();renderAdminCats();updAdminStats()}
 
@@ -1407,6 +1413,13 @@ async function uploadFiles(files){
   return (await r.json()).files.map(x=>x.url);
 }
 function updAdminStats(){} // stats removed from UI
+
+function renderAdminTable(){
+  const t=document.getElementById('adminTbody'),apps=DB.getApps();
+  if(!t)return;
+  if(!apps.length){t.innerHTML='<tr><td colspan="5" style="text-align:center;padding:30px;color:var(--t3)">No apps added yet</td></tr>';return}
+  t.innerHTML=apps.map(a=>'<tr><td data-label="App"><div class="am"><img src="'+icon(a)+'" alt="" onerror="this.style.display=\'none\'"><div class="am-i"><strong>'+a.name+'</strong><span>'+a.developer+'</span></div></div></td><td data-label="Category">'+a.category+'</td><td data-label="Downloads"><i class="fas fa-download" style="font-size:.75rem;margin-right:4px"></i>'+fmt(a.installs||0)+'</td><td data-label="Rating"><span class="star"><i class="fas fa-star"></i> '+(a.rating||0)+'</span></td><td data-label="Actions"><div class="ax"><button class="eb" onclick="editApp(\''+a.id+'\')"><i class="fas fa-edit"></i></button><button class="db2" onclick="delApp(\''+a.id+'\')"><i class="fas fa-trash"></i></button></div></td></tr>').join('');
+}
 
 let uploadedIcon=null,uploadedBanner=null,screenshotUrls=[];
 
