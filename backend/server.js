@@ -257,6 +257,28 @@ app.post('/api/admin/login', (req, res) => {
   res.status(401).json({ error: 'Invalid credentials' });
 });
 
+// Admin analytics endpoint
+app.get('/api/admin/analytics', adminAuth, async (req, res) => {
+  try {
+    const apps = await App.find().lean();
+    const userUsage = {};
+    let totalInstalls = 0;
+    const appUsage = [];
+    for (const a of apps) {
+      totalInstalls += a.installs || 0;
+      const u = a.usage || {};
+      const total = Object.values(u).reduce((s, v) => s + v, 0);
+      if (total > 0) appUsage.push({ id: a._id, name: a.name, icon: a.icon || '', usage: total, installs: a.installs || 0 });
+      for (const [user, count] of Object.entries(u)) {
+        userUsage[user] = (userUsage[user] || 0) + count;
+      }
+    }
+    const topUsers = Object.entries(userUsage).map(([user, usage]) => ({ user, usage })).sort((a, b) => b.usage - a.usage).slice(0, 20);
+    const topApps = appUsage.sort((a, b) => b.usage - a.usage).slice(0, 20);
+    res.json({ totalApps: apps.length, totalInstalls, totalActiveUsers: topUsers.length, topUsers, topApps });
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 // Seed default categories if empty
 async function seedCategories() {
   const count = await Category.countDocuments();
