@@ -674,13 +674,15 @@ section{padding:32px 0}
 </div>
 
 <div class="atabs">
-<button class="atab act" data-tab="apps" onclick="switchAdminTab('apps')"><i class="fas fa-mobile-alt"></i> Apps</button>
-<button class="atab" data-tab="cats" onclick="switchAdminTab('cats')"><i class="fas fa-th-large"></i> Categories</button>
+<button class="atab act" data-tab="apps" onclick="switchAdminTab('apps')"><i class="fas fa-mobile-alt"></i> All Apps</button>
+<button class="atab" data-tab="addApp" onclick="switchAdminTab('addApp')"><i class="fas fa-plus-circle"></i> Add App</button>
+<button class="atab" data-tab="cats" onclick="switchAdminTab('cats')"><i class="fas fa-th-large"></i> All Categories</button>
+<button class="atab" data-tab="addCat" onclick="switchAdminTab('addCat')"><i class="fas fa-plus-circle"></i> Add Category</button>
 <button class="atab" data-tab="analytics" onclick="switchAdminTab('analytics')"><i class="fas fa-chart-pie"></i> Analytics</button>
 </div>
 
-<div class="apn act" id="apnApps">
-<div class="ag" style="margin-bottom:24px">
+<div class="apn act" id="apnAppsList">
+<div class="ag">
 <div class="ag-tbl">
 <div class="apn-hdr">
 <h2><i class="fas fa-mobile-alt"></i> All Apps</h2>
@@ -695,6 +697,10 @@ section{padding:32px 0}
 </table>
 </div>
 </div>
+</div>
+</div>
+
+<div class="apn" id="apnAddApp">
 <div class="ag-frm">
 <h2 id="formTitle"><i class="fas fa-plus-circle"></i> Add App</h2>
 <form id="appForm" autocomplete="off">
@@ -757,9 +763,8 @@ section{padding:32px 0}
 </form>
 </div>
 </div>
-</div>
 
-<div class="apn" id="apnCats">
+<div class="apn" id="apnCatsList">
 <div class="ag">
 <div class="ag-tbl">
 <div class="apn-hdr">
@@ -775,6 +780,10 @@ section{padding:32px 0}
 </table>
 </div>
 </div>
+</div>
+</div>
+
+<div class="apn" id="apnAddCat">
 <div class="ag-frm">
 <h2 id="catFormTitle"><i class="fas fa-plus-circle"></i> Add Category</h2>
 <form id="catForm" autocomplete="off">
@@ -785,7 +794,6 @@ section{padding:32px 0}
 <div class="fg"><label>Subcategories <span style="font-weight:400;color:var(--t3);font-size:.75rem">(comma separated)</span></label><input type="text" id="cSubs" placeholder="Action, Racing, Puzzle..."></div>
 <button type="submit" class="sbtn" id="catFormBtn"><i class="fas fa-plus-circle"></i> Add Category</button>
 </form>
-</div>
 </div>
 </div>
 <div class="apn" id="apnAnalytics">
@@ -1465,8 +1473,10 @@ if(savedAdmin)try{const p=JSON.parse(savedAdmin);if(p.id&&p.pw){adminCreds={id:p
 
 function switchAdminTab(t){
   document.querySelectorAll('.atab').forEach(x=>x.classList.toggle('act',x.dataset.tab===t));
-  document.querySelectorAll('.apn').forEach(x=>x.classList.toggle('act',x.id==='apn'+(t==='apps'?'Apps':t==='cats'?'Cats':'Analytics')));
+  document.querySelectorAll('.apn').forEach(x=>x.classList.toggle('act',x.id==='apn'+(t==='apps'?'AppsList':t==='addApp'?'AddApp':t==='cats'?'CatsList':t==='addCat'?'AddCat':'Analytics')));
   if(t==='analytics')loadAnalytics();
+  if(t==='addApp')resetAppForm();
+  if(t==='addCat')resetCatForm();
 }
 window.switchAdminTab=switchAdminTab;
 
@@ -1562,6 +1572,7 @@ function editCat(name){
   document.getElementById('cSubs').value=(c.subcategories||[]).join(', ');
   document.getElementById('catFormTitle').innerHTML='<i class="fas fa-edit"></i> Edit Category';
   document.getElementById('catFormBtn').innerHTML='<i class="fas fa-save"></i> Update';
+  switchAdminTab('addCat');
 }
 
 async function delCat(name){
@@ -1714,6 +1725,7 @@ function editApp(id){
   document.getElementById('aWeb').value=a.websiteLink||'';document.getElementById('aApk').value=a.apkLink||'';
   document.getElementById('aVer').value=a.version||'';document.getElementById('aFeat').value=a.featured?'true':'false';
   document.getElementById('formTitle').innerHTML='<i class="fas fa-edit"></i> Edit App';document.getElementById('formBtn').innerHTML='<i class="fas fa-save"></i> Update';
+  switchAdminTab('addApp');
 }
 
 async function delApp(id){
