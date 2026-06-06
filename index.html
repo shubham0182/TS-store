@@ -44,6 +44,10 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
   .nav-menu:hover{background:var(--al)}
   .nav-logo span{display:inline}
 }
+@media(max-width:480px){
+  .s-card{min-width:180px;max-width:220px}
+  .s-bnr{height:50px}
+}
 .mobile-search-bar{display:none;padding:8px 16px;position:fixed;top:var(--nh);left:0;right:0;z-index:99;background:var(--gb);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--ge);transition:var(--tr)}
 .mobile-search-bar.show{display:block}
 .mobile-search-bar .ms-inner{position:relative;max-width:1200px;margin:0 auto}
@@ -83,12 +87,12 @@ section{padding:32px 0}
 .s-card:nth-child(3){animation-delay:.15s}
 .s-card:nth-child(4){animation-delay:.2s}
 .s-card:nth-child(5){animation-delay:.25s}
-.s-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 12px 48px rgba(0,0,0,0.15),0 0 0 1px var(--ac) inset}
-.s-bnr{height:100px;overflow:hidden;position:relative;background:var(--t3)}
+.s-card:hover{box-shadow:0 12px 48px rgba(0,0,0,0.15),0 0 0 1px var(--ac) inset}
+.s-bnr{height:70px;overflow:hidden;position:relative;background:var(--t3)}
 .s-bnr::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,0.15) 50%,transparent 60%);opacity:0;transition:opacity .5s}
 .s-card:hover .s-bnr::after{opacity:1;animation:sShimmer .8s}
-.s-bnr img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(0.34,1.56,0.64,1)}
-.s-card:hover .s-bnr img{transform:scale(1.08)}
+.s-bnr img{width:100%;height:100%;object-fit:cover}
+@media(hover:hover)and(pointer:fine){.s-card:hover{transform:translateY(-4px)}.s-card:hover .s-bnr img{transform:scale(1.05)}}
 .s-bdg{position:absolute;top:10px;left:10px;padding:3px 14px;border-radius:50px;background:linear-gradient(135deg,#f093fb 0%,#f5576c 100%);color:#fff;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;box-shadow:0 4px 15px rgba(245,87,108,0.4);animation:sBdgPulse 2s infinite}
 .s-body{padding:12px 14px 14px;display:flex;gap:10px;position:relative}
 .s-body::before{content:'';position:absolute;top:0;left:14px;right:14px;height:1px;background:linear-gradient(90deg,transparent,var(--ge),transparent)}
@@ -149,7 +153,7 @@ section{padding:32px 0}
 @media(max-width:400px){.cg{grid-template-columns:repeat(2,1fr);gap:10px}}
 .cc{background:var(--crg);backdrop-filter:blur(10px);border:1px solid var(--ge);border-radius:var(--r2);padding:20px 12px;text-align:center;transition:var(--tr);cursor:pointer}
 .cc:hover{transform:translateY(-3px);box-shadow:var(--md)}
-.cc-i{font-size:2rem;margin-bottom:8px;display:block;color:var(--t1)}
+.cc-i{width:48px;height:48px;margin:0 auto 8px;display:block}.cc-i img{width:100%;height:100%;object-fit:contain;border-radius:10px}
 .cc-n{font-size:.85rem;font-weight:600}
 .cc-c{font-size:.72rem;color:var(--t3);margin-top:3px}
 .subs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
@@ -674,11 +678,11 @@ section{padding:32px 0}
 </div>
 
 <div class="atabs">
-<button class="atab act" data-tab="apps" onclick="switchAdminTab('apps')"><i class="fas fa-mobile-alt"></i> All Apps</button>
-<button class="atab" data-tab="addApp" onclick="switchAdminTab('addApp')"><i class="fas fa-plus-circle"></i> Add App</button>
-<button class="atab" data-tab="cats" onclick="switchAdminTab('cats')"><i class="fas fa-th-large"></i> All Categories</button>
-<button class="atab" data-tab="addCat" onclick="switchAdminTab('addCat')"><i class="fas fa-plus-circle"></i> Add Category</button>
-<button class="atab" data-tab="analytics" onclick="switchAdminTab('analytics')"><i class="fas fa-chart-pie"></i> Analytics</button>
+<button class="atab act" data-tab="apps" onclick="navigateTo('admin-apps')"><i class="fas fa-mobile-alt"></i> All Apps</button>
+<button class="atab" data-tab="addApp" onclick="navigateTo('admin-add-app')"><i class="fas fa-plus-circle"></i> Add App</button>
+<button class="atab" data-tab="cats" onclick="navigateTo('admin-categories')"><i class="fas fa-th-large"></i> All Categories</button>
+<button class="atab" data-tab="addCat" onclick="navigateTo('admin-add-category')"><i class="fas fa-plus-circle"></i> Add Category</button>
+<button class="atab" data-tab="analytics" onclick="navigateTo('admin-analytics')"><i class="fas fa-chart-pie"></i> Analytics</button>
 </div>
 
 <div class="apn act" id="apnAppsList">
@@ -789,7 +793,14 @@ section{padding:32px 0}
 <form id="catForm" autocomplete="off">
 <div class="fr">
 <div class="fg"><label>Category Name *</label><input type="text" id="cName" placeholder="Category name" required></div>
-<div class="fg"><label>Icon <span style="font-weight:400;color:var(--t3);font-size:.75rem">(Font Awesome)</span></label><input type="text" id="cIcon" placeholder="folder, gamepad, robot..." value="folder"></div>
+<div class="fg"><label>Icon Image</label>
+<div class="ur">
+<input type="file" id="cIconInput" accept="image/*" style="display:none">
+<button type="button" id="cIconBtn" class="ibtn"><i class="fas fa-cloud-upload-alt"></i> Upload</button>
+<input type="url" id="cIcon" placeholder="Or paste icon URL...">
+</div>
+<img class="pv pv-sm" id="cIconPreview" alt=""><span class="ufn" id="cIconName"></span>
+</div>
 </div>
 <div class="fg"><label>Subcategories <span style="font-weight:400;color:var(--t3);font-size:.75rem">(comma separated)</span></label><input type="text" id="cSubs" placeholder="Action, Racing, Puzzle..."></div>
 <button type="submit" class="sbtn" id="catFormBtn"><i class="fas fa-plus-circle"></i> Add Category</button>
@@ -1000,17 +1011,22 @@ async function api(path,opts={}){
 
 async function loadApps(){appCache=await api('/apps')}
 async function loadCategories(){catCache=await api('/categories')}
+function catIcon(name,icon){
+  if(icon&&icon.startsWith('http'))return icon;
+  const col={'Games':'f093fb','AI Tools':'58a6ff','Business':'d29922','Jobs':'3fb950','Skills':'bc8cff','Education':'f778ba','Productivity':'3178c6','PDF Tools':'f85149'};
+  return 'https://api.dicebear.com/7.x/icons/svg?seed='+encodeURIComponent(name)+'&backgroundColor='+(col[name]||'333333');
+}
 function getCats(){
-  const db=(catCache.length?catCache:[
-    {name:'Games',icon:'gamepad',subcategories:['Action','Racing','Puzzle','Adventure']},
-    {name:'AI Tools',icon:'robot',subcategories:['Chatbots','Image Generators','Productivity AI','Coding AI']},
-    {name:'Business',icon:'briefcase',subcategories:['CRM','Finance','Marketing','Startup Tools']},
-    {name:'Jobs',icon:'laptop-code',subcategories:['Internship','Remote Jobs','Freelance','Full Time']},
-    {name:'Skills',icon:'book-open',subcategories:['Programming','Data Science','Design','Marketing','AI & ML']},
-    {name:'Education',icon:'graduation-cap',subcategories:['Learning Apps','Courses','Exam Preparation']},
-    {name:'Productivity',icon:'tasks',subcategories:['Notes','To-Do','Calculator','Utility Tools']}
+  const db=(catCache.length?catCache.map(c=>({...c,icon:c.icon&&!c.icon.startsWith('http')?catIcon(c.name,c.icon):c.icon||catIcon(c.name,'')})):[
+    {name:'Games',icon:catIcon('Games'),subcategories:['Action','Racing','Puzzle','Adventure']},
+    {name:'AI Tools',icon:catIcon('AI Tools'),subcategories:['Chatbots','Image Generators','Productivity AI','Coding AI']},
+    {name:'Business',icon:catIcon('Business'),subcategories:['CRM','Finance','Marketing','Startup Tools']},
+    {name:'Jobs',icon:catIcon('Jobs'),subcategories:['Internship','Remote Jobs','Freelance','Full Time']},
+    {name:'Skills',icon:catIcon('Skills'),subcategories:['Programming','Data Science','Design','Marketing','AI & ML']},
+    {name:'Education',icon:catIcon('Education'),subcategories:['Learning Apps','Courses','Exam Preparation']},
+    {name:'Productivity',icon:catIcon('Productivity'),subcategories:['Notes','To-Do','Calculator','Utility Tools']}
   ]);
-  return [...db,{name:'PDF Tools',icon:'file-pdf',subcategories:[]}];
+  return [...db,{name:'PDF Tools',icon:catIcon('PDF Tools'),subcategories:[]}];
 }
 function getSubs(cat){const c=getCats().find(x=>x.name===cat);return c?c.subcategories:[]}
 
@@ -1032,7 +1048,7 @@ const DB={
   async incInstalls(id){const body={};if(userCreds)body.user=userCreds.username;const rr=await api('/apps/'+id+'/install',{method:'POST',body:JSON.stringify(body)});if(rr&&!rr.blocked){const i=appCache.findIndex(a=>a.id===id);if(i>=0)appCache[i]=rr}return rr},
   getTheme(){return localStorage.getItem(TK)||'light'},
   setTheme(t){localStorage.setItem(TK,t)},
-  get cats(){return getCats().map(c=>({n:c.name,f:c.icon}))},
+  get cats(){return getCats().map(c=>({n:c.name,i:c.icon}))},
   subs(name){const c=getCats().find(x=>x.name===name);return c?c.subcategories:[]}
 }
 
@@ -1116,11 +1132,11 @@ function initTheme(){
 document.addEventListener('click',e=>{if(e.target.closest('#themeToggle')||e.target.closest('#themeToggleAdmin')){const c=DB.getTheme(),n=c==='dark'?'light':'dark';DB.setTheme(n);document.documentElement.setAttribute('data-theme',n);['themeToggle','themeToggleAdmin'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=n==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>'})}});
 
 /* View */
-async function showHome(){['mainContent','adminSec','detailSec','allSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');if(id==='mainContent')e.classList.remove('hidden')});closePdfWorkspace();try{await loadApps();await loadCategories()}catch(e){}renderInstalled();renderFeat();renderCats();initCatClicks();renderTrend();renderNew();renderTop(document.querySelector('#topSec .sc.act')?.dataset.chart||'trending');document.getElementById('mainContent').scrollIntoView({behavior:'smooth'})}
-function showPdfSuite(){closePdfWorkspace();if(document.getElementById('allGrid')&&!document.getElementById('allGrid').children.length)initPdfSuite();['mainContent','adminSec','detailSec','allSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden')});const as=document.getElementById('allSec');if(as)as.classList.remove('hidden');const sc=document.getElementById('allSec');if(sc)sc.scrollIntoView({behavior:'smooth'});else window.scrollTo({top:0,behavior:'smooth'})}
+async function showHome(){['mainContent','adminSec','detailSec','allSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden');if(id==='mainContent')e.classList.remove('hidden')});closePdfWorkspace();try{await loadApps();await loadCategories()}catch(e){}renderInstalled();renderFeat();renderCats();initCatClicks();renderTrend();renderNew();renderTop(document.querySelector('#topSec .sc.act')?.dataset.chart||'trending');document.getElementById('mainContent').scrollIntoView({behavior:'smooth'});if(location.hash)history.replaceState(null,'',location.pathname+location.search)}
+function showPdfSuite(){closePdfWorkspace();if(document.getElementById('allGrid')&&!document.getElementById('allGrid').children.length)initPdfSuite();['mainContent','adminSec','detailSec','allSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden')});const as=document.getElementById('allSec');if(as)as.classList.remove('hidden');const sc=document.getElementById('allSec');if(sc)sc.scrollIntoView({behavior:'smooth'});else window.scrollTo({top:0,behavior:'smooth'});if(location.hash)history.replaceState(null,'',location.pathname+location.search)}
 
-function showDetail(id){curApp=id;hideViews();document.getElementById('detailSec').classList.remove('hidden');renderDetail(DB.getApp(id));document.getElementById('detailSec').scrollIntoView({behavior:'smooth'})}
-function showAdminLogin(){closePdfWorkspace();hideViews();document.getElementById('adminSec').classList.remove('hidden');document.getElementById('adminLogin').style.display='flex';document.getElementById('adminDash').style.display='none';document.getElementById('adminSec').scrollIntoView({behavior:'smooth'})}
+function showDetail(id){curApp=id;hideViews();document.getElementById('detailSec').classList.remove('hidden');renderDetail(DB.getApp(id));document.getElementById('detailSec').scrollIntoView({behavior:'smooth'});if(location.hash)history.replaceState(null,'',location.pathname+location.search)}
+function showAdminLogin(){closePdfWorkspace();navigateTo('admin-login')}
 function hideViews(){['mainContent','detailSec','adminSec','allSec'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('hidden')})}
 window.showHome=()=>showHome();window.showAdminLogin=showAdminLogin;window.clearSearch=clearSearch;window.showPdfSuite=showPdfSuite;window.showDetail=showDetail;window.toggleInst=toggleInst;window.editCat=editCat;window.delCat=delCat;window.editApp=editApp;window.delApp=delApp;
 
@@ -1134,7 +1150,7 @@ function renderFeat(){
   sec.style.display='';
   t.innerHTML=apps.map((a,i)=>{
     const d=a.description||'';
-    return '<div class="s-card" data-appid="'+a.id+'" style="animation-delay:'+(.05*(i+1))+'s"><a class="s-bnr" href="javascript:void(0)" onclick="event.stopPropagation();showDetail(\''+a.id+'\')"><img src="'+(a.banner||'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=200&fit=crop')+'" alt="" loading="lazy" onerror="this.style.display=\'none\'"><span class="s-bdg">Featured</span></a><div class="s-body" onclick="showDetail(\''+a.id+'\')"><div class="s-icon"><img src="'+icon(a)+'" alt="" loading="lazy"></div><div class="s-inf"><h3>'+a.name+'</h3><div class="dev"><i class="fas fa-user-circle"></i> '+a.developer+'</div><p class="s-desc">'+d.substring(0,70)+(d.length>70?'...':'')+'</p><div class="meta"><span class="tag"><i class="fas fa-tag"></i> '+a.category+(a.subcategory?' / '+a.subcategory:'')+'</span><span><i class="fas fa-star" style="color:var(--st)"></i> '+(a.rating||0)+'</span><span><i class="fas fa-download"></i> '+fmt(a.installs||0)+'</span></div></div></div></div>'
+    return '<div class="s-card" data-appid="'+a.id+'" style="animation-delay:'+(.05*(i+1))+'s"><a class="s-bnr" href="javascript:void(0)" onclick="event.stopPropagation();showDetail(\''+a.id+'\')"><img src="'+(a.banner||'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=140&fit=crop')+'" alt="" loading="lazy" onerror="this.style.display=\'none\'"><span class="s-bdg">Featured</span></a><div class="s-body" onclick="showDetail(\''+a.id+'\')"><div class="s-icon"><img src="'+icon(a)+'" alt="" loading="lazy"></div><div class="s-inf"><h3>'+a.name+'</h3><div class="dev"><i class="fas fa-user-circle"></i> '+a.developer+'</div><p class="s-desc">'+d.substring(0,70)+(d.length>70?'...':'')+'</p><div class="meta"><span class="tag"><i class="fas fa-tag"></i> '+a.category+(a.subcategory?' / '+a.subcategory:'')+'</span><span><i class="fas fa-star" style="color:var(--st)"></i> '+(a.rating||0)+'</span><span><i class="fas fa-download"></i> '+fmt(a.installs||0)+'</span></div></div></div></div>'
   }).join('');
   setupSlider(apps.length);
 }
@@ -1173,7 +1189,7 @@ function startAutoPlay(){
 
 function renderCats(){
   const g=document.getElementById('catGrid');
-  g.innerHTML=DB.cats.map(c=>'<div class="cc" data-cat="'+c.n+'"><span class="cc-i"><i class="fas fa-'+c.f+'"></i></span><div class="cc-n">'+c.n+'</div><div class="cc-c">'+(c.n==='PDF Tools'?PDFTools.length+' tools':DB.byCat(c.n).length+' apps')+'</div></div>').join('');
+  g.innerHTML=DB.cats.map(c=>'<div class="cc" data-cat="'+c.n+'"><span class="cc-i"><img src="'+c.i+'" alt="'+c.n+'" loading="lazy" onerror="this.style.display=\'none\'"></span><div class="cc-n">'+c.n+'</div><div class="cc-c">'+(c.n==='PDF Tools'?PDFTools.length+' tools':DB.byCat(c.n).length+' apps')+'</div></div>').join('');
 }
 
 function initCatClicks(){
@@ -1471,6 +1487,53 @@ const ADMIN_STORAGE_KEY='ts_admin';
 const savedAdmin=localStorage.getItem(ADMIN_STORAGE_KEY);
 if(savedAdmin)try{const p=JSON.parse(savedAdmin);if(p.id&&p.pw){adminCreds={id:p.id,pw:p.pw}}}catch(e){}
 
+/* Admin Routing - separate pages via hash */
+function navigateTo(route) {
+  location.hash = route;
+}
+window.navigateTo = navigateTo;
+
+function handleAdminRoute() {
+  const hash = location.hash.slice(1);
+  if (!hash || hash === 'home') {
+    if (document.getElementById('adminSec') && !document.getElementById('adminSec').classList.contains('hidden')) {
+      showHome();
+    }
+    return;
+  }
+  if (hash.startsWith('admin-')) {
+    const parts = hash.split('-');
+    const page = parts.slice(1).join('-');
+    const adminLogin = document.getElementById('adminLogin');
+    const adminDash = document.getElementById('adminDash');
+    const adminSec = document.getElementById('adminSec');
+    if (!adminSec) return;
+    if (hash === 'admin-login') {
+      hideViews();
+      adminSec.classList.remove('hidden');
+      if (adminLogin) adminLogin.style.display = 'flex';
+      if (adminDash) adminDash.style.display = 'none';
+      adminSec.scrollIntoView({behavior:'smooth'});
+      return;
+    }
+    if (!adminCreds) {
+      navigateTo('admin-login');
+      return;
+    }
+    hideViews();
+    adminSec.classList.remove('hidden');
+    if (adminLogin) adminLogin.style.display = 'none';
+    if (adminDash) adminDash.style.display = '';
+    adminSec.scrollIntoView({behavior:'smooth'});
+    const tabMap = {'apps':'apps','add-app':'addApp','categories':'cats','add-category':'addCat','analytics':'analytics'};
+    const tab = tabMap[page] || 'apps';
+    switchAdminTab(tab);
+  }
+}
+
+window.addEventListener('hashchange', handleAdminRoute);
+if (location.hash) setTimeout(handleAdminRoute, 100);
+
 function switchAdminTab(t){
   document.querySelectorAll('.atab').forEach(x=>x.classList.toggle('act',x.dataset.tab===t));
   document.querySelectorAll('.apn').forEach(x=>x.classList.toggle('act',x.id==='apn'+(t==='apps'?'AppsList':t==='addApp'?'AddApp':t==='cats'?'CatsList':t==='addCat'?'AddCat':'Analytics')));
@@ -1492,8 +1555,10 @@ function resetAppForm(){
 
 function resetCatForm(){
   document.getElementById('catForm').reset();
-  document.getElementById('cIcon').value='folder';
-  editingCat=null;
+  document.getElementById('cIcon').value='';
+  document.getElementById('cIconPreview').style.display='none';
+  document.getElementById('cIconName').textContent='';
+  uploadedCatIcon=null;editingCat=null;
   document.getElementById('catFormTitle').innerHTML='<i class="fas fa-plus-circle"></i> Add Category';
   document.getElementById('catFormBtn').innerHTML='<i class="fas fa-plus-circle"></i> Add Category';
 }
@@ -1502,14 +1567,14 @@ document.getElementById('adminLoginBtn')?.addEventListener('click',async()=>{
   const id=document.getElementById('adminId').value.trim(),pw=document.getElementById('adminPass').value.trim();
   const btn=document.getElementById('adminLoginBtn');btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-pulse"></i> Signing In...';
   const el=document.getElementById('adminErr');
-  try{const r=await api('/admin/login',{method:'POST',body:JSON.stringify({id,password:pw})});if(r.success){adminCreds={id,pw};localStorage.setItem(ADMIN_STORAGE_KEY,JSON.stringify({id,pw}));document.getElementById('adminLogin').style.display='none';document.getElementById('adminDash').style.display='';await initAdmin()}else{if(el){el.textContent='Invalid credentials';el.style.display='block'}}}catch(e){if(el){el.textContent=e.message.includes('Failed to fetch')||e.message.includes('NetworkError')?'Cannot connect to server. Make sure the backend is running (cd backend && npm start)':'Invalid credentials';el.style.display='block'}}
+  try{const r=await api('/admin/login',{method:'POST',body:JSON.stringify({id,password:pw})});if(r.success){adminCreds={id,pw};localStorage.setItem(ADMIN_STORAGE_KEY,JSON.stringify({id,pw}));document.getElementById('adminLogin').style.display='none';document.getElementById('adminDash').style.display='';await initAdmin();navigateTo('admin-apps')}else{if(el){el.textContent='Invalid credentials';el.style.display='block'}}}catch(e){if(el){el.textContent=e.message.includes('Failed to fetch')||e.message.includes('NetworkError')?'Cannot connect to server. Make sure the backend is running (cd backend && npm start)':'Invalid credentials';el.style.display='block'}}
   btn.disabled=false;btn.innerHTML='<i class="fas fa-sign-in-alt"></i> Sign In';
 });
 document.getElementById('adminPass')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('adminLoginBtn')?.click()});
-document.getElementById('adminLogout')?.addEventListener('click',()=>{localStorage.removeItem(ADMIN_STORAGE_KEY);adminCreds=null;document.getElementById('adminLogin').style.display='flex';document.getElementById('adminDash').style.display='none';document.getElementById('adminId').value='';document.getElementById('adminPass').value='';showHome()});
+document.getElementById('adminLogout')?.addEventListener('click',()=>{localStorage.removeItem(ADMIN_STORAGE_KEY);adminCreds=null;document.getElementById('adminLogin').style.display='flex';document.getElementById('adminDash').style.display='none';document.getElementById('adminId').value='';document.getElementById('adminPass').value='';navigateTo('admin-login')});
 
 // Auto-login if saved admin creds
-if(adminCreds){(async()=>{try{await api('/admin/login',{method:'POST',body:JSON.stringify({id:adminCreds.id,password:adminCreds.pw})});document.getElementById('adminLogin').style.display='none';document.getElementById('adminDash').style.display='';await initAdmin()}catch(e){localStorage.removeItem(ADMIN_STORAGE_KEY);adminCreds=null}})()}
+if(adminCreds){(async()=>{try{await api('/admin/login',{method:'POST',body:JSON.stringify({id:adminCreds.id,password:adminCreds.pw})});document.getElementById('adminLogin').style.display='none';document.getElementById('adminDash').style.display='';await initAdmin();if(!location.hash||location.hash==='#home')navigateTo('admin-apps')}catch(e){localStorage.removeItem(ADMIN_STORAGE_KEY);adminCreds=null;navigateTo('admin-login')}})()}
 
 document.getElementById('clearAll')?.addEventListener('click',async()=>{
   if(!confirm('Delete ALL apps? This cannot be undone.'))return;
@@ -1559,7 +1624,7 @@ function renderAdminCats(){
   const t=document.getElementById('adminCatTbody'),cats=getCats();
   if(!t)return;
   if(!cats.length){t.innerHTML='<tr><td colspan="3" style="text-align:center;padding:30px;color:var(--t3)">No categories</td></tr>';return}
-  t.innerHTML=cats.map(c=>'<tr><td data-label="Name"><strong><i class="fas fa-'+c.icon+'" style="margin-right:8px"></i>'+c.name+'</strong></td><td data-label="Subcategories">'+(c.subcategories||[]).join(', ')+'</td><td data-label="Actions"><div class="ax"><button class="eb" data-name="'+c.name+'" onclick="editCat(this.dataset.name)"><i class="fas fa-edit"></i></button><button class="db2" data-name="'+c.name+'" onclick="delCat(this.dataset.name)"><i class="fas fa-trash"></i></button></div></td></tr>').join('');
+  t.innerHTML=cats.map(c=>'<tr><td data-label="Name"><div class="am"><img src="'+c.icon+'" alt="" style="width:28px;height:28px;border-radius:6px;object-fit:cover;background:var(--t3)" onerror="this.style.display=\'none\'"><div class="am-i"><strong>'+c.name+'</strong></div></div></td><td data-label="Subcategories">'+(c.subcategories||[]).join(', ')+'</td><td data-label="Actions"><div class="ax"><button class="eb" data-name="'+c.name+'" onclick="editCat(this.dataset.name)"><i class="fas fa-edit"></i></button><button class="db2" data-name="'+c.name+'" onclick="delCat(this.dataset.name)"><i class="fas fa-trash"></i></button></div></td></tr>').join('');
 }
 
 let editingCat=null;
@@ -1568,11 +1633,17 @@ function editCat(name){
   if(!c)return;
   editingCat=name;
   document.getElementById('cName').value=c.name;
-  document.getElementById('cIcon').value=c.icon||'folder';
+  uploadedCatIcon=c.icon||null;
+  document.getElementById('cIcon').value=c.icon||'';
+  if(c.icon){
+    const p=document.getElementById('cIconPreview');
+    if(p){p.src=c.icon;p.style.display='block'}
+    document.getElementById('cIconName').textContent='Current icon';
+  }
   document.getElementById('cSubs').value=(c.subcategories||[]).join(', ');
   document.getElementById('catFormTitle').innerHTML='<i class="fas fa-edit"></i> Edit Category';
   document.getElementById('catFormBtn').innerHTML='<i class="fas fa-save"></i> Update';
-  switchAdminTab('addCat');
+  navigateTo('admin-add-category');
 }
 
 async function delCat(name){
@@ -1586,7 +1657,7 @@ async function delCat(name){
 
 document.getElementById('catForm')?.addEventListener('submit',async e=>{
   e.preventDefault();
-  const n=document.getElementById('cName').value.trim(),ic=document.getElementById('cIcon').value.trim()||'folder',sb=document.getElementById('cSubs').value.trim().split(',').map(x=>x.trim()).filter(Boolean);
+  const n=document.getElementById('cName').value.trim(),ic=document.getElementById('cIcon').value.trim()||(uploadedCatIcon||catIcon(n)),sb=document.getElementById('cSubs').value.trim().split(',').map(x=>x.trim()).filter(Boolean);
   if(!n){tst('Enter category name','error');return}
   try{
     if(editingCat){
@@ -1601,7 +1672,9 @@ document.getElementById('catForm')?.addEventListener('submit',async e=>{
     }
     editingCat=null;
     document.getElementById('catForm').reset();
-    document.getElementById('cIcon').value='folder';
+    document.getElementById('cIcon').value='';
+    document.getElementById('cIconPreview').style.display='none';
+    document.getElementById('cIconName').textContent='';
     document.getElementById('catFormTitle').innerHTML='<i class="fas fa-plus-circle"></i> Add Category';
     document.getElementById('catFormBtn').innerHTML='<i class="fas fa-plus-circle"></i> Add Category';
     renderAdminCats();populateCatSelect();renderCats();resetCatForm();
@@ -1635,7 +1708,7 @@ function renderAdminTable(){
   t.innerHTML=apps.map(a=>'<tr><td data-label="App"><div class="am"><img src="'+icon(a)+'" alt="" onerror="this.style.display=\'none\'"><div class="am-i"><strong>'+a.name+'</strong><span>'+a.developer+'</span></div></div></td><td data-label="Category">'+a.category+'</td><td data-label="Downloads"><i class="fas fa-download" style="font-size:.75rem;margin-right:4px"></i>'+fmt(a.installs||0)+'</td><td data-label="Rating"><span class="star"><i class="fas fa-star"></i> '+(a.rating||0)+'</span></td><td data-label="Actions"><div class="ax"><button class="eb" onclick="editApp(\''+a.id+'\')"><i class="fas fa-edit"></i></button><button class="db2" onclick="delApp(\''+a.id+'\')"><i class="fas fa-trash"></i></button></div></td></tr>').join('');
 }
 
-let uploadedIcon=null,uploadedBanner=null,screenshotUrls=[];
+let uploadedIcon=null,uploadedBanner=null,screenshotUrls=[],uploadedCatIcon=null;
 
 // Icon upload
 document.getElementById('aIconBtn')?.addEventListener('click',()=>document.getElementById('aIconInput')?.click());
@@ -1694,6 +1767,30 @@ document.getElementById('aScreensInput')?.addEventListener('change',async functi
   }catch(e){tst('Upload error: '+e.message,'error')}
 });
 
+// Category icon upload
+document.getElementById('cIconBtn')?.addEventListener('click',()=>document.getElementById('cIconInput')?.click());
+document.getElementById('cIconInput')?.addEventListener('change',async function(){
+  const f=this.files&&this.files[0];
+  if(!f)return;
+  document.getElementById('cIconName').textContent='Uploading...';
+  try{
+    const url=await uploadFile(f);
+    uploadedCatIcon=API_ORIGIN+url;
+    document.getElementById('cIconName').textContent='Uploaded!';
+    const p=document.getElementById('cIconPreview');
+    if(p){p.src=uploadedCatIcon;p.style.display='block'}
+    document.getElementById('cIcon').value=uploadedCatIcon;
+  }catch(e){document.getElementById('cIconName').textContent='Upload failed';tst('Upload error: '+e.message,'error')}
+});
+document.getElementById('cIcon')?.addEventListener('input',function(){
+  if(this.value.trim()){
+    uploadedCatIcon=this.value.trim();
+    const p=document.getElementById('cIconPreview');
+    if(p){p.src=uploadedCatIcon;p.style.display='block'}
+    document.getElementById('cIconName').textContent='URL set';
+  }
+});
+
 document.getElementById('appForm')?.addEventListener('submit',async e=>{
   e.preventDefault();
   const n=document.getElementById('aName').value.trim(),d=document.getElementById('aDev').value.trim(),c=document.getElementById('aCat').value,s=document.getElementById('aSub').value,desc=document.getElementById('aDesc').value.trim(),ic=document.getElementById('aIconUrl').value.trim()||uploadedIcon||'',bn=document.getElementById('aBanner').value.trim()||uploadedBanner||'',scList=screenshotUrls.length?screenshotUrls:document.getElementById('aScreens').value.trim().split(',').map(x=>x.trim()).filter(Boolean),w=document.getElementById('aWeb').value.trim(),ap=document.getElementById('aApk').value.trim(),v=document.getElementById('aVer').value.trim()||'1.0.0',f=document.getElementById('aFeat').value==='true';
@@ -1725,7 +1822,7 @@ function editApp(id){
   document.getElementById('aWeb').value=a.websiteLink||'';document.getElementById('aApk').value=a.apkLink||'';
   document.getElementById('aVer').value=a.version||'';document.getElementById('aFeat').value=a.featured?'true':'false';
   document.getElementById('formTitle').innerHTML='<i class="fas fa-edit"></i> Edit App';document.getElementById('formBtn').innerHTML='<i class="fas fa-save"></i> Update';
-  switchAdminTab('addApp');
+  navigateTo('admin-add-app');
 }
 
 async function delApp(id){
