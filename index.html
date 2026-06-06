@@ -1538,7 +1538,7 @@ function switchAdminTab(t){
   document.querySelectorAll('.atab').forEach(x=>x.classList.toggle('act',x.dataset.tab===t));
   document.querySelectorAll('.apn').forEach(x=>x.classList.toggle('act',x.id==='apn'+(t==='apps'?'AppsList':t==='addApp'?'AddApp':t==='cats'?'CatsList':t==='addCat'?'AddCat':'Analytics')));
   if(t==='analytics')loadAnalytics();
-  if(t==='addApp')resetAppForm();
+  if(t==='addApp'&&!edId)resetAppForm();
   if(t==='addCat')resetCatForm();
 }
 window.switchAdminTab=switchAdminTab;
@@ -1686,6 +1686,7 @@ document.getElementById('refreshCatsBtn')?.addEventListener('click',async()=>{
 });
 
 // File upload helpers
+function fileToBase64(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
 async function uploadFile(file){
   const fd=new FormData();fd.append('file',file);
   const r=await fetch(API_BASE+'/upload',{method:'POST',body:fd,headers:adminCreds?{'Authorization':'Basic '+btoa(adminCreds.id+':'+adminCreds.pw)}:{}});
@@ -1715,14 +1716,14 @@ document.getElementById('aIconBtn')?.addEventListener('click',()=>document.getEl
 document.getElementById('aIconInput')?.addEventListener('change',async function(){
   const f=this.files&&this.files[0];
   if(!f)return;
-  document.getElementById('aIconName').textContent='Uploading...';
+  document.getElementById('aIconName').textContent='Processing...';
   try{
-    const url=await uploadFile(f);
-    uploadedIcon=API_ORIGIN+url;
+    const dataUrl=await fileToBase64(f);
+    uploadedIcon=dataUrl;
     document.getElementById('aIconName').textContent='Uploaded!';
     const p=document.getElementById('aIconPreview');
-    if(p){p.src=uploadedIcon;p.style.display='block'}
-    document.getElementById('aIconUrl').value=uploadedIcon;
+    if(p){p.src=dataUrl;p.style.display='block'}
+    document.getElementById('aIconUrl').value=dataUrl;
   }catch(e){document.getElementById('aIconName').textContent='Upload failed';tst('Upload error: '+e.message,'error')}
 });
 document.getElementById('aIconUrl')?.addEventListener('input',function(){
@@ -1740,11 +1741,11 @@ document.getElementById('aBannerInput')?.addEventListener('change',async functio
   const f=this.files&&this.files[0];
   if(!f)return;
   try{
-    const url=await uploadFile(f);
-    uploadedBanner=API_ORIGIN+url;
-    document.getElementById('aBanner').value=uploadedBanner;
+    const dataUrl=await fileToBase64(f);
+    uploadedBanner=dataUrl;
+    document.getElementById('aBanner').value=dataUrl;
     const p=document.getElementById('aBannerPreview');
-    if(p){p.src=uploadedBanner;p.style.display='block'}
+    if(p){p.src=dataUrl;p.style.display='block'}
     tst('Banner uploaded!','success');
   }catch(e){tst('Upload error: '+e.message,'error')}
 });
@@ -1755,15 +1756,14 @@ document.getElementById('aScreensInput')?.addEventListener('change',async functi
   const files=[...this.files];
   if(!files.length)return;
   try{
-    const urls=await uploadFiles(files);
-    urls.forEach(u=>{
-      const fullUrl=API_ORIGIN+u;
-      screenshotUrls.push(fullUrl);
+    for(const f of files){
+      const dataUrl=await fileToBase64(f);
+      screenshotUrls.push(dataUrl);
       const p=document.getElementById('aScreensPreview');
-      if(p)p.innerHTML+=`<img src="${fullUrl}" alt="">`;
-    });
+      if(p)p.innerHTML+=`<img src="${dataUrl}" alt="">`;
+    }
     document.getElementById('aScreensList').value=screenshotUrls.join(',');
-    tst(urls.length+' screenshot(s) uploaded!','success');
+    tst(files.length+' screenshot(s) uploaded!','success');
   }catch(e){tst('Upload error: '+e.message,'error')}
 });
 
@@ -1772,14 +1772,14 @@ document.getElementById('cIconBtn')?.addEventListener('click',()=>document.getEl
 document.getElementById('cIconInput')?.addEventListener('change',async function(){
   const f=this.files&&this.files[0];
   if(!f)return;
-  document.getElementById('cIconName').textContent='Uploading...';
+  document.getElementById('cIconName').textContent='Processing...';
   try{
-    const url=await uploadFile(f);
-    uploadedCatIcon=API_ORIGIN+url;
+    const dataUrl=await fileToBase64(f);
+    uploadedCatIcon=dataUrl;
     document.getElementById('cIconName').textContent='Uploaded!';
     const p=document.getElementById('cIconPreview');
-    if(p){p.src=uploadedCatIcon;p.style.display='block'}
-    document.getElementById('cIcon').value=uploadedCatIcon;
+    if(p){p.src=dataUrl;p.style.display='block'}
+    document.getElementById('cIcon').value=dataUrl;
   }catch(e){document.getElementById('cIconName').textContent='Upload failed';tst('Upload error: '+e.message,'error')}
 });
 document.getElementById('cIcon')?.addEventListener('input',function(){

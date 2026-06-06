@@ -26,7 +26,7 @@ const upload = multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } });
 
 const app = express();
 app.use(cors());
-app.use(express.json({limit:'10mb'}));
+app.use(express.json({limit:'50mb'}));
 app.use(express.static(path.join(__dirname, '..'), {maxAge:0,etag:false,lastModified:false}));
 app.use('/uploads', express.static(UPLOADS_DIR));
 
