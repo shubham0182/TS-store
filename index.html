@@ -1502,6 +1502,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 /* User */
 let userCreds=JSON.parse(localStorage.getItem('ts_user')||'null');
+window.addEventListener('beforeunload',()=>{if(userCreds)localStorage.setItem('ts_close_time',Date.now())});
 
 function updateUserUI(){
   const btn=document.getElementById('userBtn');
@@ -1645,9 +1646,11 @@ document.getElementById('userLoginForm')?.addEventListener('submit',async e=>{
 document.getElementById('userLogoutBtn')?.addEventListener('click',()=>{
   userCreds=null;
   localStorage.removeItem('ts_user');
+  localStorage.removeItem('ts_close_time');
   updateUserUI();
   refreshReviewSection();
   closeUserModal();
+  showSplash();
   tst('Logged out','info');
 });
 
@@ -2059,6 +2062,7 @@ function showRegisterForm(){document.getElementById('loginForm').style.display='
 window.showLoginForm=showLoginForm;window.showRegisterForm=showRegisterForm;
 
 function hideSplash(){document.getElementById('splash')?.classList.add('hide');document.body.style.overflow=''}
+function showSplash(){const s=document.getElementById('splash');if(!s)return;s.classList.remove('hide');document.body.style.overflow='hidden';document.getElementById('loginForm').style.display='';document.getElementById('registerForm').style.display='none';document.getElementById('loginErr').style.display='none';document.getElementById('regErr').style.display='none';document.getElementById('loginUser').value='';document.getElementById('loginPass').value='';document.getElementById('regUser').value='';document.getElementById('regPass').value=''}
 
 async function initApp(){initTheme();try{await loadApps();await loadCategories()}catch(e){tst('Server not running. Start backend: cd backend && npm start','error')}initHome();initPdfSuite();renderInstalled();if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{})})}window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window._deferredPrompt=e})}
 
@@ -2067,7 +2071,24 @@ const spEl=document.getElementById('spType');const spText='Presented by ';const 
 function spType(){if(i<spText.length){spEl.innerHTML=spText.substring(0,i+1);i++;setTimeout(spType,60)}else if(j<=spName.length){spEl.innerHTML=spText+'<span style="color:#a78bfa;font-weight:600">'+spName.substring(0,j)+'</span>';j++;setTimeout(spType,80)}}
 setTimeout(spType,400);
 const savedUser=JSON.parse(localStorage.getItem('ts_user')||'null');
-if(savedUser){userCreds=savedUser;updateUserUI();hideSplash();initApp();return}
+if(savedUser){
+  userCreds=savedUser;updateUserUI();hideSplash();initApp();
+  const closeTime=parseInt(localStorage.getItem('ts_close_time')||'0');
+  if(closeTime&&Date.now()-closeTime>15*60*1000){
+    localStorage.removeItem('ts_close_time');
+    const logoUrl=window.location.origin+'/logo.svg';
+    setTimeout(async()=>{
+      if(!('Notification'in window)||Notification.permission==='denied')return;
+      if(Notification.permission==='granted'){
+        new Notification('TS Store',{body:'Come back! Your apps are waiting.',icon:logoUrl,badge:logoUrl});
+      }else if(Notification.permission!=='denied'){
+        const p=await Notification.requestPermission();
+        if(p==='granted')new Notification('TS Store',{body:'Come back! Your apps are waiting.',icon:logoUrl,badge:logoUrl});
+      }
+    },3000);
+  }
+  return;
+}
 document.body.style.overflow='hidden';
 document.getElementById('loginBtn')?.addEventListener('click',async()=>{
   const u=document.getElementById('loginUser').value.trim(),p=document.getElementById('loginPass').value.trim();
