@@ -2063,8 +2063,10 @@ const spEl=document.getElementById('spType');const spText='Presented by ';const 
 function spType(){if(i<spText.length){spEl.innerHTML=spText.substring(0,i+1);i++;setTimeout(spType,60)}else if(j<=spName.length){spEl.innerHTML=spText+'<span style="color:#a78bfa;font-weight:600">'+spName.substring(0,j)+'</span>';j++;setTimeout(spType,80)}}
 setTimeout(spType,400);
 let liveCount=parseInt(localStorage.getItem('ts_live_count')||'500');
+localStorage.setItem('ts_live_count',liveCount);
 function updCounters(){const a=document.getElementById('counterNum'),b=document.getElementById('navCounterNum');if(a)a.textContent=liveCount;if(b)b.textContent=liveCount}
 updCounters();
+window.addEventListener('beforeunload',()=>localStorage.setItem('ts_live_count',liveCount));
 setInterval(()=>{liveCount++;localStorage.setItem('ts_live_count',liveCount);updCounters()},30000);
 const savedUser=JSON.parse(localStorage.getItem('ts_user')||'null');
 if(savedUser){
