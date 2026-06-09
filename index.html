@@ -1716,14 +1716,14 @@ document.getElementById('aIconBtn')?.addEventListener('click',()=>document.getEl
 document.getElementById('aIconInput')?.addEventListener('change',async function(){
   const f=this.files&&this.files[0];
   if(!f)return;
-  document.getElementById('aIconName').textContent='Processing...';
+  document.getElementById('aIconName').textContent='Uploading...';
   try{
-    const dataUrl=await fileToBase64(f);
-    uploadedIcon=dataUrl;
+    const url=await uploadFile(f);
+    uploadedIcon=url;
     document.getElementById('aIconName').textContent='Uploaded!';
     const p=document.getElementById('aIconPreview');
-    if(p){p.src=dataUrl;p.style.display='block'}
-    document.getElementById('aIconUrl').value=dataUrl;
+    if(p){p.src=url;p.style.display='block'}
+    document.getElementById('aIconUrl').value=url;
   }catch(e){document.getElementById('aIconName').textContent='Upload failed';tst('Upload error: '+e.message,'error')}
 });
 document.getElementById('aIconUrl')?.addEventListener('input',function(){
@@ -1741,11 +1741,11 @@ document.getElementById('aBannerInput')?.addEventListener('change',async functio
   const f=this.files&&this.files[0];
   if(!f)return;
   try{
-    const dataUrl=await fileToBase64(f);
-    uploadedBanner=dataUrl;
-    document.getElementById('aBanner').value=dataUrl;
+    const url=await uploadFile(f);
+    uploadedBanner=url;
+    document.getElementById('aBanner').value=url;
     const p=document.getElementById('aBannerPreview');
-    if(p){p.src=dataUrl;p.style.display='block'}
+    if(p){p.src=url;p.style.display='block'}
     tst('Banner uploaded!','success');
   }catch(e){tst('Upload error: '+e.message,'error')}
 });
@@ -1756,12 +1756,10 @@ document.getElementById('aScreensInput')?.addEventListener('change',async functi
   const files=[...this.files];
   if(!files.length)return;
   try{
-    for(const f of files){
-      const dataUrl=await fileToBase64(f);
-      screenshotUrls.push(dataUrl);
-      const p=document.getElementById('aScreensPreview');
-      if(p)p.innerHTML+=`<img src="${dataUrl}" alt="">`;
-    }
+    const urls=await uploadFiles(files);
+    screenshotUrls.push(...urls);
+    const p=document.getElementById('aScreensPreview');
+    if(p)p.innerHTML+=urls.map(u=>`<img src="${u}" alt="">`).join('');
     document.getElementById('aScreensList').value=screenshotUrls.join(',');
     tst(files.length+' screenshot(s) uploaded!','success');
   }catch(e){tst('Upload error: '+e.message,'error')}
@@ -1772,14 +1770,14 @@ document.getElementById('cIconBtn')?.addEventListener('click',()=>document.getEl
 document.getElementById('cIconInput')?.addEventListener('change',async function(){
   const f=this.files&&this.files[0];
   if(!f)return;
-  document.getElementById('cIconName').textContent='Processing...';
+  document.getElementById('cIconName').textContent='Uploading...';
   try{
-    const dataUrl=await fileToBase64(f);
-    uploadedCatIcon=dataUrl;
+    const url=await uploadFile(f);
+    uploadedCatIcon=url;
     document.getElementById('cIconName').textContent='Uploaded!';
     const p=document.getElementById('cIconPreview');
-    if(p){p.src=dataUrl;p.style.display='block'}
-    document.getElementById('cIcon').value=dataUrl;
+    if(p){p.src=url;p.style.display='block'}
+    document.getElementById('cIcon').value=url;
   }catch(e){document.getElementById('cIconName').textContent='Upload failed';tst('Upload error: '+e.message,'error')}
 });
 document.getElementById('cIcon')?.addEventListener('input',function(){
