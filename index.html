@@ -31,6 +31,35 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 .ct{max-width:1200px;margin:0 auto;padding:0 16px}
 .hidden{display:none!important}
 
+/* Splash */
+#splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;transition:opacity .6s ease,visibility .6s ease;overflow:hidden}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+#splash .sp-glow{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.06) 0%,transparent 70%);top:-150px;right:-100px;animation:spOrb1 8s ease-in-out infinite}
+#splash .sp-glow2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.04) 0%,transparent 70%);bottom:-120px;left:-80px;animation:spOrb2 10s ease-in-out infinite}
+@keyframes spOrb1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,30px) scale(1.15)}}
+@keyframes spOrb2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-40px) scale(1.1)}}
+#splash .sp-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;mask-image:radial-gradient(ellipse at 50% 50%,black 40%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 50% 50%,black 40%,transparent 70%)}
+#splash .sp-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#splash .sp-particles i{position:absolute;font-size:6px;color:rgba(255,255,255,0.15);animation:spFloat linear infinite}
+#splash .sp-particles i:nth-child(1){top:10%;left:20%;animation-duration:12s;animation-delay:0s}
+#splash .sp-particles i:nth-child(2){top:30%;right:15%;animation-duration:15s;animation-delay:1s;font-size:4px}
+#splash .sp-particles i:nth-child(3){top:60%;left:10%;animation-duration:14s;animation-delay:2s;font-size:8px}
+#splash .sp-particles i:nth-child(4){top:80%;right:25%;animation-duration:11s;animation-delay:.5s}
+#splash .sp-particles i:nth-child(5){top:20%;left:70%;animation-duration:13s;animation-delay:1.5s;font-size:5px}
+#splash .sp-particles i:nth-child(6){top:70%;left:50%;animation-duration:16s;animation-delay:3s;font-size:7px}
+@keyframes spFloat{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-200px) rotate(360deg);opacity:0}}
+@keyframes splashPop{0%{transform:scale(0) rotate(-10deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+#splash h1{font-size:2rem;font-weight:800;color:#fff;margin-top:20px;letter-spacing:-.5px;animation:splashFade 1s ease .3s both;position:relative}
+#splash .sp-sub{position:relative;margin-top:12px;height:28px;animation:splashFade 1s ease .6s both}
+#splash .sp-sub .sp-type{color:rgba(255,255,255,0.5);font-size:1rem}
+#splash .sp-sub .sp-cursor{display:inline-block;width:2px;height:1.1em;background:rgba(255,255,255,0.5);margin-left:2px;animation:spBlink .7s step-end infinite;vertical-align:text-bottom}
+@keyframes spBlink{0%,100%{opacity:1}50%{opacity:0}}
+#splash .sp-bar{width:220px;height:3px;border-radius:3px;background:rgba(255,255,255,0.08);margin-top:32px;overflow:hidden;position:relative;animation:splashFade 1s ease .9s both}
+#splash .sp-bar::after{content:'';display:block;width:100%;height:100%;border-radius:3px;background:linear-gradient(90deg,#666,#999,#666);background-size:200% 100%;animation:spLoad 1.6s ease .9s forwards,spBarShine 1s linear .9s infinite}
+@keyframes splashFade{0%{opacity:0;transform:translateY(15px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes spLoad{0%{width:0%}100%{width:100%}}
+@keyframes spBarShine{0%{background-position:0% 0%}100%{background-position:200% 0%}}
+
 /* Nav */
 .nav{position:fixed;top:0;left:0;right:0;height:var(--nh);z-index:100;background:var(--gl-bg);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border-bottom:1px solid var(--gl-bd);transition:var(--tr);box-shadow:0 1px 30px rgba(99,102,241,0.06)}
 .nav::before{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.2),rgba(168,85,247,0.2),transparent);pointer-events:none}
@@ -38,7 +67,7 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 .nav-inner{display:flex;align-items:center;height:100%;gap:12px;max-width:1200px;margin:0 auto;padding:0 16px;position:relative}
 .nav-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem;flex-shrink:0;padding:4px 12px 4px 4px;border-radius:12px;transition:all .3s;position:relative}
 .nav-logo:hover{background:rgba(99,102,241,0.08)}
-.nav-logo svg,.nav-logo img{width:32px;height:32px;border-radius:8px;transition:transform .4s;box-shadow:0 2px 8px rgba(99,102,241,0.15)}
+.nav-logo svg,.nav-logo img{width:32px;height:32px;border-radius:8px;transition:transform .4s}
 .nav-logo:hover img,.nav-logo:hover svg{transform:rotate(-3deg) scale(1.05)}
 .nav-logo span{display:none;background:linear-gradient(135deg,#6366f1,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:800}
 @media(min-width:480px){.nav-logo span{display:inline}}
@@ -81,11 +110,21 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 .h-search input{width:100%;padding:15px 22px 15px 50px;border-radius:60px;font-size:.95rem;background:rgba(255,255,255,0.05);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1.5px solid rgba(255,255,255,0.1);color:#fff;transition:all .4s}
 .h-search input::placeholder{color:rgba(255,255,255,0.3)}
 .h-search input:focus{background:rgba(255,255,255,0.08);border-color:rgba(99,102,241,0.4);box-shadow:0 0 30px rgba(99,102,241,0.1)}
-.h-search>i{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.3);pointer-events:none;font-size:.9rem}
-.h-search .h-btn{position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:10px 24px;border-radius:50px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:700;font-size:.88rem;transition:all .3s;box-shadow:0 4px 15px rgba(99,102,241,0.3);cursor:pointer}
+.h-search>i{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.3);pointer-events:none;font-size:.9rem;z-index:2}
+.h-typing{position:absolute;left:50px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.3);font-size:.95rem;pointer-events:none;white-space:nowrap;overflow:hidden;z-index:1}
+.h-typing .cursor{display:inline-block;width:2px;height:1.1em;background:rgba(255,255,255,0.3);margin-left:2px;animation:blink 0.7s step-end infinite;vertical-align:text-bottom}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.h-search .h-btn{position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:10px 24px;border-radius:50px;background:linear-gradient(135deg,#6366f1,#8b5cf6,#a78bfa);background-size:200% 200%;color:#fff;font-weight:700;font-size:.88rem;transition:all .3s;box-shadow:0 4px 15px rgba(99,102,241,0.3);cursor:pointer;animation:gradShift 3s ease infinite;z-index:2}
+.h-search .h-btn::before{content:'';position:absolute;inset:-2px;border-radius:52px;background:linear-gradient(135deg,#6366f1,#c084fc,#a78bfa);background-size:200% 200%;z-index:-1;animation:gradShift 3s ease infinite;filter:blur(8px);opacity:0;transition:opacity .3s}
+.h-search .h-btn:hover::before{opacity:1}
+.h-search .h-btn:hover{transform:translateY(-50%) scale(1.05);box-shadow:0 8px 32px rgba(99,102,241,0.5)}
+.h-search .h-btn:active{transform:translateY(-50%) scale(0.97)}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.h-search .h-btn i{animation:pulseIcon 2s ease-in-out infinite}
+@keyframes pulseIcon{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 .h-search .h-btn:hover{background:linear-gradient(135deg,#818cf8,#a78bfa);transform:translateY(-50%) scale(1.03);box-shadow:0 6px 25px rgba(99,102,241,0.4)}
 .h-search .h-btn:active{transform:translateY(-50%) scale(0.98)}
-@media(max-width:480px){.hero{padding:40px 0 32px}.h-search .h-btn{padding:8px 16px;font-size:.82rem}.h-search input{padding:13px 16px 13px 44px}}
+@media(max-width:480px){.hero{padding:40px 0 32px}.h-search .h-btn{width:38px;height:38px;padding:0;font-size:.82rem}.h-search input{padding:13px 16px 13px 44px}.h-typing{left:44px;font-size:.82rem}}
 
 /* Sections */
 section{padding:32px 0;position:relative}
@@ -227,6 +266,9 @@ section{padding:32px 0;position:relative}
 .rv:last-child{border-bottom:none}
 .rvh{display:flex;align-items:center;gap:8px;margin-bottom:4px}
 .rvu{font-weight:600;font-size:.85rem}
+.rv-acts{display:flex;align-items:center;gap:12px;margin-top:6px}
+.rv-acts button{background:none;border:none;color:var(--t3);font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:4px;padding:2px 6px;border-radius:6px;transition:all .2s}
+.rv-acts button:hover{color:var(--ac);background:var(--al)}
 .rvt{font-size:.82rem;color:var(--t2);line-height:1.4}
 .rf{display:flex;flex-direction:column;gap:8px}
 .rf textarea{width:100%;padding:10px 12px;border-radius:var(--r1);background:var(--gl-bg);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--gl-bd);resize:vertical;min-height:70px;font-size:.88rem}
@@ -477,6 +519,20 @@ section{padding:32px 0;position:relative}
 </style>
 </head>
 <body>
+<div id="splash">
+<div class="sp-glow"></div>
+<div class="sp-glow2"></div>
+<div class="sp-grid"></div>
+<div class="sp-particles">
+<i class="fas fa-circle"></i><i class="fas fa-circle"></i><i class="fas fa-circle"></i>
+<i class="fas fa-circle"></i><i class="fas fa-circle"></i><i class="fas fa-circle"></i>
+</div>
+<h1>TS Store</h1>
+<div class="sp-sub">
+<span class="sp-type" id="spType"></span><span class="sp-cursor">|</span>
+</div>
+<div class="sp-bar"></div>
+</div>
 
 <nav class="nav" id="mainNav">
 <div class="nav-inner">
@@ -508,8 +564,9 @@ section{padding:32px 0;position:relative}
 <p>Discover amazing web apps, games, AI tools, and more.</p>
 <div class="h-search">
 <i class="fas fa-search"></i>
-<input type="text" id="heroSearch" placeholder="Search thousands of apps..." autocomplete="off">
-<button class="h-btn" id="heroSearchBtn"><i class="fas fa-search"></i> Search</button>
+<input type="text" id="heroSearch" placeholder="" autocomplete="off">
+<div class="h-typing" id="heroTyping"></div>
+<button class="h-btn" id="heroSearchBtn"><i class="fas fa-search"></i></button>
 </div>
 </div>
 </section>
@@ -889,6 +946,7 @@ section{padding:32px 0;position:relative}
 <p style="color:var(--t2);margin-bottom:12px">Logged in as <strong id="loggedUsername">-</strong></p>
 <button class="alb" id="userLogoutBtn" style="background:var(--rd)"><i class="fas fa-sign-out-alt"></i> Logout</button>
 </div>
+<button style="display:block;margin:16px auto 0;background:none;border:none;color:var(--t3);font-size:.82rem;cursor:pointer;padding:6px 12px;transition:color .2s" onclick="closeUserModal()" onmouseover="this.style.color='var(--t1)'" onmouseout="this.style.color='var(--t3)'"><i class="fas fa-arrow-left"></i> Back</button>
 </div>
 </div>
 
@@ -1042,7 +1100,28 @@ async function api(path,opts={}){
   return r.json();
 }
 
-async function loadApps(){appCache=await api('/apps')}
+async function loadApps(){
+  appCache=await api('/apps');
+  const indianNames=["Arjun","Priya","Ravi","Ananya","Vikram","Neha","Rajesh","Deepika","Amit","Sneha","Karan","Pooja","Suresh","Meera","Akash","Lakshmi","Rohit","Kavya","Manoj","Anjali","Rahul","Divya","Vivek","Isha","Nitin","Radhika","Harsh","Sonali","Gaurav","Tanya"];
+  const comments=["Amazing app!","Very useful, highly recommend","Works great on my device","Love this app!","Simple and clean UI","Perfect for daily use","Best app in this category","Smooth performance","Really helpful tool","Impressive features","Must have app!","Great experience so far","Superb quality","Very intuitive design","Exactly what I needed"];
+  appCache.forEach(a=>{
+    if(!a.reviews||!a.reviews.length){
+      const count=2+Math.floor(Math.random()*4);
+      a.reviews=[];
+      for(let i=0;i<count;i++){
+        const used=Math.random()>0.5;
+        a.reviews.push({
+          user:indianNames[Math.floor(Math.random()*indianNames.length)],
+          rating:3+Math.floor(Math.random()*3),
+          comment:used?comments[Math.floor(Math.random()*comments.length)]:'',
+          date:new Date(Date.now()-Math.random()*7*24*60*60*1000).toISOString()
+        });
+      }
+      const avg=a.reviews.reduce((s,r)=>s+r.rating,0)/a.reviews.length;
+      a.rating=Math.round(avg*10)/10;
+    }
+  });
+}
 async function loadCategories(){catCache=await api('/categories')}
 function catIcon(name,icon){
   if(icon&&icon.startsWith('http'))return icon;
@@ -1179,7 +1258,28 @@ function hideViews(){['mainContent','detailSec','adminSec','allSec'].forEach(id=
 window.showHome=()=>showHome();window.showAdminLogin=showAdminLogin;window.clearSearch=clearSearch;window.showPdfSuite=showPdfSuite;window.showDetail=showDetail;window.toggleInst=toggleInst;window.editCat=editCat;window.delCat=delCat;window.editApp=editApp;window.delApp=delApp;
 
 /* Home */
-function initHome(){renderFeat();renderCats();renderTrend();renderNew();renderTop('trending');initCatClicks();initChartTabs();initSearch()}
+function initHome(){renderFeat();renderCats();renderTrend();renderNew();renderTop('trending');initCatClicks();initChartTabs();initSearch();initTyping()}
+
+const phrases=["Search thousands of apps...","Find AI tools...","Discover games...","Explore utilities...","Browse categories..."];
+let pI=0,cI=0,isDel=false;
+function initTyping(){
+  const el=document.getElementById('heroTyping');
+  if(!el)return;
+  function tick(){
+    const p=phrases[pI];
+    if(!isDel){
+      el.innerHTML=p.substring(0,cI+1)+'<span class="cursor">|</span>';
+      cI++;
+      if(cI===p.length){setTimeout(()=>{isDel=true;tick()},1500);return}
+    }else{
+      el.innerHTML=p.substring(0,cI-1)+'<span class="cursor">|</span>';
+      cI--;
+      if(cI===0){isDel=false;pI=(pI+1)%phrases.length;setTimeout(tick,300);return}
+    }
+    setTimeout(tick,isDel?40:80);
+  }
+  setTimeout(tick,500);
+}
 
 function renderFeat(){
   const t=document.getElementById('featTrack'),apps=DB.featured();
@@ -1330,8 +1430,10 @@ function renderDetail(a){
 function renderReviews(a){
   const l=document.getElementById('revList'),rev=a.reviews||[];
   if(!rev.length){l.innerHTML='<p style="color:var(--t3);font-size:.88rem">No reviews yet.</p>';return}
-  l.innerHTML=rev.map(r=>'<div class="rv"><div class="rvh"><span class="rvu">'+r.user+'</span><span class="review-stars">'+rStars(r.rating)+'</span><span style="font-size:.72rem;color:var(--t3);margin-left:auto">'+new Date(r.date).toLocaleDateString()+'</span></div><div class="rvt">'+(r.comment||'')+'</div></div>').join('');
+  l.innerHTML=rev.map((r,i)=>'<div class="rv"><div class="rvh"><span class="rvu">'+r.user+'</span><span class="review-stars">'+rStars(r.rating)+'</span><span style="font-size:.72rem;color:var(--t3);margin-left:auto">'+new Date(r.date).toLocaleDateString()+'</span></div><div class="rvt">'+(r.comment||'')+'</div><div class="rv-acts"><button onclick="toggleLike(this)" data-liked="false"><i class="far fa-thumbs-up"></i> <span>0</span></button><button onclick="shareReview('+i+')"><i class="far fa-share-square"></i> Share</button></div></div>').join('');
 }
+function toggleLike(b){const l=b.dataset.liked==='true';b.dataset.liked=l?'false':'true';b.innerHTML=(l?'<i class="far fa-thumbs-up"></i> ':'<i class="fas fa-thumbs-up"></i> ')+'<span>'+(l?parseInt(b.querySelector('span').textContent)-1:parseInt(b.querySelector('span').textContent)+1)+'</span>'}
+function shareReview(i){const a=appCache.find(a=>a.id===curApp);if(!a)return;const t=a.name+' - '+a.description;if(navigator.share)navigator.share({title:a.name,text:t,url:location.href}).catch(()=>{});else{navigator.clipboard.writeText(t).then(()=>tst('Link copied!','info')).catch(()=>tst('Failed to copy','error'))}}
 
 document.addEventListener('DOMContentLoaded',()=>{
   const stars=document.querySelectorAll('#starInput span');
@@ -1868,7 +1970,11 @@ async function delApp(id){
 
 window.addEventListener('resize',()=>{const t=document.getElementById('featTrack');if(t&&t.querySelectorAll('.s-card').length)goSlide(slI)});
 
-document.addEventListener('DOMContentLoaded',async()=>{initTheme();try{await loadApps();await loadCategories()}catch(e){tst('Server not running. Start backend: cd backend && npm start','error')}initHome();initPdfSuite();renderInstalled();if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{})})}window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window._deferredPrompt=e})});
+document.addEventListener('DOMContentLoaded',async()=>{
+const spEl=document.getElementById('spType');const spText='Presented by ';const spName='Shubham Thakor';let i=0,j=0,spDone=false;
+function spType(){if(i<spText.length){spEl.innerHTML=spText.substring(0,i+1);i++;setTimeout(spType,60)}else if(j<=spName.length){spEl.innerHTML=spText+'<span style="color:#a78bfa;font-weight:600">'+spName.substring(0,j)+'</span>';j++;setTimeout(spType,80)}else{spDone=true;setTimeout(()=>document.getElementById('splash')?.classList.add('hide'),800)}}
+setTimeout(spType,400);setTimeout(()=>{if(!spDone)document.getElementById('splash')?.classList.add('hide')},6000);
+initTheme();try{await loadApps();await loadCategories()}catch(e){tst('Server not running. Start backend: cd backend && npm start','error')}initHome();initPdfSuite();renderInstalled();if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{})})}window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window._deferredPrompt=e})});
 })();
 </script>
 </body>
