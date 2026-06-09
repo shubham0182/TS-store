@@ -34,23 +34,20 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 /* Splash / Login */
 #splash{position:fixed;inset:0;z-index:9999;display:flex;transition:opacity .6s ease,visibility .6s ease;overflow:hidden}
 #splash.hide{opacity:0;visibility:hidden;pointer-events:none}
-#splash .sp-left{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f0c29,#1a1a3e,#24243e);padding:40px;position:relative;overflow:hidden}
-#splash .sp-left::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.12) 0%,transparent 70%);top:-150px;right:-100px;animation:spOrb1 8s ease-in-out infinite}
-#splash .sp-left::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(168,85,247,0.08) 0%,transparent 70%);bottom:-120px;left:-80px;animation:spOrb2 10s ease-in-out infinite}
+#splash .sp-left{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0a0a,#1a1a1a,#0d0d0d);padding:40px;position:relative;overflow:hidden}
+#splash .sp-left::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.03) 0%,transparent 70%);top:-150px;right:-100px;animation:spOrb1 8s ease-in-out infinite}
+#splash .sp-left::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.02) 0%,transparent 70%);bottom:-120px;left:-80px;animation:spOrb2 10s ease-in-out infinite}
 #splash .sp-left .sp-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;mask-image:radial-gradient(ellipse at 50% 50%,black 40%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 50% 50%,black 40%,transparent 70%)}
 #splash .sp-left .sp-inner{position:relative;z-index:1;text-align:center;max-width:480px}
-#splash .sp-left .sp-inner .sp-logo-icon{width:80px;height:80px;border-radius:20px;background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:0 8px 32px rgba(0,0,0,0.2);animation:spLogoIn .8s cubic-bezier(0.34,1.56,0.64,1) forwards}
-#splash .sp-left .sp-inner .sp-logo-icon img{width:48px;height:48px;filter:brightness(0) invert(1)}
-@keyframes spLogoIn{0%{transform:scale(0) rotate(-15deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
-#splash .sp-left .sp-inner h1{font-size:2.4rem;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:8px}
+#splash .sp-left .sp-inner h1{font-size:2.4rem;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:8px;background:linear-gradient(135deg,#e0e0e0,#a0a0a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 #splash .sp-left .sp-inner p{color:rgba(255,255,255,0.5);font-size:1.05rem;line-height:1.7}
 #splash .sp-left .sp-inner p span{color:#a78bfa;font-weight:600}
 #splash .sp-left .sp-inner .sp-type-wrap{margin-top:16px;height:28px}
 #splash .sp-left .sp-inner .sp-type-wrap .sp-type{color:rgba(255,255,255,0.4);font-size:.95rem}
 #splash .sp-left .sp-inner .sp-type-wrap .sp-cursor{display:inline-block;width:2px;height:1.1em;background:rgba(255,255,255,0.4);margin-left:2px;animation:spBlink .7s step-end infinite;vertical-align:text-bottom}
 @keyframes spBlink{0%,100%{opacity:1}50%{opacity:0}}
-#splash .sp-right{flex:1;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f0c29,#1a1a3e,#24243e);padding:40px;position:relative;overflow:hidden}
-#splash .sp-right::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,0.08) 0%,transparent 70%);bottom:-80px;right:-60px;animation:spOrb2 12s ease-in-out infinite}
+#splash .sp-right{flex:1;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0a0a,#1a1a1a,#0d0d0d);padding:40px;position:relative;overflow:hidden}
+#splash .sp-right::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.03) 0%,transparent 70%);bottom:-80px;right:-60px;animation:spOrb2 12s ease-in-out infinite}
 #splash .sp-right .sp-form{width:100%;max-width:380px;position:relative;z-index:1}
 #splash .sp-right .sp-form-inner{padding:32px;border-radius:20px;background:rgba(255,255,255,0.05);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 40px rgba(0,0,0,0.15)}
 [data-theme="dark"] #splash .sp-right .sp-form-inner{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.06)}
@@ -72,7 +69,7 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 #splash .sp-right .sp-form .sp-toggle a:hover{text-decoration:underline}
 #splash .sp-right .sp-form .sp-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:rgba(255,255,255,0.25);font-size:.8rem}
 #splash .sp-right .sp-form .sp-divider::before,#splash .sp-right .sp-form .sp-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06)}
-@media(max-width:768px){#splash{flex-direction:column}#splash .sp-left{flex:none;height:38vh;padding:24px}#splash .sp-right{flex:none;min-height:62vh;padding:24px;align-items:flex-start;padding-top:32px}#splash .sp-left .sp-inner .sp-logo-icon{width:56px;height:56px;margin-bottom:16px}#splash .sp-left .sp-inner .sp-logo-icon img{width:32px;height:32px}#splash .sp-left .sp-inner h1{font-size:1.5rem}#splash .sp-right .sp-form-inner{padding:24px}}
+@media(max-width:768px){#splash{flex-direction:column}#splash .sp-left{flex:none;height:38vh;padding:24px}#splash .sp-right{flex:none;min-height:62vh;padding:24px;align-items:flex-start;padding-top:32px}#splash .sp-left .sp-inner h1{font-size:1.5rem}#splash .sp-right .sp-form-inner{padding:24px}}
 
 /* Nav */
 .nav{position:fixed;top:0;left:0;right:0;height:var(--nh);z-index:100;background:var(--gl-bg);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border-bottom:1px solid var(--gl-bd);transition:var(--tr);box-shadow:0 1px 30px rgba(99,102,241,0.06)}
@@ -535,7 +532,6 @@ section{padding:32px 0;position:relative}
 <div class="sp-left">
 <div class="sp-grid"></div>
 <div class="sp-inner">
-<div class="sp-logo-icon"><img src="logo.svg" alt="TS Store"></div>
 <h1>TS Store</h1>
 <p>Discover amazing web apps, games,<br>AI tools, and more.</p>
 <div class="sp-type-wrap">
