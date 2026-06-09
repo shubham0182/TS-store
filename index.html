@@ -44,10 +44,6 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 #splash .sp-left .sp-inner p span{color:#a78bfa;font-weight:600}
 #splash .sp-left .sp-inner .sp-type-wrap{margin-top:16px;height:28px}
 #splash .sp-left .sp-inner .sp-type-wrap .sp-type{color:rgba(255,255,255,0.4);font-size:.95rem}
-#splash .sp-left .sp-inner .sp-type-wrap .sp-cursor{display:inline-block;width:2px;height:1.1em;background:rgba(255,255,255,0.4);margin-left:2px;animation:spBlink .7s step-end infinite;vertical-align:text-bottom}
-#splash .sp-left .sp-inner .sp-counter{margin-top:32px;display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:50px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font-size:.85rem;color:rgba(255,255,255,0.5)}
-#splash .sp-left .sp-inner .sp-counter i{color:#22c55e;font-size:.8rem}
-#splash .sp-left .sp-inner .sp-counter #counterNum{font-weight:700;color:rgba(255,255,255,0.8);min-width:28px;display:inline-block;text-align:center}
 @keyframes spBlink{0%,100%{opacity:1}50%{opacity:0}}
 #splash .sp-right{flex:1;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0a0a,#1a1a1a,#0d0d0d);padding:40px;position:relative;overflow:hidden}
 #splash .sp-right::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.03) 0%,transparent 70%);bottom:-80px;right:-60px;animation:spOrb2 12s ease-in-out infinite}
@@ -73,9 +69,9 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 #splash .sp-right .sp-form .sp-toggle a:hover{text-decoration:underline}
 #splash .sp-right .sp-form .sp-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:rgba(255,255,255,0.25);font-size:.8rem}
 #splash .sp-right .sp-form .sp-divider::before,#splash .sp-right .sp-form .sp-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06)}
-@media(max-width:768px){#splash{flex-direction:column}#splash .sp-left{flex:none;height:38vh;padding:24px 20px}#splash .sp-right{flex:none;min-height:62vh;padding:24px 16px;align-items:flex-start;padding-top:28px}#splash .sp-left .sp-inner h1{font-size:1.5rem}#splash .sp-left .sp-inner p{font-size:.95rem}#splash .sp-left .sp-inner .sp-type-wrap .sp-type{font-size:.85rem}#splash .sp-left .sp-inner .sp-counter{margin-top:24px;font-size:.8rem;padding:6px 14px}#splash .sp-right .sp-form-inner{padding:24px 20px}#splash .sp-right .sp-form h2{font-size:1.25rem}#splash .sp-right .sp-form .fg label{font-size:.72rem}#splash .sp-right .sp-form .fg input{padding:10px 12px;font-size:.85rem}}
-@media(max-width:480px){#splash .sp-left{height:34vh;padding:20px 16px}#splash .sp-right{min-height:66vh;padding:20px 12px;padding-top:24px}#splash .sp-left .sp-inner h1{font-size:1.3rem}#splash .sp-left .sp-inner p{font-size:.85rem}#splash .sp-left .sp-inner .sp-type-wrap .sp-type{font-size:.8rem}#splash .sp-left .sp-inner .sp-counter{margin-top:18px;font-size:.75rem;padding:5px 12px}#splash .sp-right .sp-form-inner{padding:20px 16px;border-radius:16px}#splash .sp-right .sp-form h2{font-size:1.15rem}#splash .sp-right .sp-form .sp-subh{font-size:.8rem;margin-bottom:18px}#splash .sp-right .sp-form .fg{margin-bottom:12px}#splash .sp-right .sp-form .fg input{padding:9px 11px;font-size:.82rem;border-radius:10px}#splash .sp-right .sp-form .sp-btn{padding:11px;font-size:.85rem;border-radius:10px}#splash .sp-right .sp-form .sp-btn-o svg{width:16px;height:16px}#splash .sp-right .sp-form .sp-divider{margin:14px 0;font-size:.75rem}#splash .sp-right .sp-form .sp-btn-o{padding:10px;gap:8px}#splash .sp-right .sp-form .sp-toggle{font-size:.78rem}}
-@media(max-width:380px){#splash .sp-left{height:30vh;padding:16px 12px}#splash .sp-right{min-height:70vh;padding:16px 10px;padding-top:20px}#splash .sp-left .sp-inner h1{font-size:1.1rem}#splash .sp-left .sp-inner p{font-size:.8rem}#splash .sp-left .sp-inner .sp-type-wrap{margin-top:10px;height:24px}#splash .sp-left .sp-inner .sp-type-wrap .sp-type{font-size:.75rem}#splash .sp-left .sp-inner .sp-counter{margin-top:14px;font-size:.7rem;padding:4px 10px}#splash .sp-right .sp-form-inner{padding:16px 12px;border-radius:14px}#splash .sp-right .sp-form h2{font-size:1rem}#splash .sp-right .sp-form .sp-subh{font-size:.75rem;margin-bottom:14px}#splash .sp-right .sp-form .fg{margin-bottom:10px}#splash .sp-right .sp-form .fg label{font-size:.68rem;margin-bottom:4px}#splash .sp-right .sp-form .fg input{padding:8px 10px;font-size:.78rem;border-radius:8px}#splash .sp-right .sp-form .sp-btn{padding:10px;font-size:.8rem;border-radius:8px}#splash .sp-right .sp-form .sp-btn-o svg{width:14px;height:14px}#splash .sp-right .sp-form .sp-divider{margin:12px 0;gap:8px}#splash .sp-right .sp-form .sp-btn-o{padding:9px;gap:6px;font-size:.8rem}#splash .sp-right .sp-form .sp-toggle{font-size:.72rem}}
+@media(max-width:768px){#splash{flex-direction:column}#splash .sp-left{flex:none;height:38vh;padding:24px 20px}#splash .sp-right{flex:none;min-height:62vh;padding:24px 16px;align-items:flex-start;padding-top:28px}#splash .sp-left .sp-inner h1{font-size:1.5rem}#splash .sp-left .sp-inner p{font-size:.95rem}#splash .sp-left .sp-inner .sp-type-wrap .sp-type{font-size:.85rem}#splash .sp-right .sp-form-inner{padding:24px 20px}#splash .sp-right .sp-form h2{font-size:1.25rem}#splash .sp-right .sp-form .fg label{font-size:.72rem}#splash .sp-right .sp-form .fg input{padding:10px 12px;font-size:.85rem}}
+@media(max-width:480px){#splash .sp-left{height:34vh;padding:20px 16px}#splash .sp-right{min-height:66vh;padding:20px 12px;padding-top:24px}#splash .sp-left .sp-inner h1{font-size:1.3rem}#splash .sp-left .sp-inner p{font-size:.85rem}#splash .sp-left .sp-inner .sp-type-wrap .sp-type{font-size:.8rem}#splash .sp-right .sp-form-inner{padding:20px 16px;border-radius:16px}#splash .sp-right .sp-form h2{font-size:1.15rem}#splash .sp-right .sp-form .sp-subh{font-size:.8rem;margin-bottom:18px}#splash .sp-right .sp-form .fg{margin-bottom:12px}#splash .sp-right .sp-form .fg input{padding:9px 11px;font-size:.82rem;border-radius:10px}#splash .sp-right .sp-form .sp-btn{padding:11px;font-size:.85rem;border-radius:10px}#splash .sp-right .sp-form .sp-btn-o svg{width:16px;height:16px}#splash .sp-right .sp-form .sp-divider{margin:14px 0;font-size:.75rem}#splash .sp-right .sp-form .sp-btn-o{padding:10px;gap:8px}#splash .sp-right .sp-form .sp-toggle{font-size:.78rem}}
+@media(max-width:380px){#splash .sp-left{height:30vh;padding:16px 12px}#splash .sp-right{min-height:70vh;padding:16px 10px;padding-top:20px}#splash .sp-left .sp-inner h1{font-size:1.1rem}#splash .sp-left .sp-inner p{font-size:.8rem}#splash .sp-left .sp-inner .sp-type-wrap{margin-top:10px;height:24px}#splash .sp-left .sp-inner .sp-type-wrap .sp-type{font-size:.75rem}#splash .sp-right .sp-form-inner{padding:16px 12px;border-radius:14px}#splash .sp-right .sp-form h2{font-size:1rem}#splash .sp-right .sp-form .sp-subh{font-size:.75rem;margin-bottom:14px}#splash .sp-right .sp-form .fg{margin-bottom:10px}#splash .sp-right .sp-form .fg label{font-size:.68rem;margin-bottom:4px}#splash .sp-right .sp-form .fg input{padding:8px 10px;font-size:.78rem;border-radius:8px}#splash .sp-right .sp-form .sp-btn{padding:10px;font-size:.8rem;border-radius:8px}#splash .sp-right .sp-form .sp-btn-o svg{width:14px;height:14px}#splash .sp-right .sp-form .sp-divider{margin:12px 0;gap:8px}#splash .sp-right .sp-form .sp-btn-o{padding:9px;gap:6px;font-size:.8rem}#splash .sp-right .sp-form .sp-toggle{font-size:.72rem}}
 
 /* Nav */
 .nav{position:fixed;top:0;left:0;right:0;height:var(--nh);z-index:100;background:var(--gl-bg);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border-bottom:1px solid var(--gl-bd);transition:var(--tr);box-shadow:0 1px 30px rgba(99,102,241,0.06)}
@@ -95,16 +91,8 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 #themeToggle i,#themeToggleAdmin i{transition:transform .5s cubic-bezier(0.34,1.56,0.64,1);display:inline-block}
 #themeToggle:hover i,#themeToggleAdmin:hover i{transform:rotate(40deg)}
 .nav-menu{display:none}
-.nav-counter{display:flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);font-size:.75rem;color:var(--t2);white-space:nowrap}
-.nav-counter i{color:#22c55e;font-size:.7rem}
-.nav-counter #navCounterNum{font-weight:700;color:var(--t1);min-width:24px;display:inline-block;text-align:center}
 @media(max-width:600px){
   .nav-logo span{display:inline}
-  .nav-counter{font-size:.7rem;padding:3px 8px;gap:3px}
-  .nav-counter #navCounterNum{min-width:18px}
-}
-@media(max-width:400px){
-  .nav-counter{display:none}
 }
 @media(max-width:480px){
   .s-card{min-width:180px;max-width:220px}
@@ -551,7 +539,6 @@ section{padding:32px 0;position:relative}
 <div class="sp-type-wrap">
 <span class="sp-type" id="spType"></span><span class="sp-cursor">|</span>
 </div>
-<div class="sp-counter" id="liveCounter"><i class="fas fa-users"></i> <span id="counterNum">500</span> live users</div>
 </div>
 </div>
 <div class="sp-right">
@@ -587,7 +574,6 @@ section{padding:32px 0;position:relative}
 <span>TS Store</span>
 </a>
 <div class="nav-act">
-<span class="nav-counter" id="navLiveCounter"><i class="fas fa-users"></i> <span id="navCounterNum">500</span></span>
 <button class="nav-btn" id="themeToggle" aria-label="Theme"><i class="fas fa-moon"></i></button>
 <button class="nav-user" id="userBtn" onclick="openUserModal()" title="User"><i class="fas fa-user"></i></button>
 <button class="nav-admin" onclick="showAdminLogin()"><i class="fas fa-cog"></i> <span>Admin</span></button>
@@ -2069,12 +2055,6 @@ document.addEventListener('DOMContentLoaded',async()=>{
 const spEl=document.getElementById('spType');const spText='Presented by ';const spName='Shubham Thakor';let i=0,j=0;
 function spType(){if(i<spText.length){spEl.innerHTML=spText.substring(0,i+1);i++;setTimeout(spType,60)}else if(j<=spName.length){spEl.innerHTML=spText+'<span style="color:#a78bfa;font-weight:600">'+spName.substring(0,j)+'</span>';j++;setTimeout(spType,80)}}
 setTimeout(spType,400);
-let liveCount=parseInt(localStorage.getItem('ts_live_count')||'500');
-localStorage.setItem('ts_live_count',liveCount);
-function updCounters(){const a=document.getElementById('counterNum'),b=document.getElementById('navCounterNum');if(a)a.textContent=liveCount;if(b)b.textContent=liveCount}
-updCounters();
-window.addEventListener('beforeunload',()=>localStorage.setItem('ts_live_count',liveCount));
-setInterval(()=>{liveCount++;localStorage.setItem('ts_live_count',liveCount);updCounters()},30000);
 const savedUser=JSON.parse(localStorage.getItem('ts_user')||'null');
 if(savedUser){
   userCreds=savedUser;updateUserUI();hideSplash();initApp();reqNotifPerm();
