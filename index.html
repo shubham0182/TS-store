@@ -1226,6 +1226,12 @@ function pushNotif(title,body){
   if(Notification.permission==='granted'){new Notification(title,{body,icon:'logo.svg'})}
   else if(Notification.permission!=='denied'){Notification.requestPermission().then(p=>{if(p==='granted')new Notification(title,{body,icon:'logo.svg'})})}
 }
+function reqNotifPerm(){
+  if(!('Notification'in window)||Notification.permission!=='default')return;
+  setTimeout(()=>{
+    Notification.requestPermission();
+  },1000);
+}
 
 function tst(m,t='success'){
   const o=document.getElementById('toast'),msg=document.getElementById('toastMsg');
@@ -1606,6 +1612,7 @@ async function handleLoginGoogleClick(){
       updateUserUI();
       hideSplash();
       initApp();
+      reqNotifPerm();
     }
   }catch(e){
     if(e.code!=='auth/popup-closed-by-user'){
@@ -2070,7 +2077,7 @@ window.addEventListener('beforeunload',()=>localStorage.setItem('ts_live_count',
 setInterval(()=>{liveCount++;localStorage.setItem('ts_live_count',liveCount);updCounters()},30000);
 const savedUser=JSON.parse(localStorage.getItem('ts_user')||'null');
 if(savedUser){
-  userCreds=savedUser;updateUserUI();hideSplash();initApp();
+  userCreds=savedUser;updateUserUI();hideSplash();initApp();reqNotifPerm();
   const closeTime=parseInt(localStorage.getItem('ts_close_time')||'0');
   if(closeTime&&Date.now()-closeTime>15*60*1000){
     localStorage.removeItem('ts_close_time');
@@ -2094,13 +2101,13 @@ document.getElementById('loginBtn')?.addEventListener('click',async()=>{
   const btn=document.getElementById('loginBtn');btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-pulse"></i> Signing In...';
   try{
     const r=await api('/users/login',{method:'POST',body:JSON.stringify({username:u,password:p})});
-    if(r.success){userCreds=r.user;localStorage.setItem('ts_user',JSON.stringify(r.user));updateUserUI();hideSplash();initApp()}
+    if(r.success){userCreds=r.user;localStorage.setItem('ts_user',JSON.stringify(r.user));updateUserUI();hideSplash();initApp();reqNotifPerm()}
     else{document.getElementById('loginErr').textContent='Invalid credentials';document.getElementById('loginErr').style.display='block'}
   }catch(e){
     if(u==='shubham'&&p==='1234'){
       userCreds={id:'u_hardcoded',username:'shubham'};
       localStorage.setItem('ts_user',JSON.stringify(userCreds));
-      updateUserUI();hideSplash();initApp();return
+      updateUserUI();hideSplash();initApp();reqNotifPerm();return
     }
     document.getElementById('loginErr').textContent='Cannot connect to server';document.getElementById('loginErr').style.display='block'
   }
