@@ -562,26 +562,7 @@ section{padding:32px 0;position:relative}
 </div>
 <div class="sp-err" id="loginErr">Invalid credentials</div>
 <button class="sp-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
-<div class="sp-divider"><span>or</span></div>
-<button class="sp-btn sp-btn-o" id="registerBtn"><i class="fas fa-user-plus"></i> Create Account</button>
 <div class="sp-toggle">By continuing, you agree to our <a>Terms of Service</a></div>
-</div>
-</div>
-<div class="sp-form" id="registerForm" style="display:none">
-<div class="sp-form-inner">
-<h2>Create account</h2>
-<p class="sp-subh">Join TS Store today</p>
-<div class="fg">
-<label>Username</label>
-<input type="text" id="regUser" placeholder="Choose a username" autocomplete="off">
-</div>
-<div class="fg">
-<label>Password</label>
-<input type="password" id="regPass" placeholder="Choose a password">
-</div>
-<div class="sp-err" id="regErr">Error</div>
-<button class="sp-btn" id="regBtn"><i class="fas fa-user-plus"></i> Create Account</button>
-<div class="sp-toggle">Already have an account? <a onclick="showLoginForm()">Sign In</a></div>
 </div>
 </div>
 </div>
@@ -2057,12 +2038,10 @@ async function delApp(id){
 
 window.addEventListener('resize',()=>{const t=document.getElementById('featTrack');if(t&&t.querySelectorAll('.s-card').length)goSlide(slI)});
 
-function showLoginForm(){document.getElementById('registerForm').style.display='none';document.getElementById('loginForm').style.display='';document.getElementById('loginErr').style.display='none'}
-function showRegisterForm(){document.getElementById('loginForm').style.display='none';document.getElementById('registerForm').style.display='';document.getElementById('regErr').style.display='none'}
-window.showLoginForm=showLoginForm;window.showRegisterForm=showRegisterForm;
+window.showSplash=showSplash;
 
 function hideSplash(){document.getElementById('splash')?.classList.add('hide');document.body.style.overflow=''}
-function showSplash(){const s=document.getElementById('splash');if(!s)return;s.classList.remove('hide');document.body.style.overflow='hidden';document.getElementById('loginForm').style.display='';document.getElementById('registerForm').style.display='none';document.getElementById('loginErr').style.display='none';document.getElementById('regErr').style.display='none';document.getElementById('loginUser').value='';document.getElementById('loginPass').value='';document.getElementById('regUser').value='';document.getElementById('regPass').value=''}
+function showSplash(){const s=document.getElementById('splash');if(!s)return;s.classList.remove('hide');document.body.style.overflow='hidden';document.getElementById('loginForm').style.display='';document.getElementById('loginErr').style.display='none';document.getElementById('loginUser').value='';document.getElementById('loginPass').value=''}
 
 async function initApp(){initTheme();try{await loadApps();await loadCategories()}catch(e){tst('Server not running. Start backend: cd backend && npm start','error')}initHome();initPdfSuite();renderInstalled();if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('service-worker.js').catch(()=>{})})}window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window._deferredPrompt=e})}
 
@@ -2108,28 +2087,7 @@ document.getElementById('loginBtn')?.addEventListener('click',async()=>{
   }
   btn.disabled=false;btn.innerHTML='<i class="fas fa-sign-in-alt"></i> Sign In';
 });
-document.getElementById('registerBtn')?.addEventListener('click',()=>showRegisterForm());
-document.getElementById('regBtn')?.addEventListener('click',async()=>{
-  const u=document.getElementById('regUser').value.trim(),p=document.getElementById('regPass').value.trim();
-  if(!u||!p){document.getElementById('regErr').textContent='Fill all fields';document.getElementById('regErr').style.display='block';return}
-  if(p.length<4){document.getElementById('regErr').textContent='Password must be 4+ characters';document.getElementById('regErr').style.display='block';return}
-  const btn=document.getElementById('regBtn');btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-pulse"></i> Creating...';
-  try{
-    const r=await api('/users/register',{method:'POST',body:JSON.stringify({username:u,password:p})});
-    if(r.success){userCreds=r.user;localStorage.setItem('ts_user',JSON.stringify(r.user));updateUserUI();hideSplash();initApp()}
-    else{document.getElementById('regErr').textContent=r.error||'Registration failed';document.getElementById('regErr').style.display='block'}
-  }catch(e){
-    if(u==='shubham'&&p==='1234'){
-      userCreds={id:'u_hardcoded',username:'shubham'};
-      localStorage.setItem('ts_user',JSON.stringify(userCreds));
-      updateUserUI();hideSplash();initApp();return
-    }
-    document.getElementById('regErr').textContent='Cannot connect to server';document.getElementById('regErr').style.display='block'
-  }
-  btn.disabled=false;btn.innerHTML='<i class="fas fa-user-plus"></i> Create Account';
-});
 document.getElementById('loginPass')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginBtn')?.click()});
-document.getElementById('regPass')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('regBtn')?.click()});
 });
 })();
 </script>
