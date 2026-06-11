@@ -1400,21 +1400,33 @@ function startVoice(inputId){
   const input=document.getElementById(inputId);
   const micBtn=inputId==='heroSearch'?document.getElementById('heroMic'):document.getElementById('mobileMic');
   if(!input||!micBtn)return;
-  if(micBtn.classList.contains('listening')){micBtn.classList.remove('listening');recognition.abort();return}
-  const rec=new recognition();
-  rec.lang='en-US';
-  rec.interimResults=false;
-  rec.maxAlternatives=1;
-  micBtn.classList.add('listening');
-  rec.onresult=function(e){
-    const transcript=e.results[0][0].transcript;
-    input.value=transcript;
-    micBtn.classList.remove('listening');
-    input.dispatchEvent(new Event('input'));
-  };
-  rec.onerror=function(){micBtn.classList.remove('listening')};
-  rec.onend=function(){micBtn.classList.remove('listening')};
-  rec.start();
+  if(micBtn.classList.contains('listening')){micBtn.classList.remove('listening');return}
+  function startRec(){
+    const rec=new recognition();
+    rec.lang='en-US';
+    rec.interimResults=false;
+    rec.maxAlternatives=1;
+    micBtn.classList.add('listening');
+    rec.onresult=function(e){
+      const transcript=e.results[0][0].transcript;
+      input.value=transcript;
+      micBtn.classList.remove('listening');
+      input.dispatchEvent(new Event('input'));
+    };
+    rec.onerror=function(){micBtn.classList.remove('listening')};
+    rec.onend=function(){micBtn.classList.remove('listening')};
+    rec.start();
+  }
+  if(userCreds&&userCreds.username){
+    const msg=new SpeechSynthesisUtterance('Hello '+userCreds.username+', how can I help you?');
+    msg.lang='en-US';
+    msg.rate=1;
+    msg.pitch=1;
+    msg.onend=startRec;
+    speechSynthesis.speak(msg);
+  }else{
+    startRec();
+  }
 }
 
 function clearSearch(){
