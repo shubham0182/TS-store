@@ -31,48 +31,6 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 .ct{max-width:1200px;margin:0 auto;padding:0 16px}
 .hidden{display:none!important}
 
-/* Splash / Login */
-#splash{position:fixed;inset:0;z-index:9999;display:flex;transition:opacity .6s ease,visibility .6s ease;overflow:hidden}
-#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
-#splash .sp-left{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0a0a,#1a1a1a,#0d0d0d);padding:40px;position:relative;overflow:hidden}
-#splash .sp-left::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.03) 0%,transparent 70%);top:-150px;right:-100px;animation:spOrb1 8s ease-in-out infinite}
-#splash .sp-left::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.02) 0%,transparent 70%);bottom:-120px;left:-80px;animation:spOrb2 10s ease-in-out infinite}
-#splash .sp-left .sp-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;mask-image:radial-gradient(ellipse at 50% 50%,black 40%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 50% 50%,black 40%,transparent 70%)}
-#splash .sp-left .sp-inner{position:relative;z-index:1;text-align:center;max-width:480px}
-#splash .sp-left .sp-inner h1{font-size:2.4rem;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:8px;background:linear-gradient(135deg,#e0e0e0,#a0a0a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-#splash .sp-left .sp-inner p{color:rgba(255,255,255,0.5);font-size:1.05rem;line-height:1.7}
-#splash .sp-left .sp-inner p span{color:#a78bfa;font-weight:600}
-#splash .sp-left .sp-inner .sp-type-wrap{margin-top:16px;height:28px}
-#splash .sp-left .sp-inner .sp-type-wrap .sp-type{color:rgba(255,255,255,0.4);font-size:.95rem}
-@keyframes spBlink{0%,100%{opacity:1}50%{opacity:0}}
-#splash .sp-right{flex:1;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0a0a0a,#1a1a1a,#0d0d0d);padding:40px;position:relative;overflow:hidden}
-#splash .sp-right::before{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.03) 0%,transparent 70%);bottom:-80px;right:-60px;animation:spOrb2 12s ease-in-out infinite}
-#splash .sp-right .sp-form{width:100%;max-width:380px;position:relative;z-index:1}
-#splash .sp-right .sp-form-inner{padding:32px;border-radius:20px;background:rgba(255,255,255,0.05);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);box-shadow:0 8px 40px rgba(0,0,0,0.15)}
-[data-theme="dark"] #splash .sp-right .sp-form-inner{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.06)}
-#splash .sp-right .sp-form h2{font-size:1.5rem;font-weight:700;margin-bottom:4px;color:#fff}
-#splash .sp-right .sp-form .sp-subh{color:rgba(255,255,255,0.4);font-size:.85rem;margin-bottom:22px}
-#splash .sp-right .sp-form .fg{margin-bottom:14px}
-#splash .sp-right .sp-form .fg label{display:block;font-size:.78rem;font-weight:600;margin-bottom:5px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.5px}
-#splash .sp-right .sp-form .fg input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:.9rem;transition:all .25s;color:#fff}
-#splash .sp-right .sp-form .fg input::placeholder{color:rgba(255,255,255,0.2)}
-#splash .sp-right .sp-form .fg input:focus{border-color:rgba(99,102,241,0.4);background:rgba(255,255,255,0.06);box-shadow:0 0 0 3px rgba(99,102,241,0.08)}
-#splash .sp-right .sp-form .sp-btn{width:100%;padding:12px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:700;font-size:.9rem;border:none;cursor:pointer;transition:all .3s;margin-top:4px}
-#splash .sp-right .sp-form .sp-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(99,102,241,0.3)}
-#splash .sp-right .sp-form .sp-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
-#splash .sp-right .sp-form .sp-btn-o{background:transparent;border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.7);box-shadow:none;gap:10px}
-#splash .sp-right .sp-form .sp-btn-o:hover{background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.2);color:#fff;box-shadow:none}
-#splash .sp-right .sp-form .sp-btn-o svg{width:18px;height:18px;flex-shrink:0}
-#splash .sp-right .sp-form .sp-err{color:#ef4444;font-size:.82rem;margin-top:8px;display:none}
-#splash .sp-right .sp-form .sp-toggle{margin-top:16px;text-align:center;font-size:.82rem;color:rgba(255,255,255,0.35)}
-#splash .sp-right .sp-form .sp-toggle a{color:#a78bfa;cursor:pointer;font-weight:600}
-#splash .sp-right .sp-form .sp-toggle a:hover{text-decoration:underline}
-#splash .sp-right .sp-form .sp-divider{display:flex;align-items:center;gap:12px;margin:18px 0;color:rgba(255,255,255,0.25);font-size:.8rem}
-#splash .sp-right .sp-form .sp-divider::before,#splash .sp-right .sp-form .sp-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06)}
-@media(max-width:768px){#splash{flex-direction:column}#splash .sp-left{flex:none;height:38vh;padding:24px 20px}#splash .sp-right{flex:none;min-height:62vh;padding:24px 16px;align-items:flex-start;padding-top:28px}#splash .sp-left .sp-inner h1{font-size:1.5rem}#splash .sp-left .sp-inner p{font-size:.95rem}#splash .sp-left .sp-inner .sp-type-wrap .sp-type{font-size:.85rem}#splash .sp-right .sp-form-inner{padding:24px 20px}#splash .sp-right .sp-form h2{font-size:1.25rem}#splash .sp-right .sp-form .fg label{font-size:.72rem}#splash .sp-right .sp-form .fg input{padding:10px 12px;font-size:.85rem}}
-@media(max-width:480px){#splash .sp-left{height:34vh;padding:20px 16px}#splash .sp-right{min-height:66vh;padding:20px 12px;padding-top:24px}#splash .sp-left .sp-inner h1{font-size:1.3rem}#splash .sp-left .sp-inner p{font-size:.85rem}#splash .sp-left .sp-inner .sp-type-wrap .sp-type{font-size:.8rem}#splash .sp-right .sp-form-inner{padding:20px 16px;border-radius:16px}#splash .sp-right .sp-form h2{font-size:1.15rem}#splash .sp-right .sp-form .sp-subh{font-size:.8rem;margin-bottom:18px}#splash .sp-right .sp-form .fg{margin-bottom:12px}#splash .sp-right .sp-form .fg input{padding:9px 11px;font-size:.82rem;border-radius:10px}#splash .sp-right .sp-form .sp-btn{padding:11px;font-size:.85rem;border-radius:10px}#splash .sp-right .sp-form .sp-btn-o svg{width:16px;height:16px}#splash .sp-right .sp-form .sp-divider{margin:14px 0;font-size:.75rem}#splash .sp-right .sp-form .sp-btn-o{padding:10px;gap:8px}#splash .sp-right .sp-form .sp-toggle{font-size:.78rem}}
-@media(max-width:380px){#splash .sp-left{height:30vh;padding:16px 12px}#splash .sp-right{min-height:70vh;padding:16px 10px;padding-top:20px}#splash .sp-left .sp-inner h1{font-size:1.1rem}#splash .sp-left .sp-inner p{font-size:.8rem}#splash .sp-left .sp-inner .sp-type-wrap{margin-top:10px;height:24px}#splash .sp-left .sp-inner .sp-type-wrap .sp-type{font-size:.75rem}#splash .sp-right .sp-form-inner{padding:16px 12px;border-radius:14px}#splash .sp-right .sp-form h2{font-size:1rem}#splash .sp-right .sp-form .sp-subh{font-size:.75rem;margin-bottom:14px}#splash .sp-right .sp-form .fg{margin-bottom:10px}#splash .sp-right .sp-form .fg label{font-size:.68rem;margin-bottom:4px}#splash .sp-right .sp-form .fg input{padding:8px 10px;font-size:.78rem;border-radius:8px}#splash .sp-right .sp-form .sp-btn{padding:10px;font-size:.8rem;border-radius:8px}#splash .sp-right .sp-form .sp-btn-o svg{width:14px;height:14px}#splash .sp-right .sp-form .sp-divider{margin:12px 0;gap:8px}#splash .sp-right .sp-form .sp-btn-o{padding:9px;gap:6px;font-size:.8rem}#splash .sp-right .sp-form .sp-toggle{font-size:.72rem}}
-
 /* Nav */
 .nav{position:fixed;top:0;left:0;right:0;height:var(--nh);z-index:100;background:var(--gl-bg);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border-bottom:1px solid var(--gl-bd);transition:var(--tr);box-shadow:0 1px 30px rgba(99,102,241,0.06)}
 .nav::before{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(99,102,241,0.2),rgba(168,85,247,0.2),transparent);pointer-events:none}
