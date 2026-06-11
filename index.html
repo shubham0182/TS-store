@@ -88,10 +88,10 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 .mobile-search-bar{display:none;padding:8px 16px;position:fixed;top:var(--nh);left:0;right:0;z-index:99;background:var(--gl-bg);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border-bottom:1px solid var(--gl-bd);transition:var(--tr);box-shadow:0 4px 20px rgba(0,0,0,0.04)}
 .mobile-search-bar.show{display:block}
 .mobile-search-bar .ms-inner{position:relative;max-width:1200px;margin:0 auto}
-.mobile-search-bar input{width:100%;padding:10px 16px;border-radius:50px;background:var(--gl-bg);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1.5px solid var(--gl-bd);font-size:.92rem;transition:all .3s}
+.mobile-search-bar input{width:100%;padding:10px 46px 10px 16px;border-radius:50px;background:var(--gl-bg);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1.5px solid var(--gl-bd);font-size:.92rem;transition:all .3s}
 .mobile-search-bar input:focus{border-color:rgba(99,102,241,0.3);box-shadow:0 0 0 3px rgba(99,102,241,0.08)}
-.mobile-search-bar i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--t3);transition:color .3s}
-.mobile-search-bar input:focus+i{color:rgba(99,102,241,0.5)}
+.mobile-search-bar .ms-inner .ms-actions{position:absolute;right:6px;top:50%;transform:translateY(-50%);display:flex;gap:2px;z-index:2}
+.mobile-search-bar .ms-inner .srch-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none;font-size:.85rem;z-index:2}
 
 /* Hero */
 .hero{margin-top:var(--nh);padding:56px 0 44px;background:linear-gradient(135deg,#0f0c29 0%,#1a1a3e 40%,#24243e 100%);position:relative;overflow:hidden;text-align:center}
@@ -111,6 +111,15 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 .h-search input::placeholder{color:rgba(255,255,255,0.3)}
 .h-search input:focus{background:rgba(255,255,255,0.08);border-color:rgba(99,102,241,0.4);box-shadow:0 0 30px rgba(99,102,241,0.1)}
 .h-search>i{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.3);pointer-events:none;font-size:.9rem;z-index:2}
+.h-search input{padding-right:90px}
+.h-mic{position:absolute;right:52px;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:rgba(255,255,255,0.5);font-size:.85rem;transition:all .3s;cursor:pointer;z-index:2;background:transparent;border:none}
+.h-mic:hover{color:#a78bfa;background:rgba(255,255,255,0.06)}
+.h-mic.listening{color:#ef4444;animation:micPulse 1s ease-in-out infinite}
+@keyframes micPulse{0%,100%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.15)}}
+.ms-mic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:var(--t3);font-size:.8rem;transition:all .3s;cursor:pointer;background:transparent;border:none;flex-shrink:0}
+.ms-mic:hover{color:#a78bfa}
+.ms-mic.listening{color:#ef4444;animation:micPulseMs 1s ease-in-out infinite}
+@keyframes micPulseMs{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 .h-typing{position:absolute;left:50px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.3);font-size:.95rem;pointer-events:none;white-space:nowrap;overflow:hidden;z-index:1}
 .h-typing .cursor{display:inline-block;width:2px;height:1.1em;background:rgba(255,255,255,0.3);margin-left:2px;animation:blink 0.7s step-end infinite;vertical-align:text-bottom}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
@@ -548,7 +557,11 @@ section{padding:32px 0;position:relative}
 
 <div class="mobile-search-bar" id="mobileSearchBar">
 <div class="ms-inner">
+<i class="fas fa-search srch-icon"></i>
 <input type="text" id="mobileSearchInput" placeholder="Search apps, categories..." autocomplete="off">
+<div class="ms-actions">
+<button type="button" class="ms-mic" id="mobileMic" onclick="startVoice('mobileSearchInput')" title="Voice search"><i class="fas fa-microphone"></i></button>
+</div>
 </div>
 </div>
 
@@ -564,6 +577,7 @@ section{padding:32px 0;position:relative}
 <i class="fas fa-search"></i>
 <input type="text" id="heroSearch" placeholder="" autocomplete="off">
 <div class="h-typing" id="heroTyping"></div>
+<button type="button" class="h-mic" id="heroMic" onclick="startVoice('heroSearch')" title="Voice search"><i class="fas fa-microphone"></i></button>
 <button class="h-btn" id="heroSearchBtn"><i class="fas fa-search"></i></button>
 </div>
 </div>
@@ -1378,6 +1392,29 @@ function showResults(r,q,isCat){
   const backBtn=document.getElementById('backFromCat');
   if(backBtn)backBtn.style.display=isCat?'':'none';
   ['featSec','catSec','trSec','newSec','topSec'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+}
+
+function startVoice(inputId){
+  const recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!recognition){tst('Voice search not supported in this browser','error');return}
+  const input=document.getElementById(inputId);
+  const micBtn=inputId==='heroSearch'?document.getElementById('heroMic'):document.getElementById('mobileMic');
+  if(!input||!micBtn)return;
+  if(micBtn.classList.contains('listening')){micBtn.classList.remove('listening');recognition.abort();return}
+  const rec=new recognition();
+  rec.lang='en-US';
+  rec.interimResults=false;
+  rec.maxAlternatives=1;
+  micBtn.classList.add('listening');
+  rec.onresult=function(e){
+    const transcript=e.results[0][0].transcript;
+    input.value=transcript;
+    micBtn.classList.remove('listening');
+    input.dispatchEvent(new Event('input'));
+  };
+  rec.onerror=function(){micBtn.classList.remove('listening')};
+  rec.onend=function(){micBtn.classList.remove('listening')};
+  rec.start();
 }
 
 function clearSearch(){
