@@ -1411,7 +1411,9 @@ function startVoice(inputId){
       const transcript=e.results[0][0].transcript;
       input.value=transcript;
       micBtn.classList.remove('listening');
-      input.dispatchEvent(new Event('input'));
+      const t=transcript.trim();
+      if(t){const r=DB.search(t);showResults(r,t,false)}
+      else clearSearch();
     };
     rec.onerror=function(){micBtn.classList.remove('listening')};
     rec.onend=function(){micBtn.classList.remove('listening')};
