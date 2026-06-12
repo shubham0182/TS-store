@@ -111,11 +111,6 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 .h-search input::placeholder{color:rgba(255,255,255,0.3)}
 .h-search input:focus{background:rgba(255,255,255,0.08);border-color:rgba(99,102,241,0.4);box-shadow:0 0 30px rgba(99,102,241,0.1)}
 .h-search>i{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.3);pointer-events:none;font-size:.9rem;z-index:2}
-.h-search input{padding-right:110px}
-.h-mic{position:absolute;right:70px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:rgba(255,255,255,0.75);font-size:.9rem;transition:all .3s;cursor:pointer;z-index:2;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08)}
-.h-mic:hover{color:#a78bfa;background:rgba(255,255,255,0.1);border-color:rgba(167,139,250,0.3)}
-.h-mic.listening{color:#ef4444;background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.25);animation:micPulse 1s ease-in-out infinite}
-@keyframes micPulse{0%,100%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.15)}}
 .ms-mic{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--t1);font-size:.85rem;transition:all .3s;cursor:pointer;background:var(--gl-bg);border:1px solid var(--gl-bd);flex-shrink:0}
 .ms-mic:hover{color:#a78bfa;border-color:rgba(167,139,250,0.3);background:rgba(167,139,250,0.06)}
 .ms-mic.listening{color:#ef4444;background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.25);animation:micPulseMs 1s ease-in-out infinite}
@@ -123,17 +118,12 @@ input,textarea,select{font:inherit;outline:none;border:none;background:none;colo
 .h-typing{position:absolute;left:50px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.3);font-size:.95rem;pointer-events:none;white-space:nowrap;overflow:hidden;z-index:1}
 .h-typing .cursor{display:inline-block;width:2px;height:1.1em;background:rgba(255,255,255,0.3);margin-left:2px;animation:blink 0.7s step-end infinite;vertical-align:text-bottom}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-.h-search .h-btn{position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:10px 24px;border-radius:50px;background:linear-gradient(135deg,#6366f1,#8b5cf6,#a78bfa);background-size:200% 200%;color:#fff;font-weight:700;font-size:.88rem;transition:all .3s;box-shadow:0 4px 15px rgba(99,102,241,0.3);cursor:pointer;animation:gradShift 3s ease infinite;z-index:2}
-.h-search .h-btn::before{content:'';position:absolute;inset:-2px;border-radius:52px;background:linear-gradient(135deg,#6366f1,#c084fc,#a78bfa);background-size:200% 200%;z-index:-1;animation:gradShift 3s ease infinite;filter:blur(8px);opacity:0;transition:opacity .3s}
-.h-search .h-btn:hover::before{opacity:1}
-.h-search .h-btn:hover{transform:translateY(-50%) scale(1.05);box-shadow:0 8px 32px rgba(99,102,241,0.5)}
-.h-search .h-btn:active{transform:translateY(-50%) scale(0.97)}
-@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.h-search .h-btn i{animation:pulseIcon 2s ease-in-out infinite}
-@keyframes pulseIcon{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-.h-search .h-btn:hover{background:linear-gradient(135deg,#818cf8,#a78bfa);transform:translateY(-50%) scale(1.03);box-shadow:0 6px 25px rgba(99,102,241,0.4)}
-.h-search .h-btn:active{transform:translateY(-50%) scale(0.98)}
-@media(max-width:480px){.hero{padding:40px 0 32px}.h-search .h-btn{width:38px;height:38px;padding:0;font-size:.82rem}.h-search input{padding:13px 16px 13px 44px}.h-typing{left:44px;font-size:.82rem}}
+.h-mic{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:rgba(255,255,255,0.8);font-size:.95rem;transition:all .3s;cursor:pointer;z-index:2;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1)}
+.h-mic:hover{color:#a78bfa;background:rgba(255,255,255,0.12);border-color:rgba(167,139,250,0.3)}
+.h-mic.listening{color:#ef4444;background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.3);animation:micPulse 1s ease-in-out infinite}
+@keyframes micPulse{0%,100%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.15)}}
+.h-search input{padding-right:55px}
+@media(max-width:480px){.hero{padding:40px 0 32px}.h-search input{padding:13px 48px 13px 44px}.h-typing{left:44px;font-size:.82rem}}
 
 /* Sections */
 section{padding:32px 0;position:relative}
@@ -560,7 +550,7 @@ section{padding:32px 0;position:relative}
 <i class="fas fa-search srch-icon"></i>
 <input type="text" id="mobileSearchInput" placeholder="Search apps, categories..." autocomplete="off">
 <div class="ms-actions">
-<button type="button" class="ms-mic" id="mobileMic" onclick="startVoice('mobileSearchInput')" title="Voice search"><i class="fas fa-microphone"></i></button>
+<button type="button" class="ms-mic" id="mobileMic" onclick="searchOrVoice('mobileSearchInput')" title="Search / Voice search"><i class="fas fa-microphone"></i></button>
 </div>
 </div>
 </div>
@@ -577,8 +567,7 @@ section{padding:32px 0;position:relative}
 <i class="fas fa-search"></i>
 <input type="text" id="heroSearch" placeholder="" autocomplete="off">
 <div class="h-typing" id="heroTyping"></div>
-<button type="button" class="h-mic" id="heroMic" onclick="startVoice('heroSearch')" title="Voice search"><i class="fas fa-microphone"></i></button>
-<button class="h-btn" id="heroSearchBtn"><i class="fas fa-search"></i></button>
+<button type="button" class="h-mic" id="heroMic" onclick="searchOrVoice('heroSearch')" title="Search / Voice search"><i class="fas fa-microphone"></i></button>
 </div>
 </div>
 </section>
@@ -1394,6 +1383,19 @@ function showResults(r,q,isCat){
   ['featSec','catSec','trSec','newSec','topSec'].forEach(id=>document.getElementById(id).classList.add('hidden'));
 }
 
+function searchOrVoice(inputId){
+  const input=document.getElementById(inputId);
+  if(!input)return;
+  const v=input.value.trim();
+  if(v){
+    const r=DB.search(v);
+    showResults(r,v,false);
+  }else{
+    startVoice(inputId);
+  }
+}
+window.searchOrVoice=searchOrVoice;
+
 function startVoice(inputId){
   const recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
   if(!recognition){tst('Voice search not supported in this browser','error');return}
@@ -1449,7 +1451,6 @@ function initSearch(){
     const e=document.getElementById(id);
     if(e){let timer;e.addEventListener('input',function(){clearTimeout(timer);timer=setTimeout(()=>q(this.value),200)});e.addEventListener('keydown',ev=>{if(ev.key==='Enter'){ev.preventDefault();q(e.value)}})}
   });
-  document.getElementById('heroSearchBtn')?.addEventListener('click',()=>{const v=document.getElementById('heroSearch');if(v)q(v.value)});
   document.getElementById('mobileSearchInput')?.addEventListener('blur',()=>setTimeout(()=>document.getElementById('mobileSearchBar')?.classList.remove('show'),200));
 }
 
