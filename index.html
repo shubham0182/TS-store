@@ -1418,7 +1418,7 @@ function startVoice(inputId){
     rec.start();
   }
   if(userCreds&&userCreds.username){
-    const msg=new SpeechSynthesisUtterance('Hello '+userCreds.username+', how can I help you?');
+    const msg=new SpeechSynthesisUtterance('Hey '+userCreds.username+', how can I help you?');
     msg.lang='en-US';
     msg.rate=1;
     msg.pitch=1;
